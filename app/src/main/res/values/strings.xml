@@ -30,16 +30,17 @@
 
     <!-- MAIN -->
     <string name="app_title">Live&amp;Learn</string>
-    <string name="app_motto">Грайся та розвивайся</string>
+    <string name="app_motto">Курси іноземних мов</string>
 
-    <string name="button_zvit">Свято</string>
-    <string name="button_programs">Програми</string>
+    <string name="button_zvit">Уроки</string>
+    <string name="button_programs">Клієнти</string>
     <string name="button_calendar1">Календар</string>
-    <string name="button_requisites">Витрати</string>
+    <string name="button_requisites">Кімнати</string>
 
     <string name="hint_double_press">Натисніть ще раз аби вийти з додатку</string>
     <string name="button_about">Про проект</string>
     <string name="button_fb">Ми в Facebook</string>
+    <string name="button_site">Наш сайт</string>
 
     <!-- USER -->
     <string name="title_activity_user">Особистий кабінет</string>
@@ -55,13 +56,13 @@
     <string name="title_activity_events">Повідомлення</string>
 
     <!-- REPORT -->
-    <string name="title_activity_report">Свято</string>
+    <string name="title_activity_report">Урок</string>
     <string name="action_edit">Редагувати</string>
-    <string name="action_add">Зберегти свято</string>
+    <string name="action_add">Зберегти</string>
 
     <!-- CALENDAR -->
     <string name="title_activity_calendar">Календар</string>
-    <string name="toast_edit_impossible">Редагувати можна тільки сьогоднішній або майбутні свята</string>
+    <string name="toast_edit_impossible">Редагувати можна тільки сьогоднішній або майбутні урок</string>
 
     <!-- M K -->
 
@@ -71,9 +72,9 @@
     <!-- NOTIFICATION-->
     <string name="title_activity_notification">Повідомлення</string>
 
-    <string name="dialog_delete_mk_title">Видалити майстер клас</string>
-    <string name="dialog_delete_title">Видалити свято</string>
-    <string name="dialog_delete_message">Після видалення відновити свято буде неможливо</string>
+    <string name="dialog_delete_mk_title">Видалити</string>
+    <string name="dialog_delete_title">Видалити</string>
+    <string name="dialog_delete_message">Після видалення відновити буде неможливо</string>
 
     <string name="title_activity_dashboard">"Адмін панель (%1$s ГРН)"</string>
     <string name="mk_done">Проведено Майстер Класів: </string>
@@ -263,6 +264,7 @@
     <string name="hint_child_ages">Вік</string>
     <string name="hint_place">Місце проведення</string>
     <string name="hint_parent">Імя</string>
+    <string name="button_expenses">Витрати</string>
 
     <string-array name="markArray">
         <item>1</item>

@@ -10,7 +10,7 @@ public class User implements Serializable {
     private String email;
     private String birthdayDate = "01.06.1991";
     private String card;
-    private String positionTitle = "Інструктор, Майстриня";
+    private String positionTitle = "Викладач";
     private String workingFromDate = "01.06.2017";
     private String workingStartTime = "10:00";
     private String workingEndTime = "19:00";

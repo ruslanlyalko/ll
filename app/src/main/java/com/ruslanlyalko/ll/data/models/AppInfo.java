@@ -12,6 +12,7 @@ public class AppInfo implements Serializable {
     private String link;
     private boolean showAnyWay;
     private String linkFb;
+    private String linkSite;
     private String title1;
     private String title2;
     private String aboutText;
@@ -20,7 +21,8 @@ public class AppInfo implements Serializable {
     public AppInfo() {
         aboutText = "Ігрова кімната Чебурашка КІДС почала працювати з 1.6.2016";
         link = "https://play.google.com/store/apps/details?id=com.ruslanlyalko.kidsapp";
-        linkFb = "https://www.facebook.com/groups/cheburashka.kids/";
+        linkFb = "https://www.facebook.com/LiveAndLearnLangauges/?ref=bookmarks";
+        linkSite = "http://www.livelearn.com.ua";
         title1 = "Доступна нова версія!";
         title2 = "натисніть тут щоб оновити";
         latestVersion = 0;
@@ -36,6 +38,14 @@ public class AppInfo implements Serializable {
 
     public String getLinkFb() {
         return linkFb;
+    }
+
+    public String getLinkSite() {
+        return linkSite;
+    }
+
+    public void setLinkSite(final String linkSite) {
+        this.linkSite = linkSite;
     }
 
     public void setLinkFb(final String linkFb) {

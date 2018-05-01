@@ -135,11 +135,11 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/button_clients"
+                    android:id="@+id/button_expenses"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/main_button_height"
                     android:background="?android:attr/selectableItemBackground"
-                    android:text="@string/button_clients"
+                    android:text="@string/button_expenses"
                     android:visibility="visible" />
 
                 <View
@@ -170,6 +170,19 @@
                 android:layout_margin="1dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:text="@string/button_fb" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/gradient" />
+
+            <Button
+                android:id="@+id/button_site"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/main_button_height"
+                android:layout_margin="1dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="@string/button_site" />
 
             <View
                 android:layout_width="match_parent"
@@ -220,7 +233,7 @@
 
                 <!-- Right Top Button -->
                 <Button
-                    android:id="@+id/button_mk"
+                    android:id="@+id/button_clients"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="1dp"
@@ -264,7 +277,7 @@
 
                 <!-- Right Bottom Button -->
                 <Button
-                    android:id="@+id/button_expenses"
+                    android:id="@+id/button_rooms"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="1dp"

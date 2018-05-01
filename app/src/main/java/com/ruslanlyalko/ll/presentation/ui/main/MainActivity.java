@@ -326,9 +326,14 @@ public class MainActivity extends BaseActivity {
         startActivity(CalendarActivity.getLaunchIntent(this));
     }
 
-    @OnClick(R.id.button_mk)
+    @OnClick(R.id.button_rooms)
     void onMkClicked() {
         startActivity(MkTabActivity.getLaunchIntent(this));
+    }
+
+    @OnClick(R.id.button_clients)
+    void onClientsClicked() {
+        startActivity(ClientsTabActivity.getLaunchIntent(this));
     }
 
     @OnClick(R.id.button_expenses)
@@ -346,9 +351,9 @@ public class MainActivity extends BaseActivity {
         openBrowser(mAppInfo.getLinkFb());
     }
 
-    @OnClick(R.id.button_clients)
-    void onClientsClicked() {
-        startActivity(ClientsTabActivity.getLaunchIntent(this));
+    @OnClick(R.id.button_site)
+    void onSiteClicked() {
+        openBrowser(mAppInfo.getLinkSite());
     }
 
     @OnClick(R.id.button_link)
