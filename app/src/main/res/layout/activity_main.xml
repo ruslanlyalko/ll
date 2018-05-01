@@ -239,7 +239,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackground"
-                    android:drawableTop="@drawable/ic_button_program"
+                    android:drawableTop="@drawable/ic_button_clients"
                     android:paddingBottom="15dp"
                     android:paddingTop="32dp"
                     android:text="@string/button_programs" />
@@ -283,7 +283,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackground"
-                    android:drawableTop="@drawable/ic_button_expense"
+                    android:drawableTop="@drawable/ic_button_rooms"
                     android:paddingBottom="16dp"
                     android:paddingTop="32dp"
                     android:text="@string/button_requisites" />
