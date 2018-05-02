@@ -2,9 +2,7 @@ package com.ruslanlyalko.ll.presentation.ui.main.messages;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +20,7 @@ import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.Notification;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.adapter.MessagesAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.edit.MessageEditActivity;
 
@@ -29,10 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MessagesActivity extends AppCompatActivity {
+public class MessagesActivity extends BaseActivity {
 
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.recycler_view) RecyclerView mMessagesList;
@@ -46,11 +44,17 @@ public class MessagesActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
-        setContentView(R.layout.activity_message);
-        ButterKnife.bind(this);
+    protected boolean isRightView() {
+        return true;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_message;
+    }
+
+    @Override
+    protected void setupView() {
         initRecycler();
         loadMessages();
         fab.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
@@ -109,16 +113,6 @@ public class MessagesActivity extends AppCompatActivity {
                 });
     }
 
-    @OnClick(R.id.fab)
-    void onFabCLicked() {
-        addNotification();
-    }
-
-    private void addNotification() {
-        Intent intent = new Intent(MessagesActivity.this, MessageEditActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -133,5 +127,15 @@ public class MessagesActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+    }
+
+    @OnClick(R.id.fab)
+    void onFabCLicked() {
+        addNotification();
+    }
+
+    private void addNotification() {
+        Intent intent = new Intent(MessagesActivity.this, MessageEditActivity.class);
+        startActivity(intent);
     }
 }

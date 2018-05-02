@@ -1,5 +1,6 @@
 package com.ruslanlyalko.ll.presentation.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.ruslanlyalko.ll.R;
 
@@ -36,6 +38,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupView();
         if (isModalView())
             overridePendingTransition(R.anim.fadein, R.anim.nothing);
+        if (isLeftView())
+            overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+        if (isRightView())
+            overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+    }
+
+    protected boolean isRightView() {
+        return false;
+    }
+
+    protected  boolean isLeftView(){
+        return false;
     }
 
     protected boolean isFullScreen() {
@@ -60,6 +74,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         mUnBinder.unbind();
         super.onDestroy();
     }
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -75,5 +96,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onBackPressed();
         if (isModalView())
             overridePendingTransition(R.anim.nothing, R.anim.fadeout);
+        if (isLeftView())
+            overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+        if (isRightView())
+            overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
     }
 }

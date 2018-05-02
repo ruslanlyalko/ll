@@ -20,6 +20,7 @@ public interface DefaultConfigurations {
     String DB_CREDITS = "CREDITS";
 
     String STORAGE_EXPENSES = "EXPENSE";
+    String STORAGE_USERS = "USERS";
     String STORAGE_MK = "MK";
     String STORAGE_REPORT = "REPORT";
     String STORAGE_DIALOGS_MESSAGES = "DIALOGS_MESSAGES";

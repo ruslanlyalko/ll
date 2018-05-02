@@ -160,14 +160,6 @@ public class CreditEditActivity extends BaseActivity {
         }
     }
 
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     private void updateModel() {
         if (mEditPrice.getText().toString().isEmpty())
             mEditPrice.setText("0");

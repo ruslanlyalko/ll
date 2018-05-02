@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity {
                             FirebaseUtils.setIsAdmin(user.getIsAdmin());
                             FirebaseUtils.setUser(user);
                             if (isDestroyed()) return;
-                            mLayoutClients.setVisibility(user.getIsAdmin() || user.getIsAllowViewClients() ? View.VISIBLE : View.GONE);
+                            mLayoutClients.setVisibility(user.getIsAdmin() || user.getIsAllowViewExpenses() ? View.VISIBLE : View.GONE);
                         }
                     }
 

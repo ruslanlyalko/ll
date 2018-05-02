@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     public static Intent getLaunchIntent(final AppCompatActivity launchActivity) {
-        return new Intent(launchActivity, LoginActivity.class);
+        return new Intent(launchActivity, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     @Override

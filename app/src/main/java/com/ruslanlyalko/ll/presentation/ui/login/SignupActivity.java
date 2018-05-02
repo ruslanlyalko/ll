@@ -2,7 +2,6 @@ package com.ruslanlyalko.ll.presentation.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -11,9 +10,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -23,6 +19,7 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
 import com.ruslanlyalko.ll.data.models.User;
+import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,44 +74,30 @@ public class SignupActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         //create user
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the mFirebaseAuth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (task.isSuccessful()) {
-                            FirebaseUtils.setIsAdmin(false);
-                            UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(name)
-                                    .build();
-                            mUser.updateProfile(profileUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    createUserData(name, phone, email, mUser.getUid());
-                                    Toast.makeText(SignupActivity.this, getResources().getString(R.string.toast_user_created)
-                                            + " " + email, Toast.LENGTH_LONG).show();
-                                    onBackPressed();
-                                }
-                            });
-                        } else {
-                            Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(SignupActivity.this, task -> {
+                    progressBar.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        FirebaseUtils.setIsAdmin(false);
+                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build();
+                        mUser.updateProfile(profileUpdate).addOnCompleteListener(task1 -> {
+                            createUserData(name, phone, email, mUser.getUid());
+                            Toast.makeText(SignupActivity.this, getResources().getString(R.string.toast_user_created)
+                                    + " " + email, Toast.LENGTH_LONG).show();
+                            startActivity(SplashActivity.getLaunchIntent(SignupActivity.this));
+                        });
+                    } else {
+                        Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void createUserData(String name, String phone, String email, String uId) {
         DatabaseReference databaseRefCurrentUser = mDatabase.getReference(DefaultConfigurations.DB_USERS).child(uId);
-        User user = new User(uId, name, phone, email, "01.06.1991", "01.06.1991", "", false);
+        User user = new User(uId, name, phone, email, "01.06.1991", "01.06.1991", "1234", false);
         databaseRefCurrentUser.setValue(user);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override

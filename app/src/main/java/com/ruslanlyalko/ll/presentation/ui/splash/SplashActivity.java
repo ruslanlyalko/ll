@@ -25,7 +25,7 @@ public class SplashActivity extends BaseActivity {
     //@BindView(R.id.image_logo) ImageView mImageLogo;
 
     public static Intent getLaunchIntent(final Context context) {
-        return new Intent(context, SplashActivity.class);
+        return new Intent(context, SplashActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     @Override

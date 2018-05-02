@@ -14,11 +14,11 @@ public class User implements Serializable {
     private String workingFromDate = "01.06.2017";
     private String workingStartTime = "10:00";
     private String workingEndTime = "19:00";
-    private String avatar;
+    private String avatar = " ";
     private String token;
     private boolean isAdmin;
-    private boolean isReceiveNotification;
-    private boolean isAllowViewClients;
+    private boolean isReceiveNotifications;
+    private boolean isAllowViewExpenses;
     private boolean isOnline;
 
     public User(String id, String fullName, String phone, String email, String birthdayDate, String workingFromDate, String card, boolean isAdmin) {
@@ -36,12 +36,12 @@ public class User implements Serializable {
         // Default constructor required
     }
 
-    public boolean getIsReceiveNotification() {
-        return isReceiveNotification;
+    public boolean getIsReceiveNotifications() {
+        return isReceiveNotifications;
     }
 
-    public void setIsReceiveNotification(final boolean receiveNotification) {
-        this.isReceiveNotification = receiveNotification;
+    public void setIsReceiveNotifications(final boolean receiveNotification) {
+        this.isReceiveNotifications = receiveNotification;
     }
 
     public String getToken() {
@@ -148,12 +148,12 @@ public class User implements Serializable {
         this.workingEndTime = workingEndTime;
     }
 
-    public boolean getIsAllowViewClients() {
-        return isAllowViewClients;
+    public boolean getIsAllowViewExpenses() {
+        return isAllowViewExpenses;
     }
 
     public void setIsAllowViewClients(final boolean allowViewClients) {
-        this.isAllowViewClients = allowViewClients;
+        this.isAllowViewExpenses = allowViewClients;
     }
 
     public boolean getIsOnline() {

@@ -12,7 +12,7 @@
     <string name="title_activity_reset_password">Відновлення паролю</string>
     <string name="text_forgot_password">Забули пароль?</string>
     <string name="text_forgot_password1">Нам необхідно Ваша електронна скринька щоб відправити інструкцію по відновленню.</string>
-    <string name="toast_user_created">"Готово. Ввійдіть з допомогою Вашого Email: "</string>
+    <string name="toast_user_created">"Користувача зареєстровано: "</string>
     <string name="button_reset_password">Відновити пароль</string>
 
     <!-- SIGN UP-->
@@ -48,6 +48,7 @@
 
     <!-- USER SETTINGS-->
     <string name="toast_data_updated">Зміни збережено</string>
+    <string name="toast_data_started_updated">Аватар загружається</string>
     <string name="action_logout">Вийти</string>
     <string name="dialog_logout_title">Вийти з аккаунта</string>
     <string name="dialog_logout_message"> Ви впевнені що бажаєте вийти з аккаунта?</string>
@@ -83,7 +84,7 @@
     <string name="hint_title2">Тип</string>
     <string name="hint_title1">Назва</string>
     <string name="text_cost_common">Загальні</string>
-    <string name="text_cost_mk">На свято</string>
+    <string name="text_cost_mk">На офіс</string>
     <string name="text_cost_list">Список витрат</string>
     <string name="action_delete_all">  ВИДАЛИТИ ВСЕ  </string>
     <string name="dialog_cost_delete_title">Видалити витрату</string>
@@ -247,7 +248,7 @@
     <string name="dialog_remove_contact_title">Видалити контакт?</string>
     <string name="dialog_remove_contact_message">Якщо ви видалите контакт всі дані будуть втрачені</string>
     <string name="title_activity_birth">Дні Народження Діточок</string>
-    <string name="hint_show_clients">Доступ до списку клієнтів</string>
+    <string name="hint_show_clients">Доступ до витрат</string>
     <string name="text_credit">Аванс %1$s грн. Залишилось %2$s грн</string>
     <string name="hint_money">Сума</string>
     <string name="text_max_money">Всю суму (%1$s грн)</string>
@@ -265,6 +266,7 @@
     <string name="hint_place">Місце проведення</string>
     <string name="hint_parent">Імя</string>
     <string name="button_expenses">Витрати</string>
+    <string name="action_change_ava">Змінити аватар</string>
 
     <string-array name="markArray">
         <item>1</item>

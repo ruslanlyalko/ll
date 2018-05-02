@@ -86,7 +86,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             textUserName.setText(user.getFullName());
             textPositionTitle.setText(user.getPositionTitle());
             if(FirebaseUtils.isAdmin())
-                imageNotificationsOff.setVisibility(user.getIsReceiveNotification() ? View.GONE : View.VISIBLE);
+                imageNotificationsOff.setVisibility(user.getIsReceiveNotifications() ? View.GONE : View.VISIBLE);
             imageUserLogo.setImageResource(user.getIsOnline() ? R.drawable.ic_user_primary : R.drawable.ic_user_name);
         }
 

@@ -1,23 +1,23 @@
 package com.ruslanlyalko.ll.presentation.ui.main.profile;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,17 +27,22 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.UploadTask;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
 import com.ruslanlyalko.ll.data.models.User;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.SignupActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.adapter.UsersAdapter;
@@ -46,13 +51,22 @@ import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.SalaryActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.settings.ProfileSettingsActivity;
 import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class ProfileActivity extends AppCompatActivity implements OnItemClickListener {
+public class ProfileActivity extends BaseActivity implements OnItemClickListener, EasyPermissions.PermissionCallbacks {
+
+    private static final int REQUEST_IMAGE_PERMISSION = 1;
 
     @BindView(R.id.text_email) TextView mEmailText;
     @BindView(R.id.text_phone) TextView mPhoneText;
@@ -74,12 +88,12 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
     @BindView(R.id.text_available) TextView mTextAvailable;
     @BindView(R.id.text_last_online) TextView mTextLastOnline;
 
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private String mUID;
     private User mUser;
     private UsersAdapter mUsersAdapter;
-    private boolean needLoadFriends;
+    private boolean mIsCurrentUserPage;
     private Date mLastOnline = new Date();
     private Boolean mConnected;
 
@@ -88,35 +102,42 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
-        setContentView(R.layout.activity_profile);
-        ButterKnife.bind(this);
-        parseExtras();
+    protected boolean isLeftView() {
+        return true;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_profile;
+    }
+
+    @Override
+    public void parseExtras() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            mUID = bundle.getString(Keys.Extras.EXTRA_UID, mFirebaseUser.getUid());
+        } else
+            mUID = mFirebaseUser.getUid();
+        mIsCurrentUserPage = mUID.equals(mFirebaseUser.getUid());
+    }
+
+    @Override
+    protected void setupView() {
         initToolbar();
         initRecycle();
         loadUsers();
         checkConnection();
     }
 
-    private void parseExtras() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            mUID = bundle.getString(Keys.Extras.EXTRA_UID, FirebaseAuth.getInstance().getCurrentUser().getUid());
-        } else
-            mUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        needLoadFriends = mUID.equals(mAuth.getCurrentUser().getUid());
-    }
-
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initRecycle() {
-        if (needLoadFriends) {
+        if (mIsCurrentUserPage) {
             mCardView.setVisibility(View.VISIBLE);
             mUsersAdapter = new UsersAdapter(this);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -127,7 +148,7 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     private void loadUsers() {
-        if (needLoadFriends)
+        if (mIsCurrentUserPage)
             mUsersAdapter.notifyDataSetChanged();
         mDatabase.getReference(DefaultConfigurations.DB_USERS)
                 .addChildEventListener(new ChildEventListener() {
@@ -137,8 +158,8 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
                         if (user != null) {
                             if (user.getId().equals(mUID)) {
                                 mUser = user;
-                                updateUI(user);
-                            } else if (needLoadFriends) {
+                                updateUI();
+                            } else if (mIsCurrentUserPage) {
                                 mUsersAdapter.add(user);
                             }
                         }
@@ -150,8 +171,8 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
                         if (user != null) {
                             if (user.getId().equals(mUID)) {
                                 mUser = user;
-                                updateUI(user);
-                            } else if (needLoadFriends) {
+                                updateUI();
+                            } else if (mIsCurrentUserPage) {
                                 mUsersAdapter.update(user);
                             }
                         }
@@ -172,7 +193,7 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     private void checkConnection() {
-        if (needLoadFriends) {
+        if (mIsCurrentUserPage) {
             mDatabase.getReference(".info/connected")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -219,54 +240,48 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
         }
     }
 
-    private void updateUI(User user) {
-        if (user == null || mAuth.getCurrentUser() == null) return;
-        final boolean myPage = mUser.getId().equals(mAuth.getCurrentUser().getUid());
-        // if current user is admin or open his friends
-        fab.setVisibility(FirebaseUtils.isAdmin() || myPage ? View.VISIBLE : View.GONE);
-        if (mUser.getIsAdmin() && myPage)
+    private void updateUI() {
+        if (isDestroyed()) return;
+        if (mUser == null || mFirebaseUser == null) return;
+        // if current mUser is admin or open his friends
+        fab.setVisibility(FirebaseUtils.isAdmin() || mIsCurrentUserPage ? View.VISIBLE : View.GONE);
+        if (mUser.getIsAdmin() && mIsCurrentUserPage)
             fab.setImageResource(R.drawable.ic_action_money);
-        mTitlePositionText.setText(user.getPositionTitle());
-        collapsingToolbar.setTitle(user.getFullName());
-        mPhoneText.setText(user.getPhone());
-        mEmailText.setText(user.getEmail());
-        mBDayText.setText(user.getBirthdayDate());
-        mCardText.setText(user.getCard());
-        mTimeText.setText(user.getWorkingStartTime() + " - " + user.getWorkingEndTime());
-        mFirstDateText.setText(user.getWorkingFromDate());
-        final String phone = user.getPhone();
-        mPhoneLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:" + phone));
-                startActivity(callIntent);
-            }
+        mTitlePositionText.setText(mUser.getPositionTitle());
+        collapsingToolbar.setTitle(mUser.getFullName());
+        mPhoneText.setText(mUser.getPhone());
+        mEmailText.setText(mUser.getEmail());
+        mBDayText.setText(mUser.getBirthdayDate());
+        mCardText.setText(mUser.getCard());
+        String time = mUser.getWorkingStartTime() + " - " + mUser.getWorkingEndTime();
+        mTimeText.setText(time);
+        mFirstDateText.setText(mUser.getWorkingFromDate());
+        final String phone = mUser.getPhone();
+        mPhoneLayout.setOnClickListener(v -> {
+            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+            callIntent.setData(Uri.parse("tel:" + phone));
+            startActivity(callIntent);
         });
-        final String email = user.getEmail();
-        mEmailLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(email, email);
+        final String email = mUser.getEmail();
+        mEmailLayout.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(email, email);
+            if (clipboard != null)
                 clipboard.setPrimaryClip(clip);
-                Toast.makeText(ProfileActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(ProfileActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
         });
-        final String card = user.getCard();
-        mCardLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(card, card);
+        final String card = mUser.getCard();
+        mCardLayout.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(card, card);
+            if (clipboard != null)
                 clipboard.setPrimaryClip(clip);
-                Toast.makeText(ProfileActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(ProfileActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
         });
-        if (FirebaseUtils.isAdmin() && !user.getId().equals(mAuth.getCurrentUser().getUid())) {
+        if (FirebaseUtils.isAdmin() && !mIsCurrentUserPage) {
             mFirsDateLayout.setVisibility(View.VISIBLE);
         }
-        if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+        if (mUser.getAvatar() != null && !mUser.getAvatar().isEmpty()) {
             mAvaImageView.setVisibility(View.VISIBLE);
             mBackImageView.setVisibility(View.VISIBLE);
             if (!isDestroyed())
@@ -278,6 +293,7 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     private void updateLastOnline() {
+        if (isDestroyed()) return;
         if (mConnected != null && mConnected) {
             mTextAvailable.setVisibility(View.VISIBLE);
             mTextLastOnline.setText(R.string.online);
@@ -290,43 +306,19 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
         }
     }
 
-    @OnClick(R.id.fab)
-    void onFabClicked() {
-        final boolean myPage = mUser.getId().equals(mAuth.getCurrentUser().getUid());
-        if (FirebaseUtils.isAdmin() && myPage) {
-            startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
-        } else {
-            startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUID, mUser));
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_user, menu);
-        boolean isCurrentUserPage = mUID.equals(mAuth.getCurrentUser().getUid());
-        menu.findItem(R.id.action_add_user).setVisible(FirebaseUtils.isAdmin() && isCurrentUserPage);
-        menu.findItem(R.id.action_settings).setVisible(FirebaseUtils.isAdmin() || isCurrentUserPage);
-        menu.findItem(R.id.action_logout).setVisible(isCurrentUserPage);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.action_add_user: {
                 startActivity(new Intent(this, SignupActivity.class));
                 return true;
             }
             case R.id.action_settings: {
-                Intent intent = new Intent(this, ProfileSettingsActivity.class);
-                intent.putExtra(Keys.Extras.EXTRA_UID, mUID);
-                startActivity(intent);
+                startActivity(ProfileSettingsActivity.getLaunchIntent(this, mUID));
+                return true;
+            }
+            case R.id.action_change_ava: {
+                choosePhoto();
                 return true;
             }
             case R.id.action_logout: {
@@ -337,30 +329,116 @@ public class ProfileActivity extends AppCompatActivity implements OnItemClickLis
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+    private void choosePhoto() {
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.image_permissions), REQUEST_IMAGE_PERMISSION, perms);
+        }
     }
 
     private void logout() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_logout_title)
                 .setMessage(R.string.dialog_logout_message)
-                .setPositiveButton("Вийти", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        FirebaseUtils.clearPushToken();
-                        mAuth.signOut();
-                        Intent intent = new Intent(ProfileActivity.this,
-                                LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    }
+                .setPositiveButton("Вийти", (dialog, which) -> {
+                    FirebaseUtils.clearPushToken();
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(LoginActivity.getLaunchIntent(this));
                 })
                 .setNegativeButton("Повернутись", null)
                 .show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                //Some error handling
+            }
+
+            @Override
+            public void onImagePicked(final File imageFile, final EasyImage.ImageSource source, final int type) {
+                onPhotosReturned(imageFile);
+            }
+        });
+    }
+
+    private void onPhotosReturned(final File imageFile) {
+        Toast.makeText(ProfileActivity.this, R.string.toast_data_started_updated, Toast.LENGTH_LONG).show();
+        String imageFileName = DateUtils.getCurrentTimeStamp() + "_original" + ".jpg";
+        uploadFile(imageFile, imageFileName, 95).addOnSuccessListener(taskSnapshot -> {
+            if (taskSnapshot.getDownloadUrl() != null) {
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put("avatar", taskSnapshot.getDownloadUrl().toString());
+                mDatabase.getReference().child(DefaultConfigurations.DB_USERS).child(mUID).updateChildren(childUpdates)
+                        .addOnCompleteListener(task ->
+                                Toast.makeText(ProfileActivity.this, R.string.toast_data_updated, Toast.LENGTH_SHORT).show());
+                hideProgressBarUpload();
+            }
+        }).addOnFailureListener(exception -> hideProgressBarUpload());
+    }
+
+    private UploadTask uploadFile(File file, String fileName, int quality) {
+        Bitmap bitmapOriginal = BitmapFactory.decodeFile(file.toString());//= imageView.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmapOriginal.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        byte[] bytes = baos.toByteArray();
+        // Meta data for imageView
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpg")
+                .setCustomMetadata("UserName", mUser.getFullName())
+                .build();
+        // name of file in Storage
+        return FirebaseStorage.getInstance()
+                .getReference(DefaultConfigurations.STORAGE_USERS)
+                .child(fileName)
+                .putBytes(bytes, metadata);
+    }
+
+    private void hideProgressBarUpload() {
+        //todo
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> list) {
+        switch (requestCode) {
+            case REQUEST_IMAGE_PERMISSION:
+                EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
+                break;
+        }
+    }
+
+    @Override
+    public void onPermissionsDenied(final int requestCode, final List<String> perms) {
+    }
+
+    @OnClick(R.id.fab)
+    void onFabClicked() {
+        final boolean myPage = mUser.getId().equals(mFirebaseUser.getUid());
+        if (FirebaseUtils.isAdmin() && myPage) {
+            startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
+        } else {
+            startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUID, mUser));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        menu.findItem(R.id.action_add_user).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
+        menu.findItem(R.id.action_settings).setVisible(FirebaseUtils.isAdmin() || mIsCurrentUserPage);
+        menu.findItem(R.id.action_change_ava).setVisible(mIsCurrentUserPage);
+        menu.findItem(R.id.action_logout).setVisible(mIsCurrentUserPage);
+        return true;
     }
 
     @Override

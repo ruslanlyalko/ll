@@ -172,6 +172,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
                     .setNegativeButton(R.string.action_cancel, null)
                     .show();
         } else {
+            hideKeyboard();
             super.onBackPressed();
         }
     }

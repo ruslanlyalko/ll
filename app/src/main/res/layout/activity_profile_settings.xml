@@ -9,6 +9,7 @@
         android:id="@+id/body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <!-- Name-->
@@ -74,7 +75,9 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:hint="@string/hint_phone"
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:nextFocusLeft="@+id/text_phone"
+                    android:nextFocusUp="@+id/text_phone" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
