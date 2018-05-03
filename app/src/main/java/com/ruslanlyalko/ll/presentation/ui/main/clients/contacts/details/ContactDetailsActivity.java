@@ -46,7 +46,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.image_avatar) ImageView mImageAvatar;
-    @BindView(R.id.text_kids) TextView mTextKids;
+    @BindView(R.id.text_sub_title) TextView mTextSubTitle;
     @BindView(R.id.text_phone1) TextView mTextPhone1;
     @BindView(R.id.text_phone2) TextView mTextPhone2;
     @BindView(R.id.card_phone2) CardView mCardPhone2;
@@ -157,23 +157,15 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
     }
 
     private void showContactDetails() {
+        if (isDestroyed()) return;
         if (mContact == null) {
             setTitle("");
             return;
         }
         setTitle("");
         mTextUserName.setText(mContact.getName());
-        String kids = "";
-        if (mContact.getChildName1() != null && !mContact.getChildName1().isEmpty()) {
-            kids += mContact.getChildName1() + DateUtils.toString(mContact.getChildBd1(), " dd.MM") + DateUtils.getAge(mContact.getChildBd1());
-        }
-        if (mContact.getChildName2() != null && !mContact.getChildName2().isEmpty()) {
-            kids += "; " + mContact.getChildName2() + DateUtils.toString(mContact.getChildBd2(), " dd.MM") + DateUtils.getAge(mContact.getChildBd2());
-        }
-        if (mContact.getChildName3() != null && !mContact.getChildName3().isEmpty()) {
-            kids += "; " + mContact.getChildName3() + DateUtils.toString(mContact.getChildBd3(), " dd.MM") + DateUtils.getAge(mContact.getChildBd3());
-        }
-        mTextKids.setText(kids);
+        String subtitle = mContact.getEmail() + DateUtils.toString(mContact.getBirthDay(), "   dd.MM.yyyy");
+        mTextSubTitle.setText(subtitle);
         mTextPhone1.setText(mContact.getPhone());
         mTextPhone2.setText(mContact.getPhone2());
         mCardPhone2.setVisibility(mContact.getPhone2() != null & !mContact.getPhone2().isEmpty() ? View.VISIBLE : View.GONE);
@@ -230,7 +222,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
 
     @OnClick(R.id.button_add_birthday)
     public void onViewClicked() {
-        startActivity(BirthdaysEditActivity.getLaunchIntent(this, mContact.getKey(), mContact.getChildName1()));
+//        startActivity(BirthdaysEditActivity.getLaunchIntent(this, mContact.getKey(), mContact.getChildName1()));
     }
 
     @OnClick({R.id.card_phone1, R.id.card_phone2})

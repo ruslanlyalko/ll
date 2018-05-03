@@ -14,9 +14,5 @@ public interface Constants {
 
     int COST_EDIT_MIN = 5;
 
-    int SALARY_DEFAULT_STAVKA = 60;
-    int SALARY_DEFAULT_PERCENT = 8;
-    int SALARY_DEFAULT_MK = 50;
-    int SALARY_DEFAULT_MK_CHILD = 0;
-    int SALARY_DEFAULT_ART_MK_CHILD = 10;
+
 }

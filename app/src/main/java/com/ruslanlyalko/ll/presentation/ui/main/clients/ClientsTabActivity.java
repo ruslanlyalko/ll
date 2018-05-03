@@ -25,6 +25,8 @@ import butterknife.OnClick;
 
 public class ClientsTabActivity extends BaseActivity implements OnFilterListener {
 
+    private static final int TAB_ADULT = 0;
+    private static final int TAB_CHILD = 1;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.tabs) TabLayout mTabs;
     @BindView(R.id.appbar) AppBarLayout mAppbar;
@@ -90,10 +92,10 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
-                    return ContactsFragment.newInstance();
-                case 1:
-                    return ContactsFragment.newInstance();
+                case TAB_ADULT:
+                    return ContactsFragment.newInstance(position);
+                case TAB_CHILD:
+                    return ContactsFragment.newInstance(position);
             }
             return null;
         }

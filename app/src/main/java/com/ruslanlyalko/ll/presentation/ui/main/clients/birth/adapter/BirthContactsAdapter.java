@@ -95,7 +95,7 @@ public class BirthContactsAdapter extends RecyclerView.Adapter<BirthContactsAdap
         @BindView(R.id.text_name) TextView mTextName;
         @BindView(R.id.text_phone1) TextView mTextPhone1;
         @BindView(R.id.text_phone2) TextView mTextPhone2;
-        @BindView(R.id.text_kids) TextView mTextKids;
+        @BindView(R.id.text_sub_title) TextView mTextSubTitle;
         @BindView(R.id.layout_root) LinearLayout mLayoutRoot;
 
         MyViewHolder(View view) {
@@ -110,17 +110,7 @@ public class BirthContactsAdapter extends RecyclerView.Adapter<BirthContactsAdap
                 mTextPhone2.setText(contact.getPhone2());
             else
                 mTextPhone2.setText("");
-            String kids = "";
-            if (contact.getChildName1() != null && !contact.getChildName1().isEmpty()) {
-                kids += contact.getChildName1() + DateUtils.toString(contact.getChildBd1(), " dd.MM") + DateUtils.getAge(contact.getChildBd1());
-            }
-            if (contact.getChildName2() != null && !contact.getChildName2().isEmpty()) {
-                kids += "; " + contact.getChildName2() + DateUtils.toString(contact.getChildBd2(), " dd.MM") + DateUtils.getAge(contact.getChildBd2());
-            }
-            if (contact.getChildName3() != null && !contact.getChildName3().isEmpty()) {
-                kids += "; " + contact.getChildName3() + DateUtils.toString(contact.getChildBd3(), " dd.MM") + DateUtils.getAge(contact.getChildBd3());
-            }
-            mTextKids.setText(kids);
+            mTextSubTitle.setText(DateUtils.toString(contact.getBirthDay(), "dd.MM.yyyy"));
         }
 
         @OnClick(R.id.layout_root)
@@ -163,15 +153,15 @@ public class BirthContactsAdapter extends RecyclerView.Adapter<BirthContactsAdap
         private boolean isMatchFilter(final CharSequence charSequence, final Contact contact) {
             if (charSequence.toString().isEmpty()) return true;
             String month = charSequence.toString();
-            if (!contact.getChildName1().isEmpty() && DateUtils.toString(contact.getChildBd1(), "MM").equals(month)) {
+            if (contact.getBirthDay()!=null && DateUtils.toString(contact.getBirthDay(), "MM").equals(month)) {
                 return true;
             }
-            if (!contact.getChildName2().isEmpty() && DateUtils.toString(contact.getChildBd2(), "MM").equals(month)) {
-                return true;
-            }
-            if (!contact.getChildName3().isEmpty() && DateUtils.toString(contact.getChildBd3(), "MM").equals(month)) {
-                return true;
-            }
+//            if (!contact.getChildName2().isEmpty() && DateUtils.toString(contact.getChildBd2(), "MM").equals(month)) {
+//                return true;
+//            }
+//            if (!contact.getChildName3().isEmpty() && DateUtils.toString(contact.getChildBd3(), "MM").equals(month)) {
+//                return true;
+//            }
             return false;
         }
 
