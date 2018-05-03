@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.mk;
+package com.ruslanlyalko.ll.presentation.ui.main.rooms;
 
 import android.content.DialogInterface;
 import android.content.Intent;

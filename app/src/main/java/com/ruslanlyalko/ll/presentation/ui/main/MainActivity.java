@@ -43,7 +43,7 @@ import com.ruslanlyalko.ll.presentation.ui.main.calendar.CalendarActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.ClientsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.MessagesActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.mk.MkTabActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.report.ReportActivity;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
@@ -328,7 +328,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.button_rooms)
     void onMkClicked() {
-        startActivity(MkTabActivity.getLaunchIntent(this));
+        startActivity(RoomsTabActivity.getLaunchIntent(this));
     }
 
     @OnClick(R.id.button_clients)

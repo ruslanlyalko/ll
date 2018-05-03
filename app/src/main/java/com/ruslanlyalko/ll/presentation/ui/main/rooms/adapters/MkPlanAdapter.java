@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.mk.adapters;
+package com.ruslanlyalko.ll.presentation.ui.main.rooms.adapters;
 
 import android.app.Activity;
 import android.content.Context;

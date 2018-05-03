@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.mk;
+package com.ruslanlyalko.ll.presentation.ui.main.rooms;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +23,7 @@ import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
 import com.ruslanlyalko.ll.data.models.Report;
-import com.ruslanlyalko.ll.presentation.ui.main.mk.adapters.MkPlanAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.rooms.adapters.MkPlanAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

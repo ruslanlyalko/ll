@@ -19,7 +19,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.details.MessageDetailsActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.mk.MkTabActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.report.ReportActivity;
 import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 
@@ -99,7 +99,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 chanelId = CHANEL_EXPENSE_ID;
                 break;
             case MK:
-                resultIntent = MkTabActivity.getLaunchIntent(this);
+                resultIntent = RoomsTabActivity.getLaunchIntent(this);
                 chanelId = CHANEL_MK_ID;
                 break;
             default:

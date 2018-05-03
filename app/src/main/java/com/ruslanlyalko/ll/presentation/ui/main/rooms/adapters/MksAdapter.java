@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.mk.adapters;
+package com.ruslanlyalko.ll.presentation.ui.main.rooms.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +21,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.models.Mk;
-import com.ruslanlyalko.ll.presentation.ui.main.mk.MkDetailsActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.rooms.MkDetailsActivity;
 
 import java.util.List;
 
