@@ -32,10 +32,10 @@
     <string name="app_title">Live&amp;Learn</string>
     <string name="app_motto">Курси іноземних мов</string>
 
-    <string name="button_zvit">Уроки</string>
+    <string name="button_zvit">Створити Заняття</string>
     <string name="button_programs">Клієнти</string>
     <string name="button_calendar1">Календар</string>
-    <string name="button_requisites">Кімнати</string>
+    <string name="button_requisites">Кабінети</string>
 
     <string name="hint_double_press">Натисніть ще раз аби вийти з додатку</string>
     <string name="button_about">Про проект</string>
@@ -57,15 +57,13 @@
     <string name="title_activity_events">Повідомлення</string>
 
     <!-- REPORT -->
-    <string name="title_activity_report">Урок</string>
+    <string name="title_activity_report">Заняття</string>
     <string name="action_edit">Редагувати</string>
     <string name="action_add">Зберегти</string>
 
     <!-- CALENDAR -->
     <string name="title_activity_calendar">Календар</string>
-    <string name="toast_edit_impossible">Редагувати можна тільки сьогоднішній або майбутні урок</string>
-
-    <!-- M K -->
+    <string name="toast_edit_impossible">Редагувати можна тільки сьогоднішній або майбутні заняття</string>
 
     <!-- Expense-->
     <string name="title_activity_cost">Витрати</string>
@@ -146,15 +144,13 @@
     <string name="hint_first_date">Перший робочий день</string>
     <string name="photo_uploaded">Фото збережено</string>
 
-    <string name="tab_k">КУЛІНАРНІ</string>
-    <string name="tab_t">ТВОРЧІ</string>
-    <string name="tab_d">ДОСЛІДИ</string>
-    <string name="mk_type_k">Кулінарний майстер клас</string>
-    <string name="mk_type_t">Творчий майстер клас</string>
-    <string name="mk_type_d">Досліди та експерименти</string>
+    <string name="tab_room_1">ЗЕЛЕНИЙ</string>
+    <string name="tab_room_2">СИНІЙ</string>
+    <string name="tab_room_3">ОЛИВК.</string>
+    <string name="tab_room_4">БОРДОВИЙ</string>
 
     <string name="title_activity_mk_plan">Майстер класи</string>
-    <string name="title_activity_mk_tab">Майстер класи</string>
+    <string name="title_activity_mk_tab">Кабінети 12.05.2018</string>
     <string name="text_mk_full">Майстер клас</string>
     <string name="title_activity_mk_item">Майстер клас</string>
 
@@ -222,7 +218,7 @@
     <string name="online">Online</string>
     <string name="last_online">Востанє в мережі %s</string>
     <string name="last_online_long_time_ago">Востаннє в мережі давно</string>
-    <string name="calendar_add_report">ДОБАВИТИ СВЯТО</string>
+    <string name="calendar_add_report">СТВОРИТИ ЗАНЯТТЯ</string>
     <string name="expense_added">Витрату добавлено</string>
     <string name="expense_upload">Загрузити фото</string>
     <string name="button_clients">НАШІ КЛІЄНТИ</string>
@@ -240,14 +236,14 @@
     <string name="check_mk">МК</string>
     <string name="check_aqua">Аквагрим</string>
     <string name="check_cinema">Кінотеатр</string>
-    <string name="add_birthday">Добавити Святкування Дня Народження в Чебурашці</string>
+    <string name="add_birthday">Поповнити особистий рахунок</string>
     <string name="text_kids">Кількість дітей:</string>
     <string name="hint_date_celebrating">Дата Святкування ДН:</string>
     <string name="text_kids_count">Кількість дітей: %s</string>
     <string name="hint_notif">Отримувати сповіщення</string>
     <string name="dialog_remove_contact_title">Видалити контакт?</string>
     <string name="dialog_remove_contact_message">Якщо ви видалите контакт всі дані будуть втрачені</string>
-    <string name="title_activity_birth">Дні Народження Діточок</string>
+    <string name="title_activity_birth">Дні Народження Клієнтів</string>
     <string name="hint_show_clients">Доступ до витрат</string>
     <string name="text_credit">Аванс %1$s грн. Залишилось %2$s грн</string>
     <string name="hint_money">Сума</string>
@@ -267,6 +263,7 @@
     <string name="hint_parent">Імя</string>
     <string name="button_expenses">Витрати</string>
     <string name="action_change_ava">Змінити аватар</string>
+    <string name="error_no_name">Імя не може бути порожнім!</string>
 
     <string-array name="markArray">
         <item>1</item>

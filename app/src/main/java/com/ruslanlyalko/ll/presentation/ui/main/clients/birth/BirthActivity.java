@@ -77,7 +77,7 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
     private void loadContacts() {
         Query ref = FirebaseDatabase.getInstance()
                 .getReference(DefaultConfigurations.DB_CONTACTS)
-                .orderByChild("name");
+                .orderByChild("birthDay/time");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -85,7 +85,7 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
                 for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
                     Contact contact = clientSS.getValue(Contact.class);
                     if (contact != null) {
-                        contacts.add(contact);
+                        contacts.add(0, contact);
                     }
                 }
                 mBirthContactsAdapter.setData(contacts);
@@ -99,6 +99,7 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
     }
 
     private void onFilterTextChanged(Date date) {
+        if (isDestroyed()) return;
         mLastDate = date;
         Calendar month = Calendar.getInstance();
         month.setTime(date);

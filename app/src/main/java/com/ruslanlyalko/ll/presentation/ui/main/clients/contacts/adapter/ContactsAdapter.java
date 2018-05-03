@@ -94,7 +94,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         @BindView(R.id.text_name) TextView mTextName;
         @BindView(R.id.text_phone1) TextView mTextPhone1;
         @BindView(R.id.text_phone2) TextView mTextPhone2;
-        @BindView(R.id.text_kids) TextView mTextKids;
+        @BindView(R.id.text_sub_title) TextView mTextSubTitle;
         @BindView(R.id.layout_root) LinearLayout mLayoutRoot;
 
         MyViewHolder(View view) {
@@ -109,17 +109,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
                 mTextPhone2.setText(contact.getPhone2());
             else
                 mTextPhone2.setText("");
-            String kids = "";
-            if (contact.getChildName1() != null && !contact.getChildName1().isEmpty()) {
-                kids += contact.getChildName1() + DateUtils.toString(contact.getChildBd1(), " dd.MM") + DateUtils.getAge(contact.getChildBd1());
-            }
-            if (contact.getChildName2() != null && !contact.getChildName2().isEmpty()) {
-                kids += "; " + contact.getChildName2() + DateUtils.toString(contact.getChildBd2(), " dd.MM") + DateUtils.getAge(contact.getChildBd2());
-            }
-            if (contact.getChildName3() != null && !contact.getChildName3().isEmpty()) {
-                kids += "; " + contact.getChildName3() + DateUtils.toString(contact.getChildBd3(), " dd.MM") + DateUtils.getAge(contact.getChildBd3());
-            }
-            mTextKids.setText(kids);
+            String subtitle = contact.getEmail() + DateUtils.toString(contact.getBirthDay(), "  dd.MM.yyyy");
+            mTextSubTitle.setText(subtitle);
         }
 
         @OnClick(R.id.layout_root)

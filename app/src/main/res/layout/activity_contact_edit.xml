@@ -3,7 +3,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".presentation.ui.main.mk.MkEditActivity">
+            tools:context=".presentation.ui.main.rooms.MkEditActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,8 +11,28 @@
         android:orientation="vertical"
         android:padding="@dimen/text_margin">
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs_user_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_type_adult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Дорослий" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_type_child"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Дитина" />
+
+        </android.support.design.widget.TabLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
             android:layout_height="wrap_content">
 
             <EditText
@@ -87,25 +107,16 @@
                 android:layout_weight="3">
 
                 <EditText
-                    android:id="@+id/edit_child_name1"
+                    android:id="@+id/edit_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/transparent"
-                    android:hint="@string/hint_child1"
-                    android:inputType="textCapWords"
+                    android:hint="@string/hint_email"
+                    android:inputType="textEmailAddress"
                     />
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/edit_child_date1"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:backgroundTint="@android:color/transparent"
-                android:hint="@string/hint_date_birth"
-                android:textSize="16sp" />
-
         </LinearLayout>
 
         <View
@@ -127,62 +138,17 @@
                 android:layout_weight="3">
 
                 <EditText
-                    android:id="@+id/edit_child_name2"
+                    android:id="@+id/edit_birth_day"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/transparent"
-                    android:hint="@string/hint_child2"
-                    android:inputType="textCapWords" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:hint="@string/hint_date_birth"
+                    android:inputType="date"
+                    />
 
             </android.support.design.widget.TextInputLayout>
-
-            <TextView
-                android:id="@+id/edit_child_date2"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:backgroundTint="@android:color/transparent"
-                android:hint="@string/hint_date_birth"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorDividers" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3">
-
-                <EditText
-                    android:id="@+id/edit_child_name3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/transparent"
-                    android:hint="@string/hint_child3"
-                    android:inputType="textCapWords" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <TextView
-                android:id="@+id/edit_child_date3"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:backgroundTint="@android:color/transparent"
-                android:hint="@string/hint_date_birth"
-                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -206,5 +172,8 @@
                 android:inputType="textMultiLine|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
+        <!-- TODO history -->
+
     </LinearLayout>
+
 </ScrollView>

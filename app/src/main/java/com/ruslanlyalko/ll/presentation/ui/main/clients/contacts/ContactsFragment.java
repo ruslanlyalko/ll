@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.common.UserType;
 import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.OnFilterListener;
@@ -47,13 +49,15 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     @BindView(R.id.edit_filter_phone) EditText mEditFilterPhone;
     private ContactsAdapter mContactsAdapter;
     private OnFilterListener mOnFilterListener;
+    private UserType mUserType = UserType.ADULT;
 
     public ContactsFragment() {
     }
 
-    public static ContactsFragment newInstance() {
+    public static ContactsFragment newInstance(final int tabIndex) {
         ContactsFragment fragment = new ContactsFragment();
         Bundle args = new Bundle();
+        args.putInt(Keys.Extras.EXTRA_TAB_INDEX, tabIndex);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,8 +65,6 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
         try {
             mOnFilterListener = (OnFilterListener) activity;
         } catch (ClassCastException e) {
@@ -83,9 +85,14 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        parseArguments();
         mContactsAdapter = new ContactsAdapter(this, getActivity());
         setupRecycler();
         loadContacts();
+    }
+
+    private void parseArguments() {
+        mUserType = getArguments().getInt(Keys.Extras.EXTRA_TAB_INDEX, 0) == 0 ? UserType.ADULT : UserType.CHILD;
     }
 
     private void setupRecycler() {
@@ -103,7 +110,7 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
                 List<Contact> contacts = new ArrayList<>();
                 for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
                     Contact contact = clientSS.getValue(Contact.class);
-                    if (contact != null) {
+                    if (contact != null && contact.getUserType().equals(mUserType)) {
                         contacts.add(contact);
                     }
                 }
