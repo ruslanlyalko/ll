@@ -2,9 +2,12 @@ package com.ruslanlyalko.ll.data.models;
 
 import com.ruslanlyalko.ll.common.UserType;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class Lesson {
+public class Lesson implements Serializable {
 
     private String key;
     private String description;
@@ -12,9 +15,48 @@ public class Lesson {
     private int roomId;
     private int lessonId;
     private int lessonLengthId;
+    private String userId;
+    private String userName;
     private Date dateTime = new Date();
+    private List<String> clients = new ArrayList<>();
+
+    public Lesson(final String userId, final String userName) {
+        this.key = "";
+        this.userId = userId;
+        this.userName = userName;
+    }
 
     public Lesson() {
+        key = "";
+    }
+
+    public Lesson(final Date date, final String key) {
+        this.key = key;
+        this.dateTime = date;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(final String userName) {
+        this.userName = userName;
+    }
+
+    public List<String> getClients() {
+        return clients;
+    }
+
+    public void setClients(final List<String> clients) {
+        this.clients = clients;
     }
 
     public String getDescription() {

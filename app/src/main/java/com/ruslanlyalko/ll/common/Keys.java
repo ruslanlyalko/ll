@@ -30,5 +30,6 @@ public interface Keys {
         String EXTRA_MAX = "EXTRA_MAX";
         String EXTRA_TAB_INDEX = "EXTRA_TAB_INDEX";
         String EXTRA_IS_SELCTABLE = "EXTRA_IS_SELCTABLE";
+        String EXTRA_LESSON_MODEL = "EXTRA_LESSON_MODEL";
     }
 }

@@ -15,5 +15,5 @@ public interface OnContactClickListener {
 
     void onItemClicked(int position, ActivityOptionsCompat options);
 
-    void onItemsCheckedChanged(List<Contact> contacts);
+    void onItemsCheckedChanged(List<String> contacts);
 }

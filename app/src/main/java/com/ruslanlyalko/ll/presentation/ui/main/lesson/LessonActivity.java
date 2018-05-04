@@ -14,13 +14,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.LessonLength;
 import com.ruslanlyalko.ll.common.UserType;
-import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.OnFilterListener;
@@ -47,19 +52,19 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     @BindView(R.id.tabs_user) TabLayout mTabsUser;
     @BindView(R.id.container) ViewPager mContainer;
     private boolean mIsChanged;
-    private List<Contact> mSelectedContactsAdults = new ArrayList<>();
-    private List<Contact> mSelectedContactsChildren = new ArrayList<>();
-    private String mKey = "";
+    private List<String> mSelectedContactsAdults = new ArrayList<>();
+    private List<String> mSelectedContactsChildren = new ArrayList<>();
     private LessonLength mLessonLength = LessonLength.ONE_HOUR;
     private Lesson mLesson = new Lesson();
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     public static Intent getLaunchIntent(final Activity launchIntent) {
         return new Intent(launchIntent, LessonActivity.class);
     }
 
-    public static Intent getLaunchIntent(final Context context, String key) {
+    public static Intent getLaunchIntent(final Context context, Lesson lesson) {
         Intent intent = new Intent(context, LessonActivity.class);
-        intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, key);
+        intent.putExtra(Keys.Extras.EXTRA_LESSON_MODEL, lesson);
         return intent;
     }
 
@@ -71,17 +76,50 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     @Override
     protected void parseExtras() {
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            mKey = bundle.getString(Keys.Extras.EXTRA_ITEM_ID, "");
-        }
+        if (bundle != null && bundle.containsKey(Keys.Extras.EXTRA_LESSON_MODEL))
+            mLesson = (Lesson) bundle.getSerializable(Keys.Extras.EXTRA_LESSON_MODEL);
+        else
+            mLesson = new Lesson(getUser().getUid(), getUser().getDisplayName());
     }
 
     @Override
     protected void setupView() {
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mContainer.setAdapter(sectionsPagerAdapter);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mContainer.setAdapter(mSectionsPagerAdapter);
         mContainer.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabsUser));
         mTabsUser.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mContainer));
+        mTextDate.setText(DateUtils.toString(mLesson.getDateTime(), "dd.MM  EEEE"));
+        mTextTime.setText(DateUtils.toString(mLesson.getDateTime(), "HH:mm"));
+        if (!isNew()) {
+            loadLesson();
+        }
+    }
+
+    private void loadLesson() {
+        getDatabase()
+                .getReference(DC.DB_LESSONS)
+                .child(DateUtils.toString(mLesson.getDateTime(), "yyyy/MM/dd"))
+                .child(mLesson.getKey()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                Lesson lesson = dataSnapshot.getValue(Lesson.class);
+                if (lesson != null) {
+                    mLesson = lesson;
+                    selectContacts();
+                }
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void selectContacts() {
+        if (mLesson.getUserType() == UserType.ADULT)
+            mSectionsPagerAdapter.getAdultFragment().updateSelected(mLesson.getClients());
+        else
+            mSectionsPagerAdapter.getChildFragment().updateSelected(mLesson.getClients());
     }
 
     @Override
@@ -90,11 +128,15 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         return true;
     }
 
+    boolean isNew() {
+        return mLesson.getKey().isEmpty();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add: {
-                saveReportToDB();
+                saveLesson();
                 break;
             }
         }
@@ -108,20 +150,34 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
             builder.setTitle(R.string.dialog_report_save_before_close_title)
                     .setMessage(R.string.dialog_report_save_before_close_text)
                     .setPositiveButton(R.string.action_save, (dialog, which) -> {
-                        saveReportToDB();
+                        saveLesson();
                         onBackPressed();
                     })
-                    .setNegativeButton(R.string.action_no, (dialog, which) -> {
-                        super.onBackPressed();
-                    })
+                    .setNegativeButton(R.string.action_no, (dialog, which) ->
+                            super.onBackPressed())
                     .show();
         } else {
             super.onBackPressed();
         }
     }
 
-    private void saveReportToDB() {
-        //todo
+    private void saveLesson() {
+        DatabaseReference ref = getDatabase()
+                .getReference(DC.DB_LESSONS)
+                .child(DateUtils.toString(mLesson.getDateTime(), "yyyy/MM/dd"));
+        if (isNew()) {
+            mLesson.setKey(ref.push().getKey());
+        }
+        mLesson.setRoomId(mTabsRoom.getSelectedTabPosition());
+        mLesson.setLessonId(mTabsLesson.getSelectedTabPosition());
+        mLesson.setUserType(mTabsUser.getSelectedTabPosition() == 0 ? UserType.ADULT : UserType.CHILD);
+        mLesson.setClients(mLesson.getUserType() == UserType.ADULT
+                ? mSelectedContactsAdults : mSelectedContactsChildren);
+        ref.child(mLesson.getKey()).setValue(mLesson)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, R.string.toast_saved, Toast.LENGTH_LONG).show();
+                })
+                .addOnFailureListener(Throwable::printStackTrace);
     }
 
     @Override
@@ -130,7 +186,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     }
 
     @Override
-    public void onCheckedChanged(final List<Contact> selected, final UserType userType) {
+    public void onCheckedChanged(final List<String> selected, final UserType userType) {
         if (userType == UserType.ADULT) {
             mSelectedContactsAdults.clear();
             mSelectedContactsAdults.addAll(selected);
@@ -150,6 +206,10 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
                                 -> {
                             mLesson.setDateTime(DateUtils.getDate(year, month, day));
                             mTextDate.setText(DateUtils.toString(mLesson.getDateTime(), "dd.MM  EEEE"));
+                            if (!isNew()) {
+                                mLesson.setKey("");
+                                Toast.makeText(this, R.string.toast_duplicate, Toast.LENGTH_LONG).show();
+                            }
                         },
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
@@ -183,6 +243,17 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private ContactsFragment mAdult;
+        private ContactsFragment mChild;
+
+        public ContactsFragment getAdultFragment() {
+            return mAdult;
+        }
+
+        public ContactsFragment getChildFragment() {
+            return mChild;
+        }
+
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -191,9 +262,9 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case TAB_ADULT:
-                    return ContactsFragment.newInstance(position, true);
+                    return mAdult = ContactsFragment.newInstance(position, true);
                 case TAB_CHILD:
-                    return ContactsFragment.newInstance(position, true);
+                    return mChild = ContactsFragment.newInstance(position, true);
             }
             return null;
         }

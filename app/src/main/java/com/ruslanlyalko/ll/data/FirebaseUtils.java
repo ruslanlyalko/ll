@@ -6,7 +6,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 
 import java.util.Date;
@@ -33,17 +33,17 @@ public class FirebaseUtils {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             FirebaseDatabase.getInstance()
-                    .getReference(DefaultConfigurations.DB_USERS)
+                    .getReference(DC.DB_USERS)
                     .child(user.getUid())
                     .child("isOnline")
                     .removeValue();
             FirebaseDatabase.getInstance()
-                    .getReference(DefaultConfigurations.DB_USERS)
+                    .getReference(DC.DB_USERS)
                     .child(user.getUid())
                     .child("lastOnline")
                     .setValue(new Date());
             FirebaseDatabase.getInstance()
-                    .getReference(DefaultConfigurations.DB_USERS)
+                    .getReference(DC.DB_USERS)
                     .child(user.getUid())
                     .child("token")
                     .removeValue();
@@ -52,7 +52,7 @@ public class FirebaseUtils {
 
     public static void clearNotificationsForAllUsers(final String notKey) {
         FirebaseDatabase.getInstance()
-                .getReference(DefaultConfigurations.DB_USERS)
+                .getReference(DC.DB_USERS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -60,7 +60,7 @@ public class FirebaseUtils {
                             User user = userSS.getValue(User.class);
                             if (user != null)
                                 FirebaseDatabase.getInstance()
-                                        .getReference(DefaultConfigurations.DB_USERS_NOTIFICATIONS)
+                                        .getReference(DC.DB_USERS_NOTIFICATIONS)
                                         .child(user.getId())
                                         .child(notKey)
                                         .removeValue();
@@ -75,7 +75,7 @@ public class FirebaseUtils {
 
     public static void markNotificationsAsRead(String key) {
         FirebaseDatabase.getInstance()
-                .getReference(DefaultConfigurations.DB_USERS_NOTIFICATIONS)
+                .getReference(DC.DB_USERS_NOTIFICATIONS)
                 .child(FirebaseAuth.getInstance().getUid())
                 .child(key)
                 .removeValue();

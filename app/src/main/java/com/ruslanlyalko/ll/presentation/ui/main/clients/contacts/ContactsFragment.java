@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.UserType;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.OnFilterListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.ContactsAdapter;
@@ -56,6 +56,7 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     private OnFilterListener mOnFilterListener;
     private UserType mUserType = UserType.ADULT;
     private boolean mIsSelectable;
+    private List<String> mSelectedClients;
 
     public ContactsFragment() {
     }
@@ -94,6 +95,8 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         parseArguments();
         mContactsAdapter = new ContactsAdapter(this, getActivity(), mIsSelectable);
+        if (mSelectedClients != null)
+            mContactsAdapter.setSelectedCotacts(mSelectedClients);
         TextWatcher watcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
@@ -128,7 +131,7 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
 
     private void loadContacts() {
         Query ref = FirebaseDatabase.getInstance()
-                .getReference(DefaultConfigurations.DB_CONTACTS)
+                .getReference(DC.DB_CONTACTS)
                 .orderByChild("name");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -178,7 +181,8 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     }
 
     @Override
-    public void onItemsCheckedChanged(final List<Contact> contacts) {
+    public void onItemsCheckedChanged(final List<String> contacts) {
+        mSelectedClients = contacts;
         if (mOnFilterListener != null)
             mOnFilterListener.onCheckedChanged(contacts, mUserType);
     }
@@ -188,5 +192,11 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
         mEditFilterName.setText("");
         mEditFilterPhone.setText("");
         //todo hide keyboard
+    }
+
+    public void updateSelected(final List<String> clients) {
+        mSelectedClients = clients;
+        if (mContactsAdapter != null)
+            mContactsAdapter.setSelectedCotacts(clients);
     }
 }

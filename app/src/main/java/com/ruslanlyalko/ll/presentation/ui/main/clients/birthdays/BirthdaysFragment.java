@@ -19,7 +19,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Birthday;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.birthdays.adapter.BirthdaysAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.birthdays.adapter.OnBirthdaysClickListener;
@@ -85,7 +85,7 @@ public class BirthdaysFragment extends Fragment implements OnBirthdaysClickListe
 
     private void loadBirthdays() {
         Query ref = FirebaseDatabase.getInstance()
-                .getReference(DefaultConfigurations.DB_BIRTHDAYS).orderByChild("bdDate/time");
+                .getReference(DC.DB_BIRTHDAYS).orderByChild("bdDate/time");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {

@@ -33,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.AppInfo;
 import com.ruslanlyalko.ll.data.models.Notification;
 import com.ruslanlyalko.ll.data.models.User;
@@ -101,7 +101,7 @@ public class MainActivity extends BaseActivity {
             finish();
             return;
         }
-        mDatabase.getReference(DefaultConfigurations.DB_USERS)
+        mDatabase.getReference(DC.DB_USERS)
                 .child(mAuth.getCurrentUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity {
                     public void onCancelled(final DatabaseError databaseError) {
                     }
                 });
-        mDatabase.getReference(DefaultConfigurations.DB_INFO)
+        mDatabase.getReference(DC.DB_INFO)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity {
             finish();
             return;
         }
-        mDatabase.getReference(DefaultConfigurations.DB_USERS_NOTIFICATIONS)
+        mDatabase.getReference(DC.DB_USERS_NOTIFICATIONS)
                 .child(mAuth.getCurrentUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity {
         }
         String version = (pInfo != null ? pInfo.versionName : "");
         if (user != null) {
-            DatabaseReference ref = mDatabase.getReference(DefaultConfigurations.DB_USERS)
+            DatabaseReference ref = mDatabase.getReference(DC.DB_USERS)
                     .child(user.getUid());
             ref.child("token").setValue(refreshedToken);
             ref.child("appVersion").setValue(version);
@@ -225,7 +225,7 @@ public class MainActivity extends BaseActivity {
         } else {
             showVersionLink(false);
             if (myVersion > mAppInfo.getLatestVersion() && !DEBUG) {
-                mDatabase.getReference(DefaultConfigurations.DB_INFO)
+                mDatabase.getReference(DC.DB_INFO)
                         .child("latestVersion").setValue(myVersion);
             }
         }

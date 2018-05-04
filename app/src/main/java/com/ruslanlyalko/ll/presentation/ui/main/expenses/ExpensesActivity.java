@@ -28,7 +28,7 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Expense;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.adapter.ExpensesAdapter;
@@ -138,7 +138,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     }
 
     private void loadExpenses(String yearStr, String monthStr) {
-        mDatabase.getReference(DefaultConfigurations.DB_EXPENSES)
+        mDatabase.getReference(DC.DB_EXPENSES)
                 .child(yearStr)
                 .child(monthStr)
                 .addValueEventListener(new ValueEventListener() {
@@ -255,7 +255,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         mExpensesAdapter.clearData();
         String yearStr = new SimpleDateFormat("yyyy", Locale.US).format(new Date());
         String monthStr = new SimpleDateFormat("M", Locale.US).format(new Date());
-        mDatabase.getReference(DefaultConfigurations.DB_EXPENSES)
+        mDatabase.getReference(DC.DB_EXPENSES)
                 .child(yearStr)
                 .child(monthStr).removeValue();
         calcTotal();
@@ -306,11 +306,11 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
 
     @Override
     public void onPhotoPreviewClicked(final Expense expense) {
-        startActivity(PhotoPreviewActivity.getLaunchIntent(this, expense.getImage(), expense.getUserName(), DefaultConfigurations.STORAGE_EXPENSES));
+        startActivity(PhotoPreviewActivity.getLaunchIntent(this, expense.getImage(), expense.getUserName(), DC.STORAGE_EXPENSES));
     }
 
     private void removeExpense(Expense expense) {
-        mDatabase.getReference(DefaultConfigurations.DB_EXPENSES)
+        mDatabase.getReference(DC.DB_EXPENSES)
                 .child(DateUtils.toString(expense.getExpenseDate(), "yyyy")).child(DateUtils.toString(expense.getExpenseDate(), "M"))
                 .child(expense.getKey()).removeValue().addOnCompleteListener(task ->
                 Snackbar.make(mExpensesList, getString(R.string.snack_deleted), Snackbar.LENGTH_LONG).show());

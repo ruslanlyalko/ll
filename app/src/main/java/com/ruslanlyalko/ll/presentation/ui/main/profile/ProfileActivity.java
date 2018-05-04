@@ -40,7 +40,7 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
@@ -150,7 +150,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     private void loadUsers() {
         if (mIsCurrentUserPage)
             mUsersAdapter.notifyDataSetChanged();
-        mDatabase.getReference(DefaultConfigurations.DB_USERS)
+        mDatabase.getReference(DC.DB_USERS)
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -208,7 +208,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                         }
                     });
         } else {
-            mDatabase.getReference(DefaultConfigurations.DB_USERS)
+            mDatabase.getReference(DC.DB_USERS)
                     .child(mUID)
                     .child("isOnline")
                     .addValueEventListener(new ValueEventListener() {
@@ -222,7 +222,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                         public void onCancelled(final DatabaseError databaseError) {
                         }
                     });
-            mDatabase.getReference(DefaultConfigurations.DB_USERS)
+            mDatabase.getReference(DC.DB_USERS)
                     .child(mUID)
                     .child("lastOnline")
                     .addValueEventListener(new ValueEventListener() {
@@ -374,7 +374,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
             if (taskSnapshot.getDownloadUrl() != null) {
                 Map<String, Object> childUpdates = new HashMap<>();
                 childUpdates.put("avatar", taskSnapshot.getDownloadUrl().toString());
-                mDatabase.getReference().child(DefaultConfigurations.DB_USERS).child(mUID).updateChildren(childUpdates)
+                mDatabase.getReference().child(DC.DB_USERS).child(mUID).updateChildren(childUpdates)
                         .addOnCompleteListener(task ->
                                 Toast.makeText(ProfileActivity.this, R.string.toast_data_updated, Toast.LENGTH_SHORT).show());
                 hideProgressBarUpload();
@@ -394,7 +394,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 .build();
         // name of file in Storage
         return FirebaseStorage.getInstance()
-                .getReference(DefaultConfigurations.STORAGE_USERS)
+                .getReference(DC.STORAGE_USERS)
                 .child(fileName)
                 .putBytes(bytes, metadata);
     }

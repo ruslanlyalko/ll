@@ -32,7 +32,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Expense;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
@@ -224,7 +224,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
                 .build();
         // name of file in Storage
         return FirebaseStorage.getInstance()
-                .getReference(DefaultConfigurations.STORAGE_EXPENSES)
+                .getReference(DC.STORAGE_EXPENSES)
                 .child(fileName)
                 .putBytes(bytes, metadata);
     }
@@ -252,7 +252,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
     private void addExpense() {
         updateModel();
         mIsNew = false;
-        DatabaseReference ref = database.getReference(DefaultConfigurations.DB_EXPENSES)
+        DatabaseReference ref = database.getReference(DC.DB_EXPENSES)
                 .child(DateUtils.getCurrentYear())
                 .child(DateUtils.getCurrentMonth())
                 .push();
@@ -266,7 +266,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
 
     private void updateExpense() {
         updateModel();
-        database.getReference(DefaultConfigurations.DB_EXPENSES)
+        database.getReference(DC.DB_EXPENSES)
                 .child(DateUtils.toString(mExpense.getExpenseDate(), "yyyy"))
                 .child(DateUtils.toString(mExpense.getExpenseDate(), "M"))
                 .child(mExpense.getKey())

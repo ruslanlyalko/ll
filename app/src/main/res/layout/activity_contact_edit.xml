@@ -145,7 +145,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:hint="@string/hint_date_birth"
-                    android:inputType="dateTime"
+                    android:inputType="date"
                     />
 
             </android.support.design.widget.TextInputLayout>

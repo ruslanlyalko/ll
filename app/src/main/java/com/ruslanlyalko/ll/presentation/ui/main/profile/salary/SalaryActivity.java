@@ -30,7 +30,7 @@ import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.ViewUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.edit.SalaryEditActivity;
@@ -165,7 +165,7 @@ public class SalaryActivity extends AppCompatActivity {
     }
 
     private void loadReports(String yearStr, String monthStr) {
-        mDatabase.getReference(DefaultConfigurations.DB_REPORTS)
+        mDatabase.getReference(DC.DB_LESSONS)
                 .child(yearStr)
                 .child(monthStr)
                 .addListenerForSingleValueEvent(new ValueEventListener() {

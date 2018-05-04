@@ -36,7 +36,7 @@ import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.MessageComment;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -123,7 +123,7 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
 
     private void loadDetailsFromDB() {
         if (mMessageKey == null || mMessageKey.isEmpty()) return;
-        database.getReference(DefaultConfigurations.DB_DIALOGS)
+        database.getReference(DC.DB_DIALOGS)
                 .child(mMessageKey)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -140,7 +140,7 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
 
     private void loadCommentsFromDB() {
         if (mMessageKey == null || mMessageKey.isEmpty()) return;
-        database.getReference(DefaultConfigurations.DB_MESSAGES)
+        database.getReference(DC.DB_MESSAGES)
                 .child(mMessageKey)
                 .orderByChild("date/time")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -187,7 +187,7 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
     }
 
     private void loadMoreCommentsFromDB() {
-        database.getReference(DefaultConfigurations.DB_MESSAGES)
+        database.getReference(DC.DB_MESSAGES)
                 .child(mMessageKey)
                 .orderByChild("date/time").addChildEventListener(new ChildEventListener() {
             @Override
@@ -258,7 +258,7 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
         AlertDialog dialog = builder.setTitle(R.string.dialog_delete_notification_title)
                 .setMessage(R.string.dialog_delete_notification_message)
                 .setPositiveButton("Видалити", (dialog1, which) -> {
-                    database.getReference(DefaultConfigurations.DB_DIALOGS)
+                    database.getReference(DC.DB_DIALOGS)
                             .child(mMessage.getKey())
                             .removeValue();
                     FirebaseUtils.clearNotificationsForAllUsers(mMessage.getKey());
@@ -318,7 +318,7 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
     }
 
     private void removeMessage(final MessageComment item) {
-        database.getReference(DefaultConfigurations.DB_MESSAGES)
+        database.getReference(DC.DB_MESSAGES)
                 .child(mMessageKey)
                 .child(item.getKey())
                 .child("removed")
@@ -341,7 +341,7 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
     }
 
     private void sendComment(String comment) {
-        DatabaseReference ref = database.getReference(DefaultConfigurations.DB_MESSAGES)
+        DatabaseReference ref = database.getReference(DC.DB_MESSAGES)
                 .child(mMessageKey)
                 .push();
         ref.setValue(new MessageComment(ref.getKey(), comment, FirebaseUtils.getUser()));
@@ -440,13 +440,13 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
         // Meta data for imageView
         // name of file in Storage
         return FirebaseStorage.getInstance()
-                .getReference(DefaultConfigurations.STORAGE_DIALOGS_MESSAGES)
+                .getReference(DC.STORAGE_DIALOGS_MESSAGES)
                 .child(fileName)
                 .putBytes(bytes);
     }
 
     private void sendCommentFile(String file, String thumbnail) {
-        DatabaseReference ref = database.getReference(DefaultConfigurations.DB_MESSAGES)
+        DatabaseReference ref = database.getReference(DC.DB_MESSAGES)
                 .child(mMessageKey)
                 .push();
         ref.setValue(new MessageComment(ref.getKey(), "фото", file, thumbnail, mUser));

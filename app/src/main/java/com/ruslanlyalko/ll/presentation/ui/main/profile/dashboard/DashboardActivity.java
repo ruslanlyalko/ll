@@ -34,7 +34,7 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.ViewUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Credit;
 import com.ruslanlyalko.ll.data.models.Expense;
 import com.ruslanlyalko.ll.data.models.Lesson;
@@ -138,7 +138,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
     }
 
     private void loadResults() {
-        mDatabase.getReference(DefaultConfigurations.DB_RESULTS)
+        mDatabase.getReference(DC.DB_RESULTS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -264,7 +264,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
     }
 
     private void loadCredits(String yearStr, String monthStr) {
-        mDatabase.getReference(DefaultConfigurations.DB_CREDITS)
+        mDatabase.getReference(DC.DB_CREDITS)
                 .child(yearStr)
                 .child(monthStr)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -355,7 +355,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
         Result result = new Result(incomeTotal, income80, salaryTotal, costTotal, netIncome, yearStr, monthStr);
         if (incomeTotal != 0 && salaryTotal != 0)
             FirebaseDatabase.getInstance()
-                    .getReference(DefaultConfigurations.DB_RESULTS)
+                    .getReference(DC.DB_RESULTS)
                     .child(yearStr)
                     .child(monthStr)
                     .setValue(result);
@@ -380,7 +380,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
 
     private void saveCommentToDB(String s) {
         if (!s.equals(mComment))
-            mDatabase.getReference(DefaultConfigurations.DB_COMMENTS)
+            mDatabase.getReference(DC.DB_COMMENTS)
                     .child(yearStr)
                     .child(monthStr).setValue(s);
     }
@@ -392,7 +392,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
     }
 
     private void loadReports(String yearStr, String monthStr) {
-        mDatabase.getReference(DefaultConfigurations.DB_REPORTS)
+        mDatabase.getReference(DC.DB_LESSONS)
                 .child(yearStr)
                 .child(monthStr)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -417,7 +417,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
     }
 
     private void loadCosts(String yearStr, String monthStr) {
-        mDatabase.getReference(DefaultConfigurations.DB_EXPENSES)
+        mDatabase.getReference(DC.DB_EXPENSES)
                 .child(yearStr)
                 .child(monthStr)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -440,7 +440,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
     }
 
     private void loadUsers() {
-        mDatabase.getReference(DefaultConfigurations.DB_USERS)
+        mDatabase.getReference(DC.DB_USERS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -462,7 +462,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
 
     private void loadComment(String yearStr, String monthStr) {
         //editComment.setText("");
-        mDatabase.getReference(DefaultConfigurations.DB_COMMENTS)
+        mDatabase.getReference(DC.DB_COMMENTS)
                 .child(yearStr)
                 .child(monthStr).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -622,7 +622,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
 
     @Override
     public void onRemoveClicked(final Credit credit) {
-        mDatabase.getReference(DefaultConfigurations.DB_CREDITS)
+        mDatabase.getReference(DC.DB_CREDITS)
                 .child(credit.getYear())
                 .child(credit.getMonth())
                 .child(credit.getKey()).removeValue();

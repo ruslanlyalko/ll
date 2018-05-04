@@ -19,7 +19,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +62,7 @@ public class PhotoPreviewActivity extends AppCompatActivity {
         if (bundle != null) {
             mUri = bundle.getString(Keys.Extras.EXTRA_URI);
             mUserName = bundle.getString(Keys.Extras.EXTRA_USER_NAME);
-            mFolder = bundle.getString(Keys.Extras.EXTRA_FOLDER, DefaultConfigurations.STORAGE_EXPENSES);
+            mFolder = bundle.getString(Keys.Extras.EXTRA_FOLDER, DC.STORAGE_EXPENSES);
         }
     }
 

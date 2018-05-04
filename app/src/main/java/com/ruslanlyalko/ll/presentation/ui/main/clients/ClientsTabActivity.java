@@ -88,7 +88,8 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
     }
 
     @Override
-    public void onCheckedChanged(final List<Contact> selected, final UserType userType) {
+    public void onCheckedChanged(final List<String> selected, final UserType userType) {
+        //not used
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

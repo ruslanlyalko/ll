@@ -3,13 +3,10 @@ package com.ruslanlyalko.ll.presentation.ui.main.calendar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -25,13 +22,13 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Lesson;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,10 +37,9 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CalendarActivity extends AppCompatActivity implements OnLessonClickListener {
+public class CalendarActivity extends BaseActivity implements OnLessonClickListener {
 
     @BindView(R.id.recycler_view) RecyclerView mReportsList;
     @BindView(R.id.calendar_view) CompactCalendarView mCompactCalendarView;
@@ -61,7 +57,6 @@ public class CalendarActivity extends AppCompatActivity implements OnLessonClick
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
 
     //private String mDay, mMonth, mYear;
-    private SimpleDateFormat mSdf = new SimpleDateFormat("d-M-yyyy", Locale.US);
     private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public static Intent getLaunchIntent(final Activity launchIntent) {
@@ -69,10 +64,12 @@ public class CalendarActivity extends AppCompatActivity implements OnLessonClick
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
-        ButterKnife.bind(this);
+    protected int getLayoutResource() {
+        return R.layout.activity_calendar;
+    }
+
+    @Override
+    protected void setupView() {
         mUserId = FirebaseAuth.getInstance().getUid();
         initRecycle();
         initCalendarView();
@@ -121,7 +118,7 @@ public class CalendarActivity extends AppCompatActivity implements OnLessonClick
 
     private void showReportsOnCalendar() {
         mSwipeRefresh.setRefreshing(true);
-        mDatabase.getReference(DefaultConfigurations.DB_REPORTS)
+        mDatabase.getReference(DC.DB_LESSONS)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -132,13 +129,13 @@ public class CalendarActivity extends AppCompatActivity implements OnLessonClick
                                 for (DataSnapshot datMonth : datYear.getChildren()) {
                                     for (DataSnapshot datDay : datMonth.getChildren()) {
                                         Lesson lesson = datDay.getValue(Lesson.class);
-//                                        if (lesson != null && (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId) || DateUtils.future(lesson.getDateTime()))) {
+                                        if (lesson != null && (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId) || DateUtils.future(lesson.getDateTime()))) {
 //                                            int color = getUserColor(lesson.getUserId());
 //                                            long date = getDateLongFromStr(lesson.getDateTime());
 //                                            String uId = lesson.getUserId();
 //                                            mCompactCalendarView.addEvent(
 //                                                    new Event(color, date, uId), true);
-//                                        }
+                                        }
                                     }
                                 }
                             }
@@ -159,7 +156,7 @@ public class CalendarActivity extends AppCompatActivity implements OnLessonClick
         String mDay = DateFormat.format("d", date).toString();
         String mMonth = DateFormat.format("M", date).toString();
         String mYear = DateFormat.format("yyyy", date).toString();
-        mDatabase.getReference(DefaultConfigurations.DB_REPORTS)
+        mDatabase.getReference(DC.DB_LESSONS)
                 .child(mYear)
                 .child(mMonth)
                 .child(mDay)
@@ -217,28 +214,6 @@ public class CalendarActivity extends AppCompatActivity implements OnLessonClick
             return Color.GREEN;
     }
 
-    private long getDateLongFromStr(String dateStr) {
-        long dateLong = Calendar.getInstance().getTime().getTime();
-        Date date;
-        try {
-            date = mSdf.parse(dateStr);
-            dateLong = date.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return dateLong;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public void onCommentClicked(final Lesson lesson) {
 //        final boolean commentsExist = lesson.getComment() != null & !lesson.getComment().isEmpty();
@@ -264,6 +239,6 @@ public class CalendarActivity extends AppCompatActivity implements OnLessonClick
 
     @OnClick(R.id.button_add_report)
     void onAddReportClicked() {
-        startActivity(LessonActivity.getLaunchIntent(this, DateUtils.toString(mCurrentDate, "d-M-yyyy")));
+        startActivity(LessonActivity.getLaunchIntent(this, new Lesson(new Date(), "-LBft-4dcBhTlDpEDEyu")));
     }
 }

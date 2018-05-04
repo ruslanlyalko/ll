@@ -2,7 +2,6 @@ package com.ruslanlyalko.ll.presentation.ui.main.profile.dashboard.credit;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -12,7 +11,6 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Credit;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
@@ -170,7 +168,7 @@ public class CreditEditActivity extends BaseActivity {
     private void addCredit() {
         updateModel();
         mIsNew = false;
-        DatabaseReference ref = database.getReference(DefaultConfigurations.DB_CREDITS)
+        DatabaseReference ref = database.getReference(DC.DB_CREDITS)
                 .child(mCredit.getYear())
                 .child(mCredit.getMonth())
                 .push();
@@ -184,7 +182,7 @@ public class CreditEditActivity extends BaseActivity {
 
     private void updateCredit() {
         updateModel();
-        database.getReference(DefaultConfigurations.DB_CREDITS)
+        database.getReference(DC.DB_CREDITS)
                 .child(mCredit.getYear())
                 .child(mCredit.getMonth())
                 .child(mCredit.getKey())

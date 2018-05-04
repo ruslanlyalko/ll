@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,7 +78,7 @@ public class AboutActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     void onFabClicked() {
         if (FirebaseUtils.isAdmin())
-            FirebaseDatabase.getInstance().getReference(DefaultConfigurations.DB_INFO)
+            FirebaseDatabase.getInstance().getReference(DC.DB_INFO)
                     .child("aboutText")
                     .setValue(editAbout.getText().toString().trim())
                     .addOnCompleteListener(task ->

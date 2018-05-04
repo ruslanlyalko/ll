@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
@@ -35,13 +35,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class ProfileSettingsActivity extends BaseActivity {
 
@@ -200,7 +198,7 @@ public class ProfileSettingsActivity extends BaseActivity {
                         .build();
                 mCurrentUser.updateProfile(profileUpdate);
             }
-            mDatabase.getReference(DefaultConfigurations.DB_USERS).child(mUid).updateChildren(childUpdates).addOnCompleteListener(task -> {
+            mDatabase.getReference(DC.DB_USERS).child(mUid).updateChildren(childUpdates).addOnCompleteListener(task -> {
                 Toast.makeText(ProfileSettingsActivity.this, R.string.toast_data_updated, Toast.LENGTH_SHORT).show();
                 onBackPressed();
             });
@@ -209,7 +207,7 @@ public class ProfileSettingsActivity extends BaseActivity {
     }
 
     private void initCurrentUserData() {
-        DatabaseReference ref = mDatabase.getReference(DefaultConfigurations.DB_USERS).child(mUid);
+        DatabaseReference ref = mDatabase.getReference(DC.DB_USERS).child(mUid);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -276,7 +274,7 @@ public class ProfileSettingsActivity extends BaseActivity {
         mCurrentUser.updatePassword(password1);
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("password", password1);
-        mDatabase.getReference(DefaultConfigurations.DB_USERS).child(mUid).updateChildren(childUpdates).addOnCompleteListener(task ->
+        mDatabase.getReference(DC.DB_USERS).child(mUid).updateChildren(childUpdates).addOnCompleteListener(task ->
                 Toast.makeText(ProfileSettingsActivity.this, R.string.toast_data_updated, Toast.LENGTH_SHORT).show());
     }
 

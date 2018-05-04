@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.edit.adapter.MembersAdapter;
@@ -111,7 +111,7 @@ public class MessageEditActivity extends AppCompatActivity {
 
     private void loadData() {
         if (isNew) return;
-        DatabaseReference ref = database.getReference(DefaultConfigurations.DB_DIALOGS).child(notKey);
+        DatabaseReference ref = database.getReference(DC.DB_DIALOGS).child(notKey);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -132,7 +132,7 @@ public class MessageEditActivity extends AppCompatActivity {
     }
 
     private void loadMembers() {
-        database.getReference(DefaultConfigurations.DB_USERS)
+        database.getReference(DC.DB_USERS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -178,12 +178,12 @@ public class MessageEditActivity extends AppCompatActivity {
     private void addNotification() {
         updateNotModel();
         isNew = false;
-        notKey = database.getReference(DefaultConfigurations.DB_DIALOGS).push().getKey();
+        notKey = database.getReference(DC.DB_DIALOGS).push().getKey();
         mMessage.setKey(notKey);
         mMessage.setDate(new SimpleDateFormat("d-M-yyyy", Locale.US).format(new Date()));
         mMessage.setUserId(mUser.getUid());
         mMessage.setUserName(mUser.getDisplayName());
-        database.getReference(DefaultConfigurations.DB_DIALOGS)
+        database.getReference(DC.DB_DIALOGS)
                 .child(notKey).setValue(mMessage).addOnCompleteListener(task -> {
             Snackbar.make(imageView, getString(R.string.not_added), Snackbar.LENGTH_SHORT).show();
         });
@@ -193,7 +193,7 @@ public class MessageEditActivity extends AppCompatActivity {
 
     private void updateNotification() {
         updateNotModel();
-        database.getReference(DefaultConfigurations.DB_DIALOGS)
+        database.getReference(DC.DB_DIALOGS)
                 .child(mMessage.getKey()).setValue(mMessage).addOnCompleteListener(task -> {
             Snackbar.make(imageView, getString(R.string.mk_updated), Snackbar.LENGTH_SHORT).show();
         });
@@ -205,7 +205,7 @@ public class MessageEditActivity extends AppCompatActivity {
         List<Boolean> checkedList = mMembersAdapter.getMembers();
         List<User> users = mMembersAdapter.getUsers();
         for (int i = 0; i < users.size(); i++) {
-            DatabaseReference ref = database.getReference(DefaultConfigurations.DB_DIALOGS)
+            DatabaseReference ref = database.getReference(DC.DB_DIALOGS)
                     .child(mMessage.getKey())
                     .child("Members")
                     .child(users.get(i).getId());

@@ -35,7 +35,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     private List<Contact> mDataSource = new ArrayList<>();
     private List<Contact> mDataSourceFiltered = new ArrayList<>();
     private MyFilter mFilter;
-    private List<Contact> mCheckedContacts = new ArrayList<>();
+    private List<String> mCheckedContacts = new ArrayList<>();
 
     public ContactsAdapter(final OnContactClickListener onContactClickListener, final Activity activity, boolean isSelectable) {
         mOnContactClickListener = onContactClickListener;
@@ -93,6 +93,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         return mFilter;
     }
 
+    public void setSelectedCotacts(final List<String> clients) {
+        mCheckedContacts = clients;
+        notifyDataSetChanged();
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.image_avatar) ImageView mImageView;
@@ -118,16 +123,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
             String subtitle = DateUtils.toString(contact.getBirthDay(), "dd.MM.yyyy  ") + contact.getEmail();
             mTextSubTitle.setText(subtitle);
             mCheckBoxSelected.setVisibility(mIsSelectable ? View.VISIBLE : View.GONE);
-            mCheckBoxSelected.setChecked(mCheckedContacts.contains(contact));
+            mCheckBoxSelected.setChecked(mCheckedContacts.contains(contact.getKey()));
         }
 
         @OnCheckedChanged(R.id.check_box_selected)
         void onCheckedChanged(boolean isChecked) {
             if (mOnContactClickListener == null) return;
             if (isChecked)
-                mCheckedContacts.add(mDataSourceFiltered.get(getAdapterPosition()));
+                mCheckedContacts.add(mDataSourceFiltered.get(getAdapterPosition()).getKey());
             else
-                mCheckedContacts.remove(mDataSourceFiltered.get(getAdapterPosition()));
+                mCheckedContacts.remove(mDataSourceFiltered.get(getAdapterPosition()).getKey());
             mOnContactClickListener.onItemsCheckedChanged(mCheckedContacts);
         }
 

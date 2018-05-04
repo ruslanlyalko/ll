@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.birth.adapter.BirthContactsAdapter;
@@ -76,7 +76,7 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
 
     private void loadContacts() {
         Query ref = FirebaseDatabase.getInstance()
-                .getReference(DefaultConfigurations.DB_CONTACTS)
+                .getReference(DC.DB_CONTACTS)
                 .orderByChild("birthDay/time");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -129,7 +129,6 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
     }
 
     @Override
-    public void onItemsCheckedChanged(final List<Contact> contacts) {
+    public void onItemsCheckedChanged(final List<String> contacts) {
     }
-
 }
