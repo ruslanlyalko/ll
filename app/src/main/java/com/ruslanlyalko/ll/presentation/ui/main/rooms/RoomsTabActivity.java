@@ -2,19 +2,13 @@ package com.ruslanlyalko.ll.presentation.ui.main.rooms;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,12 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.data.models.Mk;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.rooms.adapters.MksAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -74,8 +63,7 @@ public class RoomsTabActivity extends BaseActivity {
             return true;
         }
         if (id == R.id.action_plan) {
-            Intent intent = new Intent(RoomsTabActivity.this, MkPlanActivity.class);
-            startActivity(intent);
+            //todo set date
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -84,9 +72,6 @@ public class RoomsTabActivity extends BaseActivity {
     public static class PlaceholderFragment extends Fragment {
 
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private RecyclerView recyclerView;
-        private MksAdapter adapter;
-        private List<Mk> mkList;
 
         public PlaceholderFragment() {
         }
@@ -103,70 +88,21 @@ public class RoomsTabActivity extends BaseActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_mk_tab, container, false);
-            recyclerView = rootView.findViewById(R.id.recycler_view);
-            mkList = new ArrayList<>();
-            adapter = new MksAdapter(container.getContext(), mkList);
-            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(container.getContext(), 1);
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(10), true));
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(adapter);
-            String currentMkType = null;
+            String currentRoom = null;
             switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
                 case 0:
-                    currentMkType = (getString(R.string.tab_room_1));
+                    currentRoom = (getString(R.string.tab_room_1));
                     break;
                 case 1:
-                    currentMkType = (getString(R.string.tab_room_2));
+                    currentRoom = (getString(R.string.tab_room_2));
                     break;
                 case 2:
-                    currentMkType = (getString(R.string.tab_room_3));
+                    currentRoom = (getString(R.string.tab_room_3));
                 case 3:
-                    currentMkType = (getString(R.string.tab_room_4));
+                    currentRoom = (getString(R.string.tab_room_4));
                     break;
             }
             return rootView;
-        }
-
-        /**
-         * Converting dp to pixel
-         */
-        private int dpToPx(int dp) {
-            Resources r = getResources();
-            return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-        }
-
-        public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-            private int spanCount;
-            private int spacing;
-            private boolean includeEdge;
-
-            GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-                this.spanCount = spanCount;
-                this.spacing = spacing;
-                this.includeEdge = includeEdge;
-            }
-
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                int position = parent.getChildAdapterPosition(view); // item position
-                int column = position % spanCount; // item column
-                if (includeEdge) {
-                    outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                    outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-                    if (position < spanCount) { // top edge
-                        outRect.top = spacing;
-                    }
-                    outRect.bottom = spacing; // item bottom
-                } else {
-                    outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                    outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                    if (position >= spanCount) {
-                        outRect.top = spacing; // item top
-                    }
-                }
-            }
         }
     }
 

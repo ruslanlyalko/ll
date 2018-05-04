@@ -183,6 +183,15 @@ public class DateUtils {
         return calendar.getTime();
     }
 
+
+    public static Date getDate(final Date date, final int hours, final int minutes) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, minutes);
+        return calendar.getTime();
+    }
+
     private static long getDateDiff(Date oldDate, Date newDate) {
         try {
             return TimeUnit.DAYS.convert(newDate.getTime() - oldDate.getTime(), TimeUnit.MILLISECONDS);

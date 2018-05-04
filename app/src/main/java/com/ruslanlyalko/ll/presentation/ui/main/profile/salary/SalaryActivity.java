@@ -31,7 +31,7 @@ import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.ViewUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
-import com.ruslanlyalko.ll.data.models.Report;
+import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.edit.SalaryEditActivity;
 
@@ -65,7 +65,7 @@ public class SalaryActivity extends AppCompatActivity {
     @BindView(R.id.image_expand) ImageView mImageView;
     @BindView(R.id.text_total) TextSwitcher mTotalSwitcher;
 
-    private List<Report> mReports = new ArrayList<>();
+    private List<Lesson> mLessons = new ArrayList<>();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private User mUser = new User();
     private String mUId;
@@ -171,11 +171,11 @@ public class SalaryActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mReports.clear();
+                        mLessons.clear();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            Report report = data.child(mUId).getValue(Report.class);
-                            if (report != null) {
-                                mReports.add(report);
+                            Lesson lesson = data.child(mUId).getValue(Lesson.class);
+                            if (lesson != null) {
+                                mLessons.add(lesson);
                             }
                         }
                         calcSalary();

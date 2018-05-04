@@ -1,5 +1,6 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:focusableInTouchMode="true"
             android:orientation="horizontal">
 
             <EditText
@@ -23,6 +25,8 @@
                 android:backgroundTint="@android:color/transparent"
                 android:hint="@string/contacts_filter_by_name"
                 android:inputType="textCapWords"
+                android:nextFocusLeft="@+id/edit_filter_name"
+                android:nextFocusUp="@+id/edit_filter_name"
                 android:paddingEnd="8dp"
                 android:paddingStart="16dp" />
 
@@ -36,6 +40,19 @@
                 android:inputType="phone"
                 android:paddingEnd="8dp"
                 android:paddingStart="16dp" />
+
+            <ImageView
+                android:id="@+id/image_clear"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="4dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="4dp"
+                android:src="@drawable/ic_x"
+                android:visibility="invisible"
+                tools:ignore="ContentDescription"
+                tools:visibility="visible" />
+
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView

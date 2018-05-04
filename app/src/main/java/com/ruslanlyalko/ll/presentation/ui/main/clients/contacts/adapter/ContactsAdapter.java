@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyViewHolder>
@@ -29,13 +31,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
 
     private final OnContactClickListener mOnContactClickListener;
     private final Activity mActivity;
+    private boolean mIsSelectable;
     private List<Contact> mDataSource = new ArrayList<>();
     private List<Contact> mDataSourceFiltered = new ArrayList<>();
     private MyFilter mFilter;
+    private List<Contact> mCheckedContacts = new ArrayList<>();
 
-    public ContactsAdapter(final OnContactClickListener onContactClickListener, final Activity activity) {
+    public ContactsAdapter(final OnContactClickListener onContactClickListener, final Activity activity, boolean isSelectable) {
         mOnContactClickListener = onContactClickListener;
         mActivity = activity;
+        mIsSelectable = isSelectable;
     }
 
     public void clearAll() {
@@ -96,6 +101,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         @BindView(R.id.text_phone2) TextView mTextPhone2;
         @BindView(R.id.text_sub_title) TextView mTextSubTitle;
         @BindView(R.id.layout_root) LinearLayout mLayoutRoot;
+        @BindView(R.id.check_box_selected) CheckBox mCheckBoxSelected;
 
         MyViewHolder(View view) {
             super(view);
@@ -109,27 +115,30 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
                 mTextPhone2.setText(contact.getPhone2());
             else
                 mTextPhone2.setText("");
-            String subtitle = contact.getEmail() + DateUtils.toString(contact.getBirthDay(), "  dd.MM.yyyy");
+            String subtitle = DateUtils.toString(contact.getBirthDay(), "dd.MM.yyyy  ") + contact.getEmail();
             mTextSubTitle.setText(subtitle);
+            mCheckBoxSelected.setVisibility(mIsSelectable ? View.VISIBLE : View.GONE);
+            mCheckBoxSelected.setChecked(mCheckedContacts.contains(contact));
+        }
+
+        @OnCheckedChanged(R.id.check_box_selected)
+        void onCheckedChanged(boolean isChecked) {
+            if (mOnContactClickListener == null) return;
+            if (isChecked)
+                mCheckedContacts.add(mDataSourceFiltered.get(getAdapterPosition()));
+            else
+                mCheckedContacts.remove(mDataSourceFiltered.get(getAdapterPosition()));
+            mOnContactClickListener.onItemsCheckedChanged(mCheckedContacts);
         }
 
         @OnClick(R.id.layout_root)
         void onItemClicked() {
-            if (mOnContactClickListener != null) {
-                final ActivityOptionsCompat options;
-                if (getItem(getAdapterPosition()).getPhone2() == null || getItem(getAdapterPosition()).getPhone2().isEmpty())
-                    options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity,
-                            Pair.create(mImageView, "avatar"),
-                            //Pair.create(mTextPhone1, "phone1"),
-                            Pair.create(mTextName, "user"));
-                else
-                    options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity,
-                            Pair.create(mImageView, "avatar"),
-//                            Pair.create(mTextPhone1, "phone1"),
-//                            Pair.create(mTextPhone2, "phone2"),
-                            Pair.create(mTextName, "user"));
-                mOnContactClickListener.onItemClicked(getAdapterPosition(), options);
-            }
+            if (mOnContactClickListener == null) return;
+            final ActivityOptionsCompat options;
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity,
+                    Pair.create(mImageView, "avatar"),
+                    Pair.create(mTextName, "user"));
+            mOnContactClickListener.onItemClicked(getAdapterPosition(), options);
         }
     }
 

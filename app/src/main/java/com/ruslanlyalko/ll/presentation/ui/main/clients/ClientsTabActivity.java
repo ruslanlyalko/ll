@@ -15,10 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.common.UserType;
+import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.birth.BirthActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.ContactsFragment;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit.ContactEditActivity;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,8 +32,8 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
     private static final int TAB_ADULT = 0;
     private static final int TAB_CHILD = 1;
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.tabs) TabLayout mTabs;
     @BindView(R.id.appbar) AppBarLayout mAppbar;
+    @BindView(R.id.tabs) TabLayout mTabs;
     @BindView(R.id.container) ViewPager mViewPager;
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.main_content) CoordinatorLayout mMainContent;
@@ -83,6 +87,10 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
         mFilterPhone = phone;
     }
 
+    @Override
+    public void onCheckedChanged(final List<Contact> selected, final UserType userType) {
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         SectionsPagerAdapter(FragmentManager fm) {
@@ -93,9 +101,9 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
         public Fragment getItem(int position) {
             switch (position) {
                 case TAB_ADULT:
-                    return ContactsFragment.newInstance(position);
+                    return ContactsFragment.newInstance(position, false);
                 case TAB_CHILD:
-                    return ContactsFragment.newInstance(position);
+                    return ContactsFragment.newInstance(position, false);
             }
             return null;
         }

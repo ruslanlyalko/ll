@@ -42,10 +42,10 @@ import com.ruslanlyalko.ll.presentation.ui.about.AboutActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.CalendarActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.ClientsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.MessagesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.report.ReportActivity;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
 import java.util.ArrayList;
@@ -318,7 +318,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.button_report)
     void onReportClicked() {
-        startActivity(ReportActivity.getLaunchIntent(this));
+        startActivity(LessonActivity.getLaunchIntent(this));
     }
 
     @OnClick(R.id.button_calendar)

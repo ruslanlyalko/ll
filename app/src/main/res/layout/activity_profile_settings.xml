@@ -174,7 +174,7 @@
 
         </LinearLayout>
 
-        <!-- First date-->
+        <!-- First dateTime-->
         <LinearLayout
             android:id="@+id/panel_first_date"
             android:layout_width="match_parent"
@@ -202,7 +202,7 @@
                     android:layout_marginRight="16dp"
                     android:focusable="false"
                     android:hint="@string/hint_first_date"
-                    android:inputType="date" />
+                    android:inputType="dateTime" />
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>

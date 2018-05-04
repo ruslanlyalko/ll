@@ -127,4 +127,9 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
     public void onItemClicked(final int position, final ActivityOptionsCompat options) {
         startActivity(ContactDetailsActivity.getLaunchIntent(this, mBirthContactsAdapter.getItem(position)), options.toBundle());
     }
+
+    @Override
+    public void onItemsCheckedChanged(final List<Contact> contacts) {
+    }
+
 }

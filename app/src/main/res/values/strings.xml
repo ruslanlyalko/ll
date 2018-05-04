@@ -57,7 +57,7 @@
     <string name="title_activity_events">Повідомлення</string>
 
     <!-- REPORT -->
-    <string name="title_activity_report">Заняття</string>
+    <string name="title_activity_lesson">Заняття</string>
     <string name="action_edit">Редагувати</string>
     <string name="action_add">Зберегти</string>
 
@@ -150,7 +150,7 @@
     <string name="tab_room_4">БОРДОВИЙ</string>
 
     <string name="title_activity_mk_plan">Майстер класи</string>
-    <string name="title_activity_mk_tab">Кабінети 12.05.2018</string>
+    <string name="title_activity_rooms_tab">Кабінети 12.05.2018</string>
     <string name="text_mk_full">Майстер клас</string>
     <string name="title_activity_mk_item">Майстер клас</string>
 
@@ -264,6 +264,8 @@
     <string name="button_expenses">Витрати</string>
     <string name="action_change_ava">Змінити аватар</string>
     <string name="error_no_name">Імя не може бути порожнім!</string>
+    <string name="lesson_length_one_hour">1 год</string>
+    <string name="lesson_length_one_half_hour">1.5 год</string>
 
     <string-array name="markArray">
         <item>1</item>

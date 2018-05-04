@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.data.models.Report;
+import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
 import java.util.List;
@@ -22,32 +22,32 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 
-public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.MyViewHolder> {
+public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHolder> {
 
-    private final List<Report> mReports;
-    private final OnReportClickListener mOnReportClickListener;
+    private final List<Lesson> mLessons;
+    private final OnLessonClickListener mOnLessonClickListener;
 
-    public ReportsAdapter(OnReportClickListener onReportClickListener, List<Report> reports) {
-        mOnReportClickListener = onReportClickListener;
-        mReports = reports;
+    public LessonsAdapter(OnLessonClickListener onLessonClickListener, List<Lesson> lessons) {
+        mOnLessonClickListener = onLessonClickListener;
+        mLessons = lessons;
     }
 
     @Override
-    public ReportsAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LessonsAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_report, parent, false);
-        return new ReportsAdapter.MyViewHolder(itemView);
+        return new LessonsAdapter.MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ReportsAdapter.MyViewHolder holder, final int position) {
-        final Report report = mReports.get(position);
-        holder.bindData(report);
+    public void onBindViewHolder(final LessonsAdapter.MyViewHolder holder, final int position) {
+        final Lesson lesson = mLessons.get(position);
+        holder.bindData(lesson);
     }
 
     @Override
     public int getItemCount() {
-        return mReports.size();
+        return mLessons.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -71,9 +71,9 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.MyViewHo
             mResources = view.getResources();
         }
 
-        void bindData(final Report report) {
-            textTotal.setText(mResources.getString(R.string.HRN, "" + report.getOrderTotal()));
-            progressBar.setMax(report.getOrderTotal());
+        void bindData(final Lesson lesson) {
+//            textTotal.setText(mResources.getString(R.string.HRN, "" + lesson.getOrderTotal()));
+//            progressBar.setMax(lesson.getOrderTotal());
             progressBar.setSecondaryProgressTintMode(PorterDuff.Mode.OVERLAY);
             swipeLayout.addDrag(SwipeLayout.DragEdge.Right, R.id.swipe_menu);
             swipeLayout.setRightSwipeEnabled(true);
@@ -82,26 +82,26 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.MyViewHo
 
         @OnClick(R.id.button_comment)
         void onCommentsClicked() {
-            if (mOnReportClickListener != null)
-                mOnReportClickListener.onCommentClicked(mReports.get(getAdapterPosition()));
+            if (mOnLessonClickListener != null)
+                mOnLessonClickListener.onCommentClicked(mLessons.get(getAdapterPosition()));
         }
 
         @OnClick(R.id.button_mk)
         void onMkClicked() {
-            if (mOnReportClickListener != null)
-                mOnReportClickListener.onMkClicked(mReports.get(getAdapterPosition()));
+            if (mOnLessonClickListener != null)
+                mOnLessonClickListener.onMkClicked(mLessons.get(getAdapterPosition()));
         }
 
         @OnClick(R.id.button_edit)
         void onEditClicked() {
-            if (mOnReportClickListener != null)
-                mOnReportClickListener.onEditClicked(mReports.get(getAdapterPosition()));
+            if (mOnLessonClickListener != null)
+                mOnLessonClickListener.onEditClicked(mLessons.get(getAdapterPosition()));
         }
 
         @OnLongClick(R.id.card_root)
         boolean onCardLongClicked() {
-            if (mOnReportClickListener != null)
-                mOnReportClickListener.onEditClicked(mReports.get(getAdapterPosition()));
+            if (mOnLessonClickListener != null)
+                mOnLessonClickListener.onEditClicked(mLessons.get(getAdapterPosition()));
             return true;
         }
     }

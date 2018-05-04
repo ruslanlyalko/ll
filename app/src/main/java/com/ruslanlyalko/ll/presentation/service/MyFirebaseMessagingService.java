@@ -18,9 +18,9 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.details.MessageDetailsActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.report.ReportActivity;
 import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 
 import java.util.Map;
@@ -84,10 +84,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String chanelId;
         switch (notificationType) {
             case REPORT:
-                resultIntent = ReportActivity.getLaunchIntent(this,
-                        payload.get("reportDate"),
-                        payload.get("reportUserName"),
-                        payload.get("reportUserId"));
+                resultIntent = LessonActivity.getLaunchIntent(this,
+                        payload.get("reportDate"));
                 chanelId = CHANEL_REPORT_ID;
                 break;
             case COMMENT:

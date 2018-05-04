@@ -24,13 +24,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
-import com.ruslanlyalko.ll.data.models.Report;
-import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnReportClickListener;
-import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.ReportsAdapter;
-import com.ruslanlyalko.ll.presentation.ui.main.report.ReportActivity;
+import com.ruslanlyalko.ll.data.models.Lesson;
+import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
+import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CalendarActivity extends AppCompatActivity implements OnReportClickListener {
+public class CalendarActivity extends AppCompatActivity implements OnLessonClickListener {
 
     @BindView(R.id.recycler_view) RecyclerView mReportsList;
     @BindView(R.id.calendar_view) CompactCalendarView mCompactCalendarView;
@@ -54,8 +53,8 @@ public class CalendarActivity extends AppCompatActivity implements OnReportClick
     @BindView(R.id.text_month) TextView mTextMonth;
     @BindView(R.id.button_add_report) TextView mTextAddReport;
 
-    private ReportsAdapter mReportsAdapter;
-    private List<Report> mReportList = new ArrayList<>();
+    private LessonsAdapter mLessonsAdapter;
+    private List<Lesson> mLessonList = new ArrayList<>();
     private ArrayList<String> mUsersList = new ArrayList<>();
     private Date mCurrentDate;
     private String mUserId;
@@ -83,10 +82,10 @@ public class CalendarActivity extends AppCompatActivity implements OnReportClick
     }
 
     private void initRecycle() {
-        mReportList = new ArrayList<>();
-        mReportsAdapter = new ReportsAdapter(this, mReportList);
+        mLessonList = new ArrayList<>();
+        mLessonsAdapter = new LessonsAdapter(this, mLessonList);
         mReportsList.setLayoutManager(new LinearLayoutManager(this));
-        mReportsList.setAdapter(mReportsAdapter);
+        mReportsList.setAdapter(mLessonsAdapter);
     }
 
     private void initCalendarView() {
@@ -132,11 +131,11 @@ public class CalendarActivity extends AppCompatActivity implements OnReportClick
                             for (DataSnapshot datYear : datYears.getChildren()) {
                                 for (DataSnapshot datMonth : datYear.getChildren()) {
                                     for (DataSnapshot datDay : datMonth.getChildren()) {
-                                        Report report = datDay.getValue(Report.class);
-//                                        if (report != null && (FirebaseUtils.isAdmin() || report.getUserId().equals(mUserId) || DateUtils.future(report.getReportDate()))) {
-//                                            int color = getUserColor(report.getUserId());
-//                                            long date = getDateLongFromStr(report.getReportDate());
-//                                            String uId = report.getUserId();
+                                        Lesson lesson = datDay.getValue(Lesson.class);
+//                                        if (lesson != null && (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId) || DateUtils.future(lesson.getDateTime()))) {
+//                                            int color = getUserColor(lesson.getUserId());
+//                                            long date = getDateLongFromStr(lesson.getDateTime());
+//                                            String uId = lesson.getUserId();
 //                                            mCompactCalendarView.addEvent(
 //                                                    new Event(color, date, uId), true);
 //                                        }
@@ -167,16 +166,16 @@ public class CalendarActivity extends AppCompatActivity implements OnReportClick
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mReportList.clear();
+                        mLessonList.clear();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            Report report = data.getValue(Report.class);
-                            if (report != null) {
-//                                if (FirebaseUtils.isAdmin() || report.getUserId().equals(mUserId)) {
-//                                    mReportList.add(report);
+                            Lesson lesson = data.getValue(Lesson.class);
+                            if (lesson != null) {
+//                                if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
+//                                    mLessonList.add(lesson);
 //                                }
                             }
                         }
-                        mReportsAdapter.notifyDataSetChanged();
+                        mLessonsAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -241,17 +240,17 @@ public class CalendarActivity extends AppCompatActivity implements OnReportClick
     }
 
     @Override
-    public void onCommentClicked(final Report report) {
-//        final boolean commentsExist = report.getComment() != null & !report.getComment().isEmpty();
+    public void onCommentClicked(final Lesson lesson) {
+//        final boolean commentsExist = lesson.getComment() != null & !lesson.getComment().isEmpty();
 //        if (commentsExist)
-//            Toast.makeText(this, report.getComment(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, lesson.getComment(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onMkClicked(final Report report) {
-//        if (report.getMkRef() != null && !report.getMkRef().isEmpty()) {
+    public void onMkClicked(final Lesson lesson) {
+//        if (lesson.getMkRef() != null && !lesson.getMkRef().isEmpty()) {
 //            Intent intent = new Intent(this, MkDetailsActivity.class);
-//            intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, report.getMkRef());
+//            intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, lesson.getMkRef());
 //            startActivity(intent);
 //        } else {
 //            Toast.makeText(this, R.string.toast_mk_not_set, Toast.LENGTH_SHORT).show();
@@ -259,23 +258,12 @@ public class CalendarActivity extends AppCompatActivity implements OnReportClick
     }
 
     @Override
-    public void onEditClicked(final Report report) {
-//        if (FirebaseUtils.isAdmin() || DateUtils.todayOrFuture(report.getReportDate()))
-        {
-            Intent intent = new Intent(this, ReportActivity.class);
-            intent.putExtra(Keys.Extras.EXTRA_DATE, report.getReportDate());
-            intent.putExtra(Keys.Extras.EXTRA_UID, report.getCreatedBy());
-            intent.putExtra(Keys.Extras.EXTRA_USER_NAME, report.getCreatedById());
-            startActivityForResult(intent, 0);
-        }
-//        else{
-//            Toast.makeText(this, R.string.toast_edit_impossible, Toast.LENGTH_SHORT).show();
-//        }
+    public void onEditClicked(final Lesson lesson) {
+        //todo
     }
 
     @OnClick(R.id.button_add_report)
     void onAddReportClicked() {
-        startActivity(ReportActivity.getLaunchIntent(this, DateUtils.toString(mCurrentDate, "d-M-yyyy"),
-                mUser.getDisplayName(), mUser.getUid()));
+        startActivity(LessonActivity.getLaunchIntent(this, DateUtils.toString(mCurrentDate, "d-M-yyyy")));
     }
 }

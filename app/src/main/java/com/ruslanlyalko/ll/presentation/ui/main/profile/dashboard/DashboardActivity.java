@@ -37,7 +37,7 @@ import com.ruslanlyalko.ll.common.ViewUtils;
 import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
 import com.ruslanlyalko.ll.data.models.Credit;
 import com.ruslanlyalko.ll.data.models.Expense;
-import com.ruslanlyalko.ll.data.models.Report;
+import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.data.models.Result;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
@@ -92,7 +92,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
     private UsersSalaryAdapter mUsersSalaryAdapter = new UsersSalaryAdapter(this);
     private CreditsAdapter mCreditsAdapter = new CreditsAdapter(this);
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private List<Report> reportList = new ArrayList<>();
+    private List<Lesson> mLessonList = new ArrayList<>();
     private List<Expense> mExpenseList = new ArrayList<>();
     private List<Credit> mCreditList = new ArrayList<>();
     private List<User> userList = new ArrayList<>();
@@ -398,12 +398,12 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        reportList.clear();
+                        mLessonList.clear();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             for (DataSnapshot ds : data.getChildren()) {
-                                Report report = ds.getValue(Report.class);
-                                if (report != null) {
-                                    reportList.add(report);
+                                Lesson lesson = ds.getValue(Lesson.class);
+                                if (lesson != null) {
+                                    mLessonList.add(lesson);
                                 }
                             }
                         }

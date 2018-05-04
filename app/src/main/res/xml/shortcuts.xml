@@ -25,7 +25,7 @@
         android:shortcutShortLabel="@string/shortcut_report_short_label">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="com.ruslanlyalko.ll.presentation.ui.main.report.ReportActivity"
+            android:targetClass="com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity"
             android:targetPackage="com.ruslanlyalko.ll" />
         <!-- If your shortcut is associated with multiple intents, include them
              here. The last intent in the list determines what the user sees when

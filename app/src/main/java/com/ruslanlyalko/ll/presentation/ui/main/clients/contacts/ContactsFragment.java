@@ -9,12 +9,15 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +39,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 /**
@@ -47,17 +51,20 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     @BindView(R.id.list_contacts) RecyclerView mListContacts;
     @BindView(R.id.edit_filter_name) EditText mEditFilterName;
     @BindView(R.id.edit_filter_phone) EditText mEditFilterPhone;
+    @BindView(R.id.image_clear) ImageView mImageClear;
     private ContactsAdapter mContactsAdapter;
     private OnFilterListener mOnFilterListener;
     private UserType mUserType = UserType.ADULT;
+    private boolean mIsSelectable;
 
     public ContactsFragment() {
     }
 
-    public static ContactsFragment newInstance(final int tabIndex) {
+    public static ContactsFragment newInstance(final int tabIndex, final boolean isSelcetable) {
         ContactsFragment fragment = new ContactsFragment();
         Bundle args = new Bundle();
         args.putInt(Keys.Extras.EXTRA_TAB_INDEX, tabIndex);
+        args.putBoolean(Keys.Extras.EXTRA_IS_SELCTABLE, isSelcetable);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,13 +93,32 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         parseArguments();
-        mContactsAdapter = new ContactsAdapter(this, getActivity());
+        mContactsAdapter = new ContactsAdapter(this, getActivity(), mIsSelectable);
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+                mImageClear.setVisibility(mEditFilterName.getText().length() > 0
+                        || mEditFilterPhone.getText().length() > 0
+                        ? View.VISIBLE : View.INVISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+            }
+        };
+        mEditFilterName.addTextChangedListener(watcher);
+        mEditFilterPhone.addTextChangedListener(watcher);
         setupRecycler();
         loadContacts();
     }
 
     private void parseArguments() {
         mUserType = getArguments().getInt(Keys.Extras.EXTRA_TAB_INDEX, 0) == 0 ? UserType.ADULT : UserType.CHILD;
+        mIsSelectable = getArguments().getBoolean(Keys.Extras.EXTRA_IS_SELCTABLE, false);
     }
 
     private void setupRecycler() {
@@ -149,5 +175,18 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     @Override
     public void onItemClicked(final int position, ActivityOptionsCompat options) {
         startActivity(ContactDetailsActivity.getLaunchIntent(getContext(), mContactsAdapter.getItem(position)), options.toBundle());
+    }
+
+    @Override
+    public void onItemsCheckedChanged(final List<Contact> contacts) {
+        if (mOnFilterListener != null)
+            mOnFilterListener.onCheckedChanged(contacts, mUserType);
+    }
+
+    @OnClick(R.id.image_clear)
+    public void onClearClick() {
+        mEditFilterName.setText("");
+        mEditFilterPhone.setText("");
+        //todo hide keyboard
     }
 }
