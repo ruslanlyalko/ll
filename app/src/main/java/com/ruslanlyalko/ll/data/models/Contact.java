@@ -19,7 +19,7 @@ public class Contact implements Serializable {
     private String password;
     private String phone;
     private String phone2;
-    private UserType userType;
+    private int userType;
     private Date createdAt = new Date();
     private Date birthDay = new Date();
     private String description;
@@ -93,11 +93,11 @@ public class Contact implements Serializable {
         this.phone2 = phone2;
     }
 
-    public UserType getUserType() {
+    public int getUserType() {
         return userType;
     }
 
-    public void setUserType(final UserType userType) {
+    public void setUserType(final int userType) {
         this.userType = userType;
     }
 

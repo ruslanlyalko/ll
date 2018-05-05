@@ -15,14 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.UserType;
-import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.birth.BirthActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.ContactsFragment;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit.ContactEditActivity;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -61,12 +57,6 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_mk_tab, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_plan) {
@@ -74,6 +64,12 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_mk_tab, menu);
+        return true;
     }
 
     @OnClick(R.id.fab)
@@ -85,11 +81,6 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
     public void onFilterChanged(final String name, final String phone) {
         mFilterName = name;
         mFilterPhone = phone;
-    }
-
-    @Override
-    public void onCheckedChanged(final List<String> selected, final UserType userType) {
-        //not used
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

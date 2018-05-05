@@ -11,7 +11,7 @@ public interface OnLessonClickListener {
 
     void onCommentClicked(Lesson lesson);
 
-    void onMkClicked(Lesson lesson);
-
     void onEditClicked(Lesson lesson);
+
+    void onRemoveClicked(Lesson lesson);
 }

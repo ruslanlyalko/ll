@@ -3,6 +3,7 @@ package com.ruslanlyalko.ll.presentation.ui.main.calendar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +13,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Constants;
@@ -41,20 +42,20 @@ import butterknife.OnClick;
 
 public class CalendarActivity extends BaseActivity implements OnLessonClickListener {
 
+    private static final int RC_LESSON = 1001;
     @BindView(R.id.recycler_view) RecyclerView mReportsList;
     @BindView(R.id.calendar_view) CompactCalendarView mCompactCalendarView;
-    @BindView(R.id.swipere_fresh) SwipeRefreshLayout mSwipeRefresh;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefresh;
     @BindView(R.id.button_prev) ImageButton mButtonPrev;
     @BindView(R.id.button_next) ImageButton mButtonNext;
     @BindView(R.id.text_month) TextView mTextMonth;
-    @BindView(R.id.button_add_report) TextView mTextAddReport;
+    @BindView(R.id.fab) FloatingActionButton mFab;
 
     private LessonsAdapter mLessonsAdapter;
     private List<Lesson> mLessonList = new ArrayList<>();
     private ArrayList<String> mUsersList = new ArrayList<>();
     private Date mCurrentDate;
     private String mUserId;
-    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
 
     //private String mDay, mMonth, mYear;
     private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -116,75 +117,6 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
         });
     }
 
-    private void showReportsOnCalendar() {
-        mSwipeRefresh.setRefreshing(true);
-        mDatabase.getReference(DC.DB_LESSONS)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mUsersList.clear();
-                        mCompactCalendarView.removeAllEvents();
-                        for (DataSnapshot datYears : dataSnapshot.getChildren()) {
-                            for (DataSnapshot datYear : datYears.getChildren()) {
-                                for (DataSnapshot datMonth : datYear.getChildren()) {
-                                    for (DataSnapshot datDay : datMonth.getChildren()) {
-                                        Lesson lesson = datDay.getValue(Lesson.class);
-                                        if (lesson != null && (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId) || DateUtils.future(lesson.getDateTime()))) {
-//                                            int color = getUserColor(lesson.getUserId());
-//                                            long date = getDateLongFromStr(lesson.getDateTime());
-//                                            String uId = lesson.getUserId();
-//                                            mCompactCalendarView.addEvent(
-//                                                    new Event(color, date, uId), true);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        mSwipeRefresh.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
-    }
-
-    private void showReportsForDate(Date date) {
-        mCurrentDate = date;
-        mTextAddReport.setVisibility((FirebaseUtils.isAdmin() || DateUtils.isTodayOrFuture(date))
-                ? View.VISIBLE : View.GONE);
-        String mDay = DateFormat.format("d", date).toString();
-        String mMonth = DateFormat.format("M", date).toString();
-        String mYear = DateFormat.format("yyyy", date).toString();
-        mDatabase.getReference(DC.DB_LESSONS)
-                .child(mYear)
-                .child(mMonth)
-                .child(mDay)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mLessonList.clear();
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            Lesson lesson = data.getValue(Lesson.class);
-                            if (lesson != null) {
-//                                if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
-//                                    mLessonList.add(lesson);
-//                                }
-                            }
-                        }
-                        mLessonsAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
-    }
-
-    private void reloadReportsForDate() {
-        showReportsForDate(mCurrentDate);
-    }
-
     @OnClick(R.id.button_prev)
     void onPrevClicked() {
         mCompactCalendarView.showPreviousMonth();
@@ -198,8 +130,75 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        showReportsOnCalendar();
         reloadReportsForDate();
+    }
+
+    private void reloadReportsForDate() {
+        showReportsForDate(mCurrentDate);
+    }
+
+    private void showReportsForDate(Date date) {
+        if (isDestroyed()) return;
+        mCurrentDate = date;
+        mFab.setVisibility((FirebaseUtils.isAdmin() || DateUtils.isTodayOrFuture(date))
+                ? View.VISIBLE : View.GONE);
+        String aDate = DateFormat.format("yyyy/MM/dd", date).toString();
+        getDatabase().getReference(DC.DB_LESSONS)
+                .child(aDate)
+                .orderByChild("dateTime/time")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        mLessonList.clear();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            Lesson lesson = data.getValue(Lesson.class);
+                            if (lesson != null) {
+                                if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
+                                    mLessonList.add(lesson);
+                                }
+                            }
+                        }
+                        mLessonsAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    private void showReportsOnCalendar() {
+        mSwipeRefresh.setRefreshing(true);
+        getDatabase().getReference(DC.DB_LESSONS)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        if (isDestroyed()) return;
+                        mUsersList.clear();
+                        mCompactCalendarView.removeAllEvents();
+                        for (DataSnapshot datYears : dataSnapshot.getChildren()) {
+                            for (DataSnapshot datYear : datYears.getChildren()) {
+                                for (DataSnapshot datMonth : datYear.getChildren()) {
+                                    for (DataSnapshot datDay : datMonth.getChildren()) {
+                                        Lesson lesson = datDay.getValue(Lesson.class);
+                                        if (lesson != null && (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId))) {
+                                            int color = getUserColor(lesson.getUserId());
+                                            long date = lesson.getDateTime().getTime();
+                                            String uId = lesson.getUserId();
+                                            mCompactCalendarView.addEvent(
+                                                    new Event(color, date, uId), true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        mSwipeRefresh.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
     }
 
     private int getUserColor(String userId) {
@@ -222,7 +221,12 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
     }
 
     @Override
-    public void onMkClicked(final Lesson lesson) {
+    public void onEditClicked(final Lesson lesson) {
+        startActivityForResult(LessonActivity.getLaunchIntent(this, lesson), RC_LESSON);
+    }
+
+    @Override
+    public void onRemoveClicked(final Lesson lesson) {
 //        if (lesson.getMkRef() != null && !lesson.getMkRef().isEmpty()) {
 //            Intent intent = new Intent(this, MkDetailsActivity.class);
 //            intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, lesson.getMkRef());
@@ -232,13 +236,8 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 //        }
     }
 
-    @Override
-    public void onEditClicked(final Lesson lesson) {
-        //todo
-    }
-
-    @OnClick(R.id.button_add_report)
+    @OnClick(R.id.fab)
     void onAddReportClicked() {
-        startActivity(LessonActivity.getLaunchIntent(this, new Lesson(new Date(), "-LBft-4dcBhTlDpEDEyu")));
+        startActivityForResult(LessonActivity.getLaunchIntent(this, mCurrentDate), RC_LESSON);
     }
 }

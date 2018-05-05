@@ -54,7 +54,7 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     @BindView(R.id.image_clear) ImageView mImageClear;
     private ContactsAdapter mContactsAdapter;
     private OnFilterListener mOnFilterListener;
-    private UserType mUserType = UserType.ADULT;
+    private int mUserType = UserType.ADULT;
     private boolean mIsSelectable;
     private List<String> mSelectedClients;
 
@@ -120,7 +120,8 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     }
 
     private void parseArguments() {
-        mUserType = getArguments().getInt(Keys.Extras.EXTRA_TAB_INDEX, 0) == 0 ? UserType.ADULT : UserType.CHILD;
+        if (getArguments() == null) return;
+        mUserType = getArguments().getInt(Keys.Extras.EXTRA_TAB_INDEX, 0);
         mIsSelectable = getArguments().getBoolean(Keys.Extras.EXTRA_IS_SELCTABLE, false);
     }
 
@@ -139,7 +140,7 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
                 List<Contact> contacts = new ArrayList<>();
                 for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
                     Contact contact = clientSS.getValue(Contact.class);
-                    if (contact != null && contact.getUserType().equals(mUserType)) {
+                    if (contact != null && contact.getUserType() == mUserType) {
                         contacts.add(contact);
                     }
                 }
@@ -183,8 +184,6 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     @Override
     public void onItemsCheckedChanged(final List<String> contacts) {
         mSelectedClients = contacts;
-        if (mOnFilterListener != null)
-            mOnFilterListener.onCheckedChanged(contacts, mUserType);
     }
 
     @OnClick(R.id.image_clear)
@@ -198,5 +197,9 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
         mSelectedClients = clients;
         if (mContactsAdapter != null)
             mContactsAdapter.setSelectedCotacts(clients);
+    }
+
+    public List<String> getSelected() {
+        return mSelectedClients;
     }
 }

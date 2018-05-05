@@ -1,9 +1,8 @@
 package com.ruslanlyalko.ll.data.models;
 
-import com.ruslanlyalko.ll.common.UserType;
-
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,9 +10,9 @@ public class Lesson implements Serializable {
 
     private String key;
     private String description;
-    private UserType userType;
-    private int roomId;
-    private int lessonId;
+    private int roomType;
+    private int lessonType;
+    private int userType;
     private int lessonLengthId;
     private String userId;
     private String userName;
@@ -24,6 +23,22 @@ public class Lesson implements Serializable {
         this.key = "";
         this.userId = userId;
         this.userName = userName;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateTime);
+        cal.set(Calendar.HOUR_OF_DAY, 16);
+        cal.set(Calendar.MINUTE, 0);
+        dateTime = cal.getTime();
+    }
+
+    public Lesson(final String userId, final String userName, Date date) {
+        this.key = "";
+        this.userId = userId;
+        this.userName = userName;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 16);
+        cal.set(Calendar.MINUTE, 0);
+        dateTime = cal.getTime();
     }
 
     public Lesson() {
@@ -67,28 +82,28 @@ public class Lesson implements Serializable {
         this.description = description;
     }
 
-    public UserType getUserType() {
+    public int getUserType() {
         return userType;
     }
 
-    public void setUserType(final UserType userType) {
+    public void setUserType(final int userType) {
         this.userType = userType;
     }
 
-    public int getRoomId() {
-        return roomId;
+    public int getRoomType() {
+        return roomType;
     }
 
-    public void setRoomId(final int roomId) {
-        this.roomId = roomId;
+    public void setRoomType(final int roomType) {
+        this.roomType = roomType;
     }
 
-    public int getLessonId() {
-        return lessonId;
+    public int getLessonType() {
+        return lessonType;
     }
 
-    public void setLessonId(final int lessonId) {
-        this.lessonId = lessonId;
+    public void setLessonType(final int lessonType) {
+        this.lessonType = lessonType;
     }
 
     public int getLessonLengthId() {

@@ -23,8 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.common.LessonLength;
-import com.ruslanlyalko.ll.common.UserType;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -33,9 +31,8 @@ import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.ContactsFragmen
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -52,11 +49,8 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     @BindView(R.id.tabs_user) TabLayout mTabsUser;
     @BindView(R.id.container) ViewPager mContainer;
     private boolean mIsChanged;
-    private List<String> mSelectedContactsAdults = new ArrayList<>();
-    private List<String> mSelectedContactsChildren = new ArrayList<>();
-    private LessonLength mLessonLength = LessonLength.ONE_HOUR;
-    private Lesson mLesson = new Lesson();
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private Lesson mLesson = new Lesson();
 
     public static Intent getLaunchIntent(final Activity launchIntent) {
         return new Intent(launchIntent, LessonActivity.class);
@@ -65,6 +59,12 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     public static Intent getLaunchIntent(final Context context, Lesson lesson) {
         Intent intent = new Intent(context, LessonActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_LESSON_MODEL, lesson);
+        return intent;
+    }
+
+    public static Intent getLaunchIntent(final Context context, Date date) {
+        Intent intent = new Intent(context, LessonActivity.class);
+        intent.putExtra(Keys.Extras.EXTRA_LESSON_DATE, date);
         return intent;
     }
 
@@ -78,6 +78,8 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey(Keys.Extras.EXTRA_LESSON_MODEL))
             mLesson = (Lesson) bundle.getSerializable(Keys.Extras.EXTRA_LESSON_MODEL);
+        else if (bundle != null && bundle.containsKey(Keys.Extras.EXTRA_LESSON_DATE))
+            mLesson = new Lesson(getUser().getUid(), getUser().getDisplayName(), (Date) bundle.getSerializable(Keys.Extras.EXTRA_LESSON_DATE));
         else
             mLesson = new Lesson(getUser().getUid(), getUser().getDisplayName());
     }
@@ -88,11 +90,33 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         mContainer.setAdapter(mSectionsPagerAdapter);
         mContainer.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabsUser));
         mTabsUser.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mContainer));
-        mTextDate.setText(DateUtils.toString(mLesson.getDateTime(), "dd.MM  EEEE"));
-        mTextTime.setText(DateUtils.toString(mLesson.getDateTime(), "HH:mm"));
+        updateUI();
         if (!isNew()) {
             loadLesson();
         }
+    }
+
+    private void updateUI() {
+        if (isDestroyed()) return;
+        mTextDate.setText(DateUtils.toString(mLesson.getDateTime(), "dd.MM  EEEE"));
+        mTextTime.setText(DateUtils.toString(mLesson.getDateTime(), "HH:mm"));
+        mTextLessonLength.setText(mLesson.getLessonLengthId() == 0
+                ? R.string.lesson_length_one_hour : R.string.lesson_length_one_half_hour);
+        TabLayout.Tab tabLesson = mTabsLesson.getTabAt(mLesson.getLessonType());
+        if (tabLesson != null) tabLesson.select();
+        TabLayout.Tab tabRoom = mTabsRoom.getTabAt(mLesson.getRoomType());
+        if (tabRoom != null) tabRoom.select();
+        TabLayout.Tab tabUserType = mTabsUser.getTabAt(mLesson.getUserType());
+        if (tabUserType != null) tabUserType.select();
+        if (mLesson.getUserType() == 0)
+            mSectionsPagerAdapter.getAdultFragment().updateSelected(mLesson.getClients());
+        else
+            mSectionsPagerAdapter.getChildFragment().updateSelected(mLesson.getClients());
+        setTitle(getString(R.string.title_activity_lesson, mLesson.getUserName()));
+    }
+
+    boolean isNew() {
+        return mLesson.getKey().isEmpty();
     }
 
     private void loadLesson() {
@@ -105,7 +129,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
                 Lesson lesson = dataSnapshot.getValue(Lesson.class);
                 if (lesson != null) {
                     mLesson = lesson;
-                    selectContacts();
+                    updateUI();
                 }
             }
 
@@ -113,23 +137,6 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
             public void onCancelled(final DatabaseError databaseError) {
             }
         });
-    }
-
-    private void selectContacts() {
-        if (mLesson.getUserType() == UserType.ADULT)
-            mSectionsPagerAdapter.getAdultFragment().updateSelected(mLesson.getClients());
-        else
-            mSectionsPagerAdapter.getChildFragment().updateSelected(mLesson.getClients());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_report, menu);
-        return true;
-    }
-
-    boolean isNew() {
-        return mLesson.getKey().isEmpty();
     }
 
     @Override
@@ -168,11 +175,13 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         if (isNew()) {
             mLesson.setKey(ref.push().getKey());
         }
-        mLesson.setRoomId(mTabsRoom.getSelectedTabPosition());
-        mLesson.setLessonId(mTabsLesson.getSelectedTabPosition());
-        mLesson.setUserType(mTabsUser.getSelectedTabPosition() == 0 ? UserType.ADULT : UserType.CHILD);
-        mLesson.setClients(mLesson.getUserType() == UserType.ADULT
-                ? mSelectedContactsAdults : mSelectedContactsChildren);
+        mLesson.setRoomType(mTabsRoom.getSelectedTabPosition());
+        mLesson.setLessonType(mTabsLesson.getSelectedTabPosition());
+        mLesson.setUserType(mTabsUser.getSelectedTabPosition());
+        if (mLesson.getUserType() == 0)
+            mLesson.setClients(mSectionsPagerAdapter.getAdultFragment().getSelected());
+        else
+            mLesson.setClients(mSectionsPagerAdapter.getChildFragment().getSelected());
         ref.child(mLesson.getKey()).setValue(mLesson)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, R.string.toast_saved, Toast.LENGTH_LONG).show();
@@ -181,19 +190,14 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     }
 
     @Override
-    public void onFilterChanged(final String name, final String phone) {
-        //not used
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_report, menu);
+        return true;
     }
 
     @Override
-    public void onCheckedChanged(final List<String> selected, final UserType userType) {
-        if (userType == UserType.ADULT) {
-            mSelectedContactsAdults.clear();
-            mSelectedContactsAdults.addAll(selected);
-        } else {
-            mSelectedContactsChildren.clear();
-            mSelectedContactsChildren.addAll(selected);
-        }
+    public void onFilterChanged(final String name, final String phone) {
+        //not used
     }
 
     @OnClick({R.id.text_date, R.id.text_time, R.id.text_lesson_length})
@@ -230,13 +234,9 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
                 dialog1.show(getFragmentManager(), "time");
                 break;
             case R.id.text_lesson_length:
-                if (mLessonLength == LessonLength.ONE_HOUR) {
-                    mLessonLength = LessonLength.ONE_HALF_HOUR;
-                    mTextLessonLength.setText(R.string.lesson_length_one_half_hour);
-                } else {
-                    mLessonLength = LessonLength.ONE_HOUR;
-                    mTextLessonLength.setText(R.string.lesson_length_one_hour);
-                }
+                mLesson.setLessonLengthId(mLesson.getLessonLengthId() == 0 ? 1 : 0);
+                mTextLessonLength.setText(mLesson.getLessonLengthId() == 0
+                        ? R.string.lesson_length_one_hour : R.string.lesson_length_one_half_hour);
                 break;
         }
     }
@@ -246,14 +246,6 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         private ContactsFragment mAdult;
         private ContactsFragment mChild;
 
-        public ContactsFragment getAdultFragment() {
-            return mAdult;
-        }
-
-        public ContactsFragment getChildFragment() {
-            return mChild;
-        }
-
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -262,11 +254,23 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case TAB_ADULT:
-                    return mAdult = ContactsFragment.newInstance(position, true);
+                    return getAdultFragment();
                 case TAB_CHILD:
-                    return mChild = ContactsFragment.newInstance(position, true);
+                    return getChildFragment();
             }
             return null;
+        }
+
+        ContactsFragment getAdultFragment() {
+            if (mAdult == null)
+                mAdult = ContactsFragment.newInstance(0, true);
+            return mAdult;
+        }
+
+        ContactsFragment getChildFragment() {
+            if (mChild == null)
+                mChild = ContactsFragment.newInstance(1, true);
+            return mChild;
         }
 
         @Override

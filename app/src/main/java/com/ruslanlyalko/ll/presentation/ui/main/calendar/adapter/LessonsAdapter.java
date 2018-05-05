@@ -1,17 +1,17 @@
 package com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter;
 
 import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
@@ -20,7 +20,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHolder> {
 
@@ -33,14 +32,14 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
     }
 
     @Override
-    public LessonsAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_report, parent, false);
-        return new LessonsAdapter.MyViewHolder(itemView);
+                .inflate(R.layout.card_lesson, parent, false);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final LessonsAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Lesson lesson = mLessons.get(position);
         holder.bindData(lesson);
     }
@@ -53,17 +52,18 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         private final Resources mResources;
+        @BindView(R.id.button_comment) ImageButton mButtonComment;
+        @BindView(R.id.button_edit) ImageButton mButtonEdit;
+        @BindView(R.id.button_remove) ImageButton mButtonRemove;
+        @BindView(R.id.swipe_menu) LinearLayout mSwipeMenu;
+        @BindView(R.id.text_user_name) TextView mTextUserName;
+        @BindView(R.id.text_date) TextView mTextDate;
+        @BindView(R.id.text_room) TextView mTextRoom;
+        @BindView(R.id.text_lesson_type) TextView mTextLessonType;
+        @BindView(R.id.text_user_type) TextView mTextUserType;
+        @BindView(R.id.panel_card) LinearLayout mPanelCard;
+        @BindView(R.id.swipe_layout) SwipeLayout mSwipeLayout;
         @BindView(R.id.card_root) CardView mCardRoot;
-        @BindView(R.id.text_user_name) TextView textUserName;
-        @BindView(R.id.text_total) TextView textTotal;
-        @BindView(R.id.text_bday_total) TextView textBdayTotal;
-        @BindView(R.id.text_room_total) TextView textRoomTotal;
-        @BindView(R.id.text_mk_total) TextView textMkTotal;
-        @BindView(R.id.swipe_layout) SwipeLayout swipeLayout;
-        @BindView(R.id.progress_bar) ProgressBar progressBar;
-        @BindView(R.id.button_comment) ImageButton buttonComment;
-        @BindView(R.id.button_mk) ImageButton buttonMk;
-        @BindView(R.id.button_edit) ImageButton buttonEdit;
 
         MyViewHolder(View view) {
             super(view);
@@ -72,12 +72,47 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         }
 
         void bindData(final Lesson lesson) {
-//            textTotal.setText(mResources.getString(R.string.HRN, "" + lesson.getOrderTotal()));
-//            progressBar.setMax(lesson.getOrderTotal());
-            progressBar.setSecondaryProgressTintMode(PorterDuff.Mode.OVERLAY);
-            swipeLayout.addDrag(SwipeLayout.DragEdge.Right, R.id.swipe_menu);
-            swipeLayout.setRightSwipeEnabled(true);
-            swipeLayout.setBottomSwipeEnabled(false);
+            mSwipeLayout.addDrag(SwipeLayout.DragEdge.Right, R.id.swipe_menu);
+            mSwipeLayout.setRightSwipeEnabled(true);
+            mSwipeLayout.setBottomSwipeEnabled(false);
+            mTextUserName.setText(lesson.getUserName());
+            String date = DateUtils.toString(lesson.getDateTime(), "dd.MM  EEEE  HH:mm  ") +
+                    mResources.getString(lesson.getLessonLengthId() == 0
+                            ? R.string.lesson_length_one_hour : R.string.lesson_length_one_half_hour);
+            mTextDate.setText(date);
+            String roomName;
+            switch (lesson.getRoomType()) {
+                case 0:
+                    roomName = mResources.getString(R.string.tab_room_1);
+                    break;
+                case 1:
+                    roomName = mResources.getString(R.string.tab_room_2);
+                    break;
+                case 2:
+                    roomName = mResources.getString(R.string.tab_room_3);
+                    break;
+                default:
+                    roomName = mResources.getString(R.string.tab_room_4);
+                    break;
+            }
+            mTextRoom.setText(roomName);
+            String lessonName;
+            switch (lesson.getLessonType()) {
+                case 0:
+                    lessonName = mResources.getString(R.string.lesson_type_1);
+                    break;
+                case 1:
+                    lessonName = mResources.getString(R.string.lesson_type_2);
+                    break;
+                case 2:
+                    lessonName = mResources.getString(R.string.lesson_type_3);
+                    break;
+                default:
+                    lessonName = mResources.getString(R.string.lesson_type_4);
+                    break;
+            }
+            mTextLessonType.setText(lessonName);
+            mTextUserType.setText(lesson.getUserType() == 0 ? R.string.user_type_adult : R.string.user_type_child);
         }
 
         @OnClick(R.id.button_comment)
@@ -86,23 +121,16 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
                 mOnLessonClickListener.onCommentClicked(mLessons.get(getAdapterPosition()));
         }
 
-        @OnClick(R.id.button_mk)
-        void onMkClicked() {
-            if (mOnLessonClickListener != null)
-                mOnLessonClickListener.onMkClicked(mLessons.get(getAdapterPosition()));
-        }
-
         @OnClick(R.id.button_edit)
         void onEditClicked() {
             if (mOnLessonClickListener != null)
                 mOnLessonClickListener.onEditClicked(mLessons.get(getAdapterPosition()));
         }
 
-        @OnLongClick(R.id.card_root)
-        boolean onCardLongClicked() {
+        @OnClick(R.id.button_remove)
+        void onMkClicked() {
             if (mOnLessonClickListener != null)
-                mOnLessonClickListener.onEditClicked(mLessons.get(getAdapterPosition()));
-            return true;
+                mOnLessonClickListener.onRemoveClicked(mLessons.get(getAdapterPosition()));
         }
     }
 }

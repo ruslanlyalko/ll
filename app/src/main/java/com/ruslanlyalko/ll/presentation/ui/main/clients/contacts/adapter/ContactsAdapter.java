@@ -23,7 +23,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyViewHolder>
@@ -126,14 +125,17 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
             mCheckBoxSelected.setChecked(mCheckedContacts.contains(contact.getKey()));
         }
 
-        @OnCheckedChanged(R.id.check_box_selected)
-        void onCheckedChanged(boolean isChecked) {
+        @OnClick(R.id.check_box_selected)
+        void onCheckedChanged() {
+            boolean isChecked = mCheckBoxSelected.isChecked();
             if (mOnContactClickListener == null) return;
-            if (isChecked)
+            if (isChecked && !mCheckedContacts.contains(mDataSourceFiltered.get(getAdapterPosition()).getKey())) {
                 mCheckedContacts.add(mDataSourceFiltered.get(getAdapterPosition()).getKey());
-            else
+                mOnContactClickListener.onItemsCheckedChanged(mCheckedContacts);
+            } else {
                 mCheckedContacts.remove(mDataSourceFiltered.get(getAdapterPosition()).getKey());
-            mOnContactClickListener.onItemsCheckedChanged(mCheckedContacts);
+                mOnContactClickListener.onItemsCheckedChanged(mCheckedContacts);
+            }
         }
 
         @OnClick(R.id.layout_root)

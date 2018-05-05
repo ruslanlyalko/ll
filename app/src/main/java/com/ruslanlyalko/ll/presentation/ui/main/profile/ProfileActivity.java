@@ -346,6 +346,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                     FirebaseUtils.clearPushToken();
                     FirebaseAuth.getInstance().signOut();
                     startActivity(LoginActivity.getLaunchIntent(this));
+                    finish();
                 })
                 .setNegativeButton("Повернутись", null)
                 .show();

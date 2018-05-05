@@ -13,5 +13,4 @@ import java.util.List;
 public interface OnFilterListener {
 
     void onFilterChanged(String name, String phone);
-    void onCheckedChanged(List<String> selected, UserType userType);
 }
