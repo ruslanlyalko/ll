@@ -5,9 +5,9 @@ package com.ruslanlyalko.ll.data.configuration;
  * on 11.11.2017.
  */
 
-public interface DefaultConfigurations {
+public interface DC {
 
-    String DB_REPORTS = "REPORTS";
+    String DB_LESSONS = "LESSONS";
     String DB_USERS = "USERS";
     String DB_USERS_NOTIFICATIONS = "USERS_NOTIFICATIONS";
     String DB_DIALOGS = "DIALOGS";
@@ -26,4 +26,7 @@ public interface DefaultConfigurations {
     String STORAGE_DIALOGS_MESSAGES = "DIALOGS_MESSAGES";
     String DB_CONTACTS = "CONTACTS";
     String DB_BIRTHDAYS = "BIRTHDAYS";
+
+
+    String LESSON_CLIENTS = "CLIENTS";
 }

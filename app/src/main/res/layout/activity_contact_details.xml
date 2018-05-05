@@ -28,7 +28,7 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="40dp"
-                android:src="@drawable/ic_user_avatar"
+                android:src="@drawable/ic_user_name"
                 android:transitionName="avatar"
                 tools:ignore="ContentDescription" />
 

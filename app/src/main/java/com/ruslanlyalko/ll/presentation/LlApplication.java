@@ -9,7 +9,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 
 import io.fabric.sdk.android.Fabric;
@@ -31,7 +31,7 @@ public class LlApplication extends Application {
 
     private void loadUserData() {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
-        FirebaseDatabase.getInstance().getReference(DefaultConfigurations.DB_USERS)
+        FirebaseDatabase.getInstance().getReference(DC.DB_USERS)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override

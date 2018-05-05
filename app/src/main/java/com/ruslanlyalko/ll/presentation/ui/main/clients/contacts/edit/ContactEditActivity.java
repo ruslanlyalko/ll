@@ -21,7 +21,7 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.UserType;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -185,7 +185,7 @@ public class ContactEditActivity extends BaseActivity {
             return;
         }
         mIsNew = false;
-        DatabaseReference ref = database.getReference(DefaultConfigurations.DB_CONTACTS)
+        DatabaseReference ref = database.getReference(DC.DB_CONTACTS)
                 .push();
         mContact.setKey(ref.getKey());
         ref.setValue(mContact).addOnCompleteListener(task -> {
@@ -201,7 +201,7 @@ public class ContactEditActivity extends BaseActivity {
             Toast.makeText(this, getString(R.string.error_no_name), Toast.LENGTH_LONG).show();
             return;
         }
-        database.getReference(DefaultConfigurations.DB_CONTACTS)
+        database.getReference(DC.DB_CONTACTS)
                 .child(mContact.getKey())
                 .setValue(mContact)
                 .addOnCompleteListener(task -> {

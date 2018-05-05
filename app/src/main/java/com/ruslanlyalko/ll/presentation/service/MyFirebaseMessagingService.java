@@ -19,8 +19,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.details.MessageDetailsActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.report.ReportActivity;
 import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 
 import java.util.Map;
@@ -40,12 +38,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String GROUP_NOTIFICATIONS_NAME = "Сповіщення";
     private static final String CHANEL_COMMENT_ID = "chanel_comment_id";
     private static final String CHANEL_COMMENT_DESC = "Коментарі";
-    private static final String CHANEL_REPORT_ID = "chanel_report_id";
-    private static final String CHANEL_REPORT_DESC = "Звіти";
     private static final String CHANEL_EXPENSE_ID = "chanel_expense_id";
     private static final String CHANEL_EXPENSE_DESC = "Витрати";
-    private static final String CHANEL_MK_ID = "chanel_mk_id";
-    private static final String CHANEL_MK_DESC = "Майстер-класи";
     private static final String CHANEL_DEFAULT_ID = "chanel_default_id";
     private static final String CHANEL_DEFAULT_DESC = "Інше";
 
@@ -83,13 +77,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationType notificationType = NotificationType.findByKey(payload.get("type"));
         String chanelId;
         switch (notificationType) {
-            case REPORT:
-                resultIntent = ReportActivity.getLaunchIntent(this,
-                        payload.get("reportDate"),
-                        payload.get("reportUserName"),
-                        payload.get("reportUserId"));
-                chanelId = CHANEL_REPORT_ID;
-                break;
             case COMMENT:
                 resultIntent = MessageDetailsActivity.getLaunchIntent(this, payload.get("messageKey"));
                 chanelId = CHANEL_COMMENT_ID;
@@ -97,10 +84,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             case EXPENSE:
                 resultIntent = ExpensesActivity.getLaunchIntent(this);
                 chanelId = CHANEL_EXPENSE_ID;
-                break;
-            case MK:
-                resultIntent = RoomsTabActivity.getLaunchIntent(this);
-                chanelId = CHANEL_MK_ID;
                 break;
             default:
                 resultIntent = SplashActivity.getLaunchIntent(this);
@@ -136,12 +119,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             //expense
             createNotificationChannel(CHANEL_EXPENSE_ID,
                     CHANEL_EXPENSE_DESC, CHANEL_EXPENSE_DESC, GROUP_NOTIFICATIONS_ID);
-            //report
-            createNotificationChannel(CHANEL_REPORT_ID,
-                    CHANEL_REPORT_DESC, CHANEL_REPORT_DESC, GROUP_NOTIFICATIONS_ID);
-            //mk
-            createNotificationChannel(CHANEL_MK_ID,
-                    CHANEL_MK_DESC, CHANEL_MK_DESC, GROUP_NOTIFICATIONS_ID);
             //default
             createNotificationChannel(CHANEL_DEFAULT_ID,
                     CHANEL_DEFAULT_DESC, CHANEL_DEFAULT_DESC, GROUP_NOTIFICATIONS_ID);

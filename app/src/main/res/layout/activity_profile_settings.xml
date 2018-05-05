@@ -174,7 +174,7 @@
 
         </LinearLayout>
 
-        <!-- First date-->
+        <!-- First dateTime-->
         <LinearLayout
             android:id="@+id/panel_first_date"
             android:layout_width="match_parent"

@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.Notification;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -70,7 +70,7 @@ public class MessagesActivity extends BaseActivity {
     }
 
     private void loadMessages() {
-        FirebaseDatabase.getInstance().getReference(DefaultConfigurations.DB_DIALOGS)
+        FirebaseDatabase.getInstance().getReference(DC.DB_DIALOGS)
                 .orderByChild("updatedAt/time")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -94,7 +94,7 @@ public class MessagesActivity extends BaseActivity {
     }
 
     private void loadBadge() {
-        mDatabase.getReference(DefaultConfigurations.DB_USERS_NOTIFICATIONS)
+        mDatabase.getReference(DC.DB_USERS_NOTIFICATIONS)
                 .child(mUser.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override

@@ -15,7 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.ui.main.report.ReportActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 
 import java.io.IOException;
 
@@ -93,7 +93,7 @@ public class AlarmReceiverActivity extends AppCompatActivity {
     public void onButtonStopClicked() {
         mMediaPlayer.stop();
         mVibrator.cancel();
-        startActivity(ReportActivity.getLaunchIntent(this));
+        startActivity(LessonActivity.getLaunchIntent(this));
         finishAffinity();
     }
 }

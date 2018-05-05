@@ -27,7 +27,7 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Birthday;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -122,7 +122,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
                 .setPositiveButton("Видалити", (dialog, which) -> {
                     finish();
                     FirebaseDatabase.getInstance()
-                            .getReference(DefaultConfigurations.DB_CONTACTS)
+                            .getReference(DC.DB_CONTACTS)
                             .child(mContact.getKey()).removeValue();
                 })
                 .setNegativeButton("Повернутись", null)
@@ -141,7 +141,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
     }
 
     private void loadDetails() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(DefaultConfigurations.DB_CONTACTS)
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(DC.DB_CONTACTS)
                 .child(mContactKey);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -175,7 +175,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
 
     private void loadBirthdays() {
         Query ref = FirebaseDatabase.getInstance()
-                .getReference(DefaultConfigurations.DB_BIRTHDAYS)
+                .getReference(DC.DB_BIRTHDAYS)
                 .orderByChild("contactKey").equalTo(mContact.getKey());
         ref.addValueEventListener(new ValueEventListener() {
             @Override

@@ -29,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 
 import java.text.SimpleDateFormat;
@@ -129,7 +129,7 @@ public class SalaryEditActivity extends AppCompatActivity {
     }
 
     private void loadUserItem() {
-        DatabaseReference userRef = database.getReference(DefaultConfigurations.DB_USERS).child(key);
+        DatabaseReference userRef = database.getReference(DC.DB_USERS).child(key);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -166,7 +166,7 @@ public class SalaryEditActivity extends AppCompatActivity {
 
     private void saveToDb() {
         updateUserModel();
-        database.getReference(DefaultConfigurations.DB_USERS)
+        database.getReference(DC.DB_USERS)
                 .child(user.getId()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

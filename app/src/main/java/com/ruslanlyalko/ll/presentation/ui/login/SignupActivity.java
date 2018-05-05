@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 
@@ -95,7 +95,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void createUserData(String name, String phone, String email, String uId) {
-        DatabaseReference databaseRefCurrentUser = mDatabase.getReference(DefaultConfigurations.DB_USERS).child(uId);
+        DatabaseReference databaseRefCurrentUser = mDatabase.getReference(DC.DB_USERS).child(uId);
         User user = new User(uId, name, phone, email, "01.06.1991", "01.06.1991", "1234", false);
         databaseRefCurrentUser.setValue(user);
     }

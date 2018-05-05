@@ -24,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.configuration.DefaultConfigurations;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Birthday;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
@@ -190,7 +190,7 @@ public class BirthdaysEditActivity extends BaseActivity {
     private void addClient() {
         updateModel();
         mIsNew = false;
-        DatabaseReference ref = database.getReference(DefaultConfigurations.DB_BIRTHDAYS)
+        DatabaseReference ref = database.getReference(DC.DB_BIRTHDAYS)
                 .push();
         mBirthday.setKey(ref.getKey());
         ref.setValue(mBirthday).addOnCompleteListener(task -> {
@@ -202,7 +202,7 @@ public class BirthdaysEditActivity extends BaseActivity {
 
     private void updateClient() {
         updateModel();
-        database.getReference(DefaultConfigurations.DB_BIRTHDAYS)
+        database.getReference(DC.DB_BIRTHDAYS)
                 .child(mBirthday.getKey())
                 .setValue(mBirthday)
                 .addOnCompleteListener(task -> {

@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:card_view="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical">
 
     <android.support.v7.widget.CardView
@@ -40,15 +40,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackground"
-                    android:src="@drawable/ic_comment_dark" />
-
-                <ImageButton
-                    android:id="@+id/button_mk"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@drawable/ic_mk_dark" />
+                    android:src="@drawable/ic_comment_dark"
+                    tools:ignore="ContentDescription" />
 
                 <ImageButton
                     android:id="@+id/button_edit"
@@ -56,7 +49,17 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackground"
-                    android:src="@drawable/ic_action_edit_dark" />
+                    android:src="@drawable/ic_action_edit_dark"
+                    tools:ignore="ContentDescription" />
+
+                <ImageButton
+                    android:id="@+id/button_remove"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@drawable/ic_action_delete_red"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
             <!-- BODY -->
@@ -70,7 +73,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_margin="16dp"
-                    android:src="@drawable/ic_report" />
+                    android:src="@drawable/ic_report"
+                    tools:ignore="ContentDescription" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -85,37 +89,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="16dp"
-                        tools:text="Анна Василівна"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="-4dp"
-                        android:layout_marginTop="16dp"
-                        android:text="Всього"
-                        android:textColor="@color/colorBlack" />
-
-                    <TextView
-                        android:id="@+id/text_total"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:text="1570 ГРН"
                         android:textColor="@color/colorBlack"
-                        android:textSize="32sp" />
+                        android:textSize="18sp"
+                        tools:text="Анна Василівна" />
 
-                    <ProgressBar
-                        android:id="@+id/progress_bar"
-                        style="?android:attr/progressBarStyleHorizontal"
+                    <TextView
+                        android:id="@+id/text_date"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/progress_height"
-                        android:layout_marginBottom="@dimen/progress_margin"
-                        android:layout_marginTop="@dimen/progress_margin"
-                        android:progressDrawable="@drawable/progress" />
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="4dp"
+                        android:textSize="16sp"
+                        tools:text="05.05 СУБОТА  23:00  1.5 год" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:baselineAligned="false"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -127,54 +117,55 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="Кімната"
+                                android:text="Кабінет"
                                 android:textColor="@color/colorBlack" />
 
                             <TextView
-                                android:id="@+id/text_room_total"
+                                android:id="@+id/text_room"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                tools:text="500 грн" />
+                                tools:text="Зелений" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:orientation="vertical">
+                            android:layout_weight="2"
+                            android:orientation="vertical"
+                            >
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="День народження"
+                                android:text="Тип"
                                 android:textColor="@color/colorBlack" />
 
                             <TextView
-                                android:id="@+id/text_bday_total"
+                                android:id="@+id/text_lesson_type"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                tools:text="540 грн" />
+                                tools:text="Парне" />
 
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
+                            android:layout_weight="2"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="МК"
+                                android:text="Студенти"
                                 android:textColor="@color/colorBlack" />
 
                             <TextView
-                                android:id="@+id/text_mk_total"
+                                android:id="@+id/text_user_type"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                tools:text="530 грн" />
+                                tools:text="Дорослі" />
 
                         </LinearLayout>
 

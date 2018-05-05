@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
 
 import butterknife.ButterKnife;
@@ -67,6 +70,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected boolean isModalView() {
         return false;
+    }
+
+
+    protected FirebaseUser getUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+    protected FirebaseDatabase getDatabase() {
+        return FirebaseDatabase.getInstance();
     }
 
     @Override
