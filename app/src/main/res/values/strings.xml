@@ -223,5 +223,6 @@
     <string name="toast_lesson_removed">Заняття видалено</string>
     <string name="hint_comment">Коментар</string>
     <string name="error_delete_contact">Неможливо видалити контакт! Спочатку видаліть всі заняття</string>
+    <string name="error_delete_contact_other">Неможливо видалити контакт! В конакта є заняття з іншими викладачами</string>
 
 </resources>

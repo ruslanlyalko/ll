@@ -61,6 +61,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private String mContactKey = "";
     private LessonsAdapter mLessonAdapter = new LessonsAdapter(this);
     private ValueEventListener mValueEventListener;
+    private boolean mHasLessonsWithOtherTeachers;
 
     public static Intent getLaunchIntent(final Context launchIntent, final Contact contact) {
         Intent intent = new Intent(launchIntent, ContactDetailsActivity.class);
@@ -131,6 +132,10 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
             Toast.makeText(this, R.string.error_delete_contact, Toast.LENGTH_LONG).show();
             return;
         }
+        if (mHasLessonsWithOtherTeachers) {
+            Toast.makeText(this, R.string.error_delete_contact_other, Toast.LENGTH_LONG).show();
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_remove_contact_title)
                 .setMessage(R.string.dialog_remove_contact_message)
@@ -195,6 +200,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         if (isDestroyed()) return;
+                        mHasLessonsWithOtherTeachers = false;
                         List<Lesson> lessons = new ArrayList<>();
                         for (DataSnapshot datYears : dataSnapshot.getChildren()) {
                             for (DataSnapshot datYear : datYears.getChildren()) {
@@ -202,7 +208,10 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                                     for (DataSnapshot datDay : datMonth.getChildren()) {
                                         Lesson lesson = datDay.getValue(Lesson.class);
                                         if (lesson != null && (lesson.getClients().contains(mContact.getKey()))) {
-                                            lessons.add(lesson);
+                                            if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid()))
+                                                lessons.add(lesson);
+                                            else
+                                                mHasLessonsWithOtherTeachers = true;
                                         }
                                     }
                                 }

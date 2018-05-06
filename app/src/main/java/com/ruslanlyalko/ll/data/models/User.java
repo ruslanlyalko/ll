@@ -14,7 +14,7 @@ public class User implements Serializable {
     private String workingFromDate = "01.06.2017";
     private String workingStartTime = "10:00";
     private String workingEndTime = "19:00";
-    private String avatar = " ";
+    private String avatar = "https://firebasestorage.googleapis.com/v0/b/livelern01.appspot.com/o/USERS%2Fplaceholder_user.png?alt=media&token=201a7ee3-e7d9-42fa-8f1f-ad689378aa08";
     private String token;
     private boolean isAdmin;
     private boolean isReceiveNotifications;
