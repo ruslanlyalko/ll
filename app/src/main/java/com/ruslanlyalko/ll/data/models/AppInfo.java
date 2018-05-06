@@ -19,8 +19,8 @@ public class AppInfo implements Serializable {
     private int latestVersion;
 
     public AppInfo() {
-        aboutText = "Ігрова кімната Чебурашка КІДС почала працювати з 1.6.2016";
-        link = "https://play.google.com/store/apps/details?id=com.ruslanlyalko.kidsapp";
+        aboutText = "Історія, Місія";
+        link = "https://play.google.com/store/apps/details?id=com.ruslanlyalko.ll";
         linkFb = "https://www.facebook.com/LiveAndLearnLangauges/?ref=bookmarks";
         linkSite = "http://www.livelearn.com.ua";
         title1 = "Доступна нова версія!";
