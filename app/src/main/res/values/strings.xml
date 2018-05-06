@@ -63,7 +63,6 @@
 
     <!-- CALENDAR -->
     <string name="title_activity_calendar">Календар</string>
-    <string name="toast_edit_impossible">Редагувати можна тільки сьогоднішній або майбутні заняття</string>
 
     <!-- Expense-->
     <string name="title_activity_cost">Витрати</string>
@@ -71,15 +70,9 @@
     <!-- NOTIFICATION-->
     <string name="title_activity_notification">Повідомлення</string>
 
-    <string name="dialog_delete_mk_title">Видалити</string>
-    <string name="dialog_delete_title">Видалити</string>
-    <string name="dialog_delete_message">Після видалення відновити буде неможливо</string>
-
     <string name="title_activity_dashboard">"Адмін панель (%1$s ГРН)"</string>
-    <string name="mk_done">Проведено Майстер Класів: </string>
     <string name="toast_saved">Збережено</string>
     <string name="hint_price">Ціна</string>
-    <string name="hint_title2">Тип</string>
     <string name="hint_title1">Назва</string>
     <string name="text_cost_common">Загальні</string>
     <string name="text_cost_mk">На офіс</string>
@@ -116,9 +109,6 @@
     <string name="text_salary_detail_bd_children">МК за одну дитину:</string>
     <string name="text_salary_detail_art">"Арт МК:"</string>
 
-    <string name="action_today">Сьогодні</string>
-    <string name="action_go_to_calendar">КАЛЕНДАР</string>
-
     <string name="hint_time">Час роботи</string>
     <string name="action_new_user">Новий користувач</string>
     <string name="text_friend_list">Колеги</string>
@@ -129,30 +119,21 @@
     <string name="title_activity_add">Добавлення</string>
     <string name="hint_description">Детальний опис (не обовязково)</string>
     <string name="mk_updated">Дані обновлено успішно</string>
-    <string name="mk_added">МК створено успішно</string>
     <string name="not_added">Діалог створено успішно</string>
     <string name="dialog_mk_edit_text">В тексті є зміни, зберегти їх?</string>
-    <string name="dialog_choose_mk">Виберіть МК</string>
     <string name="action_delete_mk">Видалити</string>
     <string name="photo_uploading">"Фото загружається. Зачекайте хвильку.."</string>
     <string name="hint_first_date">Перший робочий день</string>
-    <string name="photo_uploaded">Фото збережено</string>
 
     <string name="tab_room_1">Зелений</string>
     <string name="tab_room_2">Синій</string>
     <string name="tab_room_3">Оливк.</string>
     <string name="tab_room_4">Бордовий</string>
 
-    <string name="title_activity_mk_plan">Майстер класи</string>
     <string name="title_activity_rooms_tab">Кабінети %s</string>
-    <string name="text_mk_full">Майстер клас</string>
-    <string name="title_activity_mk_item">Майстер клас</string>
 
-    <string name="expand_more">Показати опис</string>
-    <string name="text_mk_share">ПОДІЛИТИСЬ</string>
     <string name="toast_lesson_remove_unavailable">Видалення не дсступно</string>
     <string name="hint_link">Посилання (http://)</string>
-    <string name="text_mk_link">ПОСИЛАННЯ</string>
     <string name="title_activity_about">Про проект</string>
     <string name="text_about_company">
         "Чебурашка КІДС була створена 01,06,2016р.\n"
@@ -171,9 +152,6 @@
     <string name="toast_nothing_to_change">Немає змін в даних</string>
     <string name="button_link">Поділитись</string>
 
-    <string name="hrn_percent">"%1$s відсотків"</string>
-    <string name="hrn_child">"%1$s грн/дитина"</string>
-    <string name="hrn_day">"%1$s грн/день"</string>
     <string name="hrn">"%1$s грн"</string>
     <string name="HRN">"%1$s ГРН"</string>
     <string name="income">"%1$s/%2$s ГРН"</string>
@@ -185,23 +163,11 @@
     <string name="action_cancel">СКАСУВАТИ</string>
     <string name="action_save_changes">ЗБЕРЕГТИ ЗМІНИ</string>
     <string name="action_no">НІ</string>
-    <string name="action_choose">ВИБРАТИ</string>
 
     <!-- Strings related to REPORT -->
     <string name="image_permissions">Будь ласка, добавте дозвіл на використання камери</string>
-    <string name="text_check_list">Чек-Лист</string>
-    <string name="text_check_list_1"><![CDATA[Освітлення & Кондиціонер]]></string>
-    <string name="text_check_list_2"><![CDATA[Іграшки & Батут]]></string>
-    <string name="text_check_list_3">Прибирання</string>
-    <string name="text_check_list_4"><![CDATA[Стіна & Підвіконник]]></string>
-    <string name="text_check_list_5"><![CDATA[Відмінний настрій:)]]></string>
-    <string name="button_check_list_done">Готово</string>
-    <string name="toast_check_list_not_all_checked">Не всі пункти вибрано!</string>
     <string name="title_activity_maps">Карта</string>
     <string name="maps_marker_title">Розташування</string>
-    <string name="text_check_list_description">*Якщо з певним пунктом виникли труднощі,
-        будь ласка, вкажіть обставини в коментарях нижче.</string>
-    <string name="report_toast_no_image">Відсутнє фото свята. Сфотографуйте свято перед збереженням!</string>
     <string name="title_activity_alarm">Live&amp;Learn    Чек-Лист</string>
     <string name="stop_alarm">Пройти Чек-Лист</string>
     <string name="text_comments_list">Дозволити коментувати</string>
@@ -212,19 +178,12 @@
     <string name="online">Online</string>
     <string name="last_online">Востанє в мережі %s</string>
     <string name="last_online_long_time_ago">Востаннє в мережі давно</string>
-    <string name="calendar_add_report">СТВОРИТИ ЗАНЯТТЯ</string>
     <string name="expense_added">Витрату добавлено</string>
     <string name="expense_upload">Загрузити фото</string>
-    <string name="button_clients">НАШІ КЛІЄНТИ</string>
     <string name="title_activity_clients_tab">Наші Клієнти</string>
-    <string name="tab_text_1">КОНТАКТИ</string>
-    <string name="tab_text_2">ДНІ НАРОДЖЕННЯ</string>
     <string name="contacts_filter_by_name">Фільтр: І\'мя</string>
     <string name="contacts_filter_by_phone">Фільтр: Телефон</string>
     <string name="client_added">Контакт створено</string>
-    <string name="hint_child1">Імя першої дитини</string>
-    <string name="hint_child2">Імя другої дитини</string>
-    <string name="hint_child3">Імя третьої дитини</string>
     <string name="hint_client_description">Опис</string>
     <string name="hint_person">Ім\'я іменинника</string>
     <string name="check_mk">МК</string>
@@ -242,19 +201,11 @@
     <string name="text_credit">Аванс %1$s грн. Залишилось %2$s грн</string>
     <string name="hint_money">Сума</string>
     <string name="text_max_money">Всю суму (%1$s грн)</string>
-    <string name="switch_my_mk">Мій МК</string>
-    <string name="text_0_hrn">0 ГРН</string>
-    <string name="switch_half_salary">Пів дня</string>
     <string name="text_members">Учасники</string>
     <string name="shortcut_calendar_short_label">Календар</string>
     <string name="shortcut_calendar_long_label">Перейти в Календар</string>
     <string name="shortcut_report_short_label">Свято</string>
     <string name="shortcut_report_long_label">Перейти в Свято</string>
-    <string name="text_tile">Відкрити Live&amp;Learn</string>
-    <string name="hint_child">Іменинник</string>
-    <string name="hint_child_ages">Вік</string>
-    <string name="hint_place">Місце проведення</string>
-    <string name="hint_parent">Імя</string>
     <string name="button_expenses">Витрати</string>
     <string name="action_change_ava">Змінити аватар</string>
     <string name="error_no_name">Імя не може бути порожнім!</string>
@@ -270,13 +221,5 @@
     <string name="dialog_calendar_remove_title">Видалити заняття?</string>
     <string name="action_remove">Видалити</string>
     <string name="toast_lesson_removed">Заняття видалено</string>
-
-    <string-array name="markArray">
-        <item>1</item>
-        <item>4</item>
-        <item>8</item>
-        <item>12</item>
-        <item>16</item>
-    </string-array>
 
 </resources>
