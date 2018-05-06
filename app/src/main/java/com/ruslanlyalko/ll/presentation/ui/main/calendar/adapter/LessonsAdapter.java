@@ -81,7 +81,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
             mSwipeLayout.addDrag(SwipeLayout.DragEdge.Right, R.id.swipe_menu);
             mSwipeLayout.setRightSwipeEnabled(true);
             mSwipeLayout.setBottomSwipeEnabled(false);
-            mTextUserName.setText(lesson.getUserName());
+            String userName = lesson.getUserName() + (lesson.hasDescription() ? "*" : "");
+            mTextUserName.setText(userName);
             String date = DateUtils.toString(lesson.getDateTime(), "dd.MM  EEEE  HH:mm  ") +
                     mResources.getString(lesson.getLessonLengthId() == 0
                             ? R.string.lesson_length_one_hour : R.string.lesson_length_one_half_hour);

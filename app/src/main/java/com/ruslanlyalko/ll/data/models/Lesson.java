@@ -129,4 +129,8 @@ public class Lesson implements Serializable {
     public void setDateTime(final Date dateTime) {
         this.dateTime = dateTime;
     }
+
+    public boolean hasDescription() {
+        return getDescription() != null && !getDescription().isEmpty();
+    }
 }

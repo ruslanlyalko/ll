@@ -105,6 +105,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
                 if (!DateUtils.isCurrentYear(firstDayOfNewMonth))
                     str = str + "'" + yearSimple;
                 mTextMonth.setText(str);
+                showLessonsForDate(firstDayOfNewMonth);
             }
         });
         mSwipeRefresh.setOnRefreshListener(() -> {
@@ -211,8 +212,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     @Override
     public void onCommentClicked(final Lesson lesson) {
-        final boolean commentsExist = lesson.getDescription() != null & !lesson.getDescription().isEmpty();
-        if (commentsExist)
+        if (lesson.hasDescription())
             Toast.makeText(this, lesson.getDescription(), Toast.LENGTH_LONG).show();
     }
 

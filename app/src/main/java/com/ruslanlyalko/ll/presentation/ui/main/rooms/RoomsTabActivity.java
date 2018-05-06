@@ -193,8 +193,7 @@ public class RoomsTabActivity extends BaseActivity {
 
         @Override
         public void onCommentClicked(final Lesson lesson) {
-            final boolean commentsExist = lesson.getDescription() != null & !lesson.getDescription().isEmpty();
-            if (commentsExist)
+            if (lesson.hasDescription())
                 Toast.makeText(getContext(), lesson.getDescription(), Toast.LENGTH_LONG).show();
         }
 

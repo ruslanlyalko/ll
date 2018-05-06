@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,33 +18,35 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
-import com.ruslanlyalko.ll.data.models.Birthday;
 import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.clients.birthdays.adapter.BirthdaysAdapter;
-import com.ruslanlyalko.ll.presentation.ui.main.clients.birthdays.adapter.OnBirthdaysClickListener;
-import com.ruslanlyalko.ll.presentation.ui.main.clients.birthdays.edit.BirthdaysEditActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit.ContactEditActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysClickListener {
+public class ContactDetailsActivity extends BaseActivity implements OnLessonClickListener {
 
+    private static final int RC_LESSON = 1001;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.image_avatar) ImageView mImageAvatar;
     @BindView(R.id.text_sub_title) TextView mTextSubTitle;
@@ -54,9 +57,10 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
     @BindView(R.id.button_add_birthday) CardView mButtonAddBirthday;
     @BindView(R.id.list_birthdays) RecyclerView mListBirthdays;
     @BindView(R.id.text_user_name) TextView mTextUserName;
-    private BirthdaysAdapter mBirthdaysAdapter = new BirthdaysAdapter(this);
     private Contact mContact;
     private String mContactKey = "";
+    private LessonsAdapter mLessonAdapter = new LessonsAdapter(this);
+    private ValueEventListener mValueEventListener;
 
     public static Intent getLaunchIntent(final Context launchIntent, final Contact contact) {
         Intent intent = new Intent(launchIntent, ContactDetailsActivity.class);
@@ -94,7 +98,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
         setupRecycler();
         loadDetails();
         showContactDetails();
-        loadBirthdays();
     }
 
     @Override
@@ -111,9 +114,21 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(this::loadLessons, 300);
+    }
+
+    @Override
+    protected void onPause() {
+        getDatabase().getReference(DC.DB_LESSONS).removeEventListener(mValueEventListener);
+        super.onPause();
+    }
+
     private void removeCurrentContact() {
-        if (mBirthdaysAdapter.getItemCount() != 0) {
-            Toast.makeText(this, "Неможливо видалити контакт! Спочатку видаліть всі Дні Народження", Toast.LENGTH_LONG).show();
+        if (mLessonAdapter.getItemCount() != 0) {
+            Toast.makeText(this, R.string.error_delete_contact, Toast.LENGTH_LONG).show();
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -137,7 +152,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
 
     private void setupRecycler() {
         mListBirthdays.setLayoutManager(new LinearLayoutManager(this));
-        mListBirthdays.setAdapter(mBirthdaysAdapter);
+        mListBirthdays.setAdapter(mLessonAdapter);
     }
 
     private void loadDetails() {
@@ -173,28 +188,35 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
         mTextDescription.setVisibility(mContact.getDescription() != null & !mContact.getDescription().isEmpty() ? View.VISIBLE : View.GONE);
     }
 
-    private void loadBirthdays() {
-        Query ref = FirebaseDatabase.getInstance()
-                .getReference(DC.DB_BIRTHDAYS)
-                .orderByChild("contactKey").equalTo(mContact.getKey());
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                List<Birthday> birthdays = new ArrayList<>();
-                for (DataSnapshot birthdaySS : dataSnapshot.getChildren()) {
-                    Birthday birthday = birthdaySS.getValue(Birthday.class);
-                    if (birthday != null) {
-                        birthdays.add(birthday);
+    private void loadLessons() {
+        if (isDestroyed()) return;
+        mValueEventListener = getDatabase().getReference(DC.DB_LESSONS)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        if (isDestroyed()) return;
+                        List<Lesson> lessons = new ArrayList<>();
+                        for (DataSnapshot datYears : dataSnapshot.getChildren()) {
+                            for (DataSnapshot datYear : datYears.getChildren()) {
+                                for (DataSnapshot datMonth : datYear.getChildren()) {
+                                    for (DataSnapshot datDay : datMonth.getChildren()) {
+                                        Lesson lesson = datDay.getValue(Lesson.class);
+                                        if (lesson != null && (lesson.getClients().contains(mContact.getKey()))) {
+                                            lessons.add(lesson);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Collections.sort(lessons, (o1, o2) ->
+                                Long.compare(o2.getDateTime().getTime(), o1.getDateTime().getTime()));
+                        mLessonAdapter.setData(lessons);
                     }
-                }
-                mBirthdaysAdapter.setData(birthdays);
-                //onFilterTextChanged();
-            }
 
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-            }
-        });
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
     }
 
     @Override
@@ -209,15 +231,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
         menu.findItem(R.id.action_delete).setVisible(FirebaseUtils.isAdmin());
         menu.findItem(R.id.action_edit).setVisible(true);
         return true;
-    }
-
-    @Override
-    public void onEditClicked(final int position) {
-        startActivity(BirthdaysEditActivity.getLaunchIntent(this, mBirthdaysAdapter.getItem(position)));
-    }
-
-    @Override
-    public void onItemClicked(final int position) {
     }
 
     @OnClick(R.id.button_add_birthday)
@@ -240,5 +253,41 @@ public class ContactDetailsActivity extends BaseActivity implements OnBirthdaysC
                 startActivity(callIntent);
                 break;
         }
+    }
+
+    @Override
+    public void onCommentClicked(final Lesson lesson) {
+        if (lesson.hasDescription())
+            Toast.makeText(this, lesson.getDescription(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onEditClicked(final Lesson lesson) {
+        startActivityForResult(LessonActivity.getLaunchIntent(this, lesson), RC_LESSON);
+    }
+
+    @Override
+    public void onRemoveClicked(final Lesson lesson) {
+        if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(ContactDetailsActivity.this);
+            builder.setTitle(R.string.dialog_calendar_remove_title)
+                    .setPositiveButton(R.string.action_remove, (dialog, which) -> {
+                        removeLesson(lesson);
+                    })
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show();
+        } else {
+            Toast.makeText(this, R.string.toast_lesson_remove_unavailable, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void removeLesson(final Lesson lesson) {
+        getDatabase()
+                .getReference(DC.DB_LESSONS)
+                .child(DateUtils.toString(lesson.getDateTime(), "yyyy/MM/dd"))
+                .child(lesson.getKey()).removeValue().addOnSuccessListener(aVoid -> {
+            loadLessons();
+            Toast.makeText(this, R.string.toast_lesson_removed, Toast.LENGTH_LONG).show();
+        });
     }
 }
