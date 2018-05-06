@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +35,7 @@ import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
+import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
@@ -105,6 +108,7 @@ public class RoomsTabActivity extends BaseActivity {
     public static class PlaceholderFragment extends Fragment implements OnLessonClickListener {
 
         private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final int RC_LESSON = 1001;
         @BindView(R.id.recycler_view) RecyclerView mReportsList;
         private int mCurrentRoomType;
         private Date mCurrentDate = new Date();
@@ -154,6 +158,11 @@ public class RoomsTabActivity extends BaseActivity {
             mReportsList.setAdapter(mLessonsAdapter);
         }
 
+        @Override
+        public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+            reloadLessons();
+        }
+
         private void loadLessons() {
             if (getActivity() != null && getActivity().isDestroyed()) return;
             String aDate = DateFormat.format("yyyy/MM/dd", mCurrentDate).toString();
@@ -184,14 +193,43 @@ public class RoomsTabActivity extends BaseActivity {
 
         @Override
         public void onCommentClicked(final Lesson lesson) {
+            final boolean commentsExist = lesson.getDescription() != null & !lesson.getDescription().isEmpty();
+            if (commentsExist)
+                Toast.makeText(getContext(), lesson.getDescription(), Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onEditClicked(final Lesson lesson) {
+            startActivityForResult(LessonActivity.getLaunchIntent(getContext(), lesson), RC_LESSON);
         }
 
         @Override
         public void onRemoveClicked(final Lesson lesson) {
+            if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.dialog_calendar_remove_title)
+                        .setPositiveButton(R.string.action_remove, (dialog, which) -> {
+                            removeLesson(lesson);
+                        })
+                        .setNegativeButton(R.string.action_cancel, null)
+                        .show();
+            } else {
+                Toast.makeText(getContext(), R.string.toast_lesson_remove_unavailable, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        private void removeLesson(final Lesson lesson) {
+            FirebaseDatabase.getInstance()
+                    .getReference(DC.DB_LESSONS)
+                    .child(DateUtils.toString(lesson.getDateTime(), "yyyy/MM/dd"))
+                    .child(lesson.getKey()).removeValue().addOnSuccessListener(aVoid -> {
+                reloadLessons();
+                Toast.makeText(getContext(), R.string.toast_lesson_removed, Toast.LENGTH_LONG).show();
+            });
+        }
+
+        private void reloadLessons() {
+            loadLessons();
         }
     }
 
