@@ -184,6 +184,16 @@ public class DateUtils {
     }
 
 
+    public static Date getDate(Date date, final int year, final int month, final int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        return calendar.getTime();
+    }
+
+
     public static Date getDate(final Date date, final int hours, final int minutes) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

@@ -68,7 +68,7 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_mk_tab, menu);
+        getMenuInflater().inflate(R.menu.menu_rooms_tab, menu);
         return true;
     }
 

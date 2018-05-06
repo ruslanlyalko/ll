@@ -15,6 +15,7 @@ import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -23,12 +24,11 @@ import butterknife.OnClick;
 
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHolder> {
 
-    private final List<Lesson> mLessons;
+    private final List<Lesson> mLessons = new ArrayList<>();
     private final OnLessonClickListener mOnLessonClickListener;
 
-    public LessonsAdapter(OnLessonClickListener onLessonClickListener, List<Lesson> lessons) {
+    public LessonsAdapter(OnLessonClickListener onLessonClickListener) {
         mOnLessonClickListener = onLessonClickListener;
-        mLessons = lessons;
     }
 
     @Override
@@ -47,6 +47,12 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
     @Override
     public int getItemCount() {
         return mLessons.size();
+    }
+
+    public void setData(final List<Lesson> lessons) {
+        mLessons.clear();
+        mLessons.addAll(lessons);
+        notifyDataSetChanged();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

@@ -208,7 +208,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
                 calendar.setTime(mLesson.getDateTime());
                 DatePickerDialog dialog = DatePickerDialog.newInstance((datePicker, year, month, day)
                                 -> {
-                            mLesson.setDateTime(DateUtils.getDate(year, month, day));
+                            mLesson.setDateTime(DateUtils.getDate(mLesson.getDateTime(), year, month, day));
                             mTextDate.setText(DateUtils.toString(mLesson.getDateTime(), "dd.MM  EEEE"));
                             if (!isNew()) {
                                 mLesson.setKey("");
