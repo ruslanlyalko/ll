@@ -46,8 +46,6 @@ import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.SignupActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.adapter.UsersAdapter;
-import com.ruslanlyalko.ll.presentation.ui.main.profile.dashboard.DashboardActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.SalaryActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.settings.ProfileSettingsActivity;
 import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
 
@@ -421,9 +419,9 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     void onFabClicked() {
         final boolean myPage = mUser.getId().equals(mFirebaseUser.getUid());
         if (FirebaseUtils.isAdmin() && myPage) {
-            startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
+            //todo   startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
         } else {
-            startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUID, mUser));
+            //todo   startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUID, mUser));
         }
     }
 
