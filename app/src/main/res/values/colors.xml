@@ -36,10 +36,10 @@
     <integer-array name="colors">
         <item>@color/colorPrimary</item>
         <item>@color/colorAccent</item>
-        <item>@color/colorBlue500</item>
-        <item>@color/colorFab2</item>
-        <item>@color/colorIndigo500</item>
         <item>@color/colorDeepOrange500</item>
+        <item>@color/colorBlue500</item>
+        <item>@color/colorIndigo500</item>
+        <item>@color/colorFab2</item>
         <item>@color/colorTeal500</item>
     </integer-array>
 

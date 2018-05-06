@@ -5,17 +5,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -52,13 +53,9 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
     @BindView(R.id.fab) FloatingActionButton mFab;
 
     private LessonsAdapter mLessonsAdapter;
-    private List<Lesson> mLessonList = new ArrayList<>();
     private ArrayList<String> mUsersList = new ArrayList<>();
     private Date mCurrentDate;
     private String mUserId;
-
-    //private String mDay, mMonth, mYear;
-    private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public static Intent getLaunchIntent(final Activity launchIntent) {
         return new Intent(launchIntent, CalendarActivity.class);
@@ -74,14 +71,13 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
         mUserId = FirebaseAuth.getInstance().getUid();
         initRecycle();
         initCalendarView();
-        showReportsOnCalendar();
+        showLessonsOnCalendar();
         Date today = Calendar.getInstance().getTime();
-        showReportsForDate(today);
+        showLessonsForDate(today);
     }
 
     private void initRecycle() {
-        mLessonList = new ArrayList<>();
-        mLessonsAdapter = new LessonsAdapter(this, mLessonList);
+        mLessonsAdapter = new LessonsAdapter(this);
         mReportsList.setLayoutManager(new LinearLayoutManager(this));
         mReportsList.setAdapter(mLessonsAdapter);
     }
@@ -97,7 +93,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
         mCompactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                showReportsForDate(dateClicked);
+                showLessonsForDate(dateClicked);
             }
 
             @Override
@@ -112,8 +108,8 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
             }
         });
         mSwipeRefresh.setOnRefreshListener(() -> {
-            showReportsOnCalendar();
-            reloadReportsForDate();
+            showLessonsOnCalendar();
+            reloadLessons();
         });
     }
 
@@ -130,14 +126,14 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        reloadReportsForDate();
+        reloadLessons();
     }
 
-    private void reloadReportsForDate() {
-        showReportsForDate(mCurrentDate);
+    private void reloadLessons() {
+        showLessonsForDate(mCurrentDate);
     }
 
-    private void showReportsForDate(Date date) {
+    private void showLessonsForDate(Date date) {
         if (isDestroyed()) return;
         mCurrentDate = date;
         mFab.setVisibility((FirebaseUtils.isAdmin() || DateUtils.isTodayOrFuture(date))
@@ -149,16 +145,16 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mLessonList.clear();
+                        List<Lesson> lessons = new ArrayList<>();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             Lesson lesson = data.getValue(Lesson.class);
                             if (lesson != null) {
                                 if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
-                                    mLessonList.add(lesson);
+                                    lessons.add(lesson);
                                 }
                             }
                         }
-                        mLessonsAdapter.notifyDataSetChanged();
+                        mLessonsAdapter.setData(lessons);
                     }
 
                     @Override
@@ -167,7 +163,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
                 });
     }
 
-    private void showReportsOnCalendar() {
+    private void showLessonsOnCalendar() {
         mSwipeRefresh.setRefreshing(true);
         getDatabase().getReference(DC.DB_LESSONS)
                 .addValueEventListener(new ValueEventListener() {
@@ -215,9 +211,9 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     @Override
     public void onCommentClicked(final Lesson lesson) {
-//        final boolean commentsExist = lesson.getComment() != null & !lesson.getComment().isEmpty();
-//        if (commentsExist)
-//            Toast.makeText(this, lesson.getComment(), Toast.LENGTH_SHORT).show();
+        final boolean commentsExist = lesson.getDescription() != null & !lesson.getDescription().isEmpty();
+        if (commentsExist)
+            Toast.makeText(this, lesson.getDescription(), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -227,13 +223,27 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     @Override
     public void onRemoveClicked(final Lesson lesson) {
-//        if (lesson.getMkRef() != null && !lesson.getMkRef().isEmpty()) {
-//            Intent intent = new Intent(this, MkDetailsActivity.class);
-//            intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, lesson.getMkRef());
-//            startActivity(intent);
-//        } else {
-//            Toast.makeText(this, R.string.toast_mk_not_set, Toast.LENGTH_SHORT).show();
-//        }
+        if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+            builder.setTitle(R.string.dialog_calendar_remove_title)
+                    .setPositiveButton(R.string.action_remove, (dialog, which) -> {
+                        removeLesson(lesson);
+                    })
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show();
+        } else {
+            Toast.makeText(this, R.string.toast_lesson_remove_unavailable, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void removeLesson(final Lesson lesson) {
+        getDatabase()
+                .getReference(DC.DB_LESSONS)
+                .child(DateUtils.toString(lesson.getDateTime(), "yyyy/MM/dd"))
+                .child(lesson.getKey()).removeValue().addOnSuccessListener(aVoid -> {
+            reloadLessons();
+            Toast.makeText(this, R.string.toast_lesson_removed, Toast.LENGTH_LONG).show();
+        });
     }
 
     @OnClick(R.id.fab)

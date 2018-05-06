@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     private static final int TAB_CHILD = 1;
     @BindView(R.id.text_date) TextView mTextDate;
     @BindView(R.id.text_time) TextView mTextTime;
+    @BindView(R.id.edit_comment) EditText mEditDescription;
     @BindView(R.id.text_lesson_length) TextView mTextLessonLength;
     @BindView(R.id.tabs_room) TabLayout mTabsRoom;
     @BindView(R.id.tabs_lesson) TabLayout mTabsLesson;
@@ -113,6 +115,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         else
             mSectionsPagerAdapter.getChildFragment().updateSelected(mLesson.getClients());
         setTitle(getString(R.string.title_activity_lesson, mLesson.getUserName()));
+        mEditDescription.setText(mLesson.getDescription());
     }
 
     boolean isNew() {
@@ -175,6 +178,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         if (isNew()) {
             mLesson.setKey(ref.push().getKey());
         }
+        mLesson.setDescription(mEditDescription.getText().toString().trim());
         mLesson.setRoomType(mTabsRoom.getSelectedTabPosition());
         mLesson.setLessonType(mTabsLesson.getSelectedTabPosition());
         mLesson.setUserType(mTabsUser.getSelectedTabPosition());
@@ -208,7 +212,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
                 calendar.setTime(mLesson.getDateTime());
                 DatePickerDialog dialog = DatePickerDialog.newInstance((datePicker, year, month, day)
                                 -> {
-                            mLesson.setDateTime(DateUtils.getDate(year, month, day));
+                            mLesson.setDateTime(DateUtils.getDate(mLesson.getDateTime(), year, month, day));
                             mTextDate.setText(DateUtils.toString(mLesson.getDateTime(), "dd.MM  EEEE"));
                             if (!isNew()) {
                                 mLesson.setKey("");
