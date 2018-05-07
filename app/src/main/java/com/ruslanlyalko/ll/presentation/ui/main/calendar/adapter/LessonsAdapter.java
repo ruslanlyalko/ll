@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
+import com.ruslanlyalko.ll.common.ViewUtils;
+import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
@@ -25,6 +27,7 @@ import butterknife.OnClick;
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHolder> {
 
     private final List<Lesson> mLessons = new ArrayList<>();
+    private final List<Contact> mContacts = new ArrayList<>();
     private final OnLessonClickListener mOnLessonClickListener;
 
     public LessonsAdapter(OnLessonClickListener onLessonClickListener) {
@@ -55,6 +58,12 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         notifyDataSetChanged();
     }
 
+    public void setContacts(final List<Contact> contacts) {
+        mContacts.clear();
+        mContacts.addAll(contacts);
+        notifyDataSetChanged();
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         private final Resources mResources;
@@ -70,6 +79,9 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         @BindView(R.id.panel_card) LinearLayout mPanelCard;
         @BindView(R.id.swipe_layout) SwipeLayout mSwipeLayout;
         @BindView(R.id.card_root) CardView mCardRoot;
+        @BindView(R.id.text_description) TextView mTextDescription;
+        @BindView(R.id.text_users) TextView mTextUsers;
+        @BindView(R.id.layout_expanded) LinearLayout mLayoutExpanded;
 
         MyViewHolder(View view) {
             super(view);
@@ -120,6 +132,30 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
             }
             mTextLessonType.setText(lessonName);
             mTextUserType.setText(lesson.getUserType() == 0 ? R.string.user_type_adult : R.string.user_type_child);
+            mTextDescription.setText(lesson.getDescription());
+            mLayoutExpanded.setVisibility(View.GONE);
+            showClients(lesson);
+        }
+
+        private void showClients(final Lesson lesson) {
+            String names = "";
+            for (Contact contact : mContacts) {
+                if (lesson.getClients().contains(contact.getKey())) {
+                    if (!names.isEmpty())
+                        names += ", ";
+                    names += contact.getName();
+                }
+            }
+            mTextUsers.setText(names);
+        }
+
+        @OnClick(R.id.card_root)
+        void onCardCliecked() {
+            if (mLayoutExpanded.getVisibility() == View.VISIBLE) {
+                ViewUtils.collapse(mLayoutExpanded);
+            } else {
+                ViewUtils.expand(mLayoutExpanded);
+            }
         }
 
         @OnClick(R.id.button_comment)
