@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.common.ViewUtils;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
@@ -37,7 +36,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_lesson, parent, false);
+                .inflate(R.layout.card_lesson1, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -79,9 +78,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         @BindView(R.id.panel_card) LinearLayout mPanelCard;
         @BindView(R.id.swipe_layout) SwipeLayout mSwipeLayout;
         @BindView(R.id.card_root) CardView mCardRoot;
-        @BindView(R.id.text_description) TextView mTextDescription;
         @BindView(R.id.text_users) TextView mTextUsers;
-        @BindView(R.id.layout_expanded) LinearLayout mLayoutExpanded;
+        @BindView(R.id.text_description) TextView mTextDescription;
 
         MyViewHolder(View view) {
             super(view);
@@ -133,7 +131,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
             mTextLessonType.setText(lessonName);
             mTextUserType.setText(lesson.getUserType() == 0 ? R.string.user_type_adult : R.string.user_type_child);
             mTextDescription.setText(lesson.getDescription());
-            mLayoutExpanded.setVisibility(View.GONE);
+            mTextDescription.setVisibility(lesson.hasDescription() ? View.VISIBLE : View.GONE);
             showClients(lesson);
         }
 
@@ -147,15 +145,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
                 }
             }
             mTextUsers.setText(names);
-        }
-
-        @OnClick(R.id.card_root)
-        void onCardCliecked() {
-            if (mLayoutExpanded.getVisibility() == View.VISIBLE) {
-                ViewUtils.collapse(mLayoutExpanded);
-            } else {
-                ViewUtils.expand(mLayoutExpanded);
-            }
         }
 
         @OnClick(R.id.button_comment)
