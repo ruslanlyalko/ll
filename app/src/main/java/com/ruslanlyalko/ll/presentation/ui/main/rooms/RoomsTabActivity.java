@@ -26,11 +26,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
+import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
@@ -151,6 +153,7 @@ public class RoomsTabActivity extends BaseActivity {
             mUserId = FirebaseAuth.getInstance().getUid();
             initRecycler();
             loadLessons();
+            loadContacts();
         }
 
         private void initRecycler() {
@@ -189,6 +192,29 @@ public class RoomsTabActivity extends BaseActivity {
                         public void onCancelled(final DatabaseError databaseError) {
                         }
                     });
+        }
+
+        private void loadContacts() {
+            Query ref = FirebaseDatabase.getInstance()
+                    .getReference(DC.DB_CONTACTS)
+                    .orderByChild("name");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(final DataSnapshot dataSnapshot) {
+                    List<Contact> contacts = new ArrayList<>();
+                    for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
+                        Contact contact = clientSS.getValue(Contact.class);
+                        if (contact != null) {
+                            contacts.add(contact);
+                        }
+                    }
+                    mLessonsAdapter.setContacts(contacts);
+                }
+
+                @Override
+                public void onCancelled(final DatabaseError databaseError) {
+                }
+            });
         }
 
         @Override

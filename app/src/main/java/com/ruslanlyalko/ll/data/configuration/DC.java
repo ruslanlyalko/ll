@@ -12,12 +12,11 @@ public interface DC {
     String DB_USERS_NOTIFICATIONS = "USERS_NOTIFICATIONS";
     String DB_DIALOGS = "DIALOGS";
     String DB_MESSAGES = "DIALOGS_MESSAGES";
-    String DB_MK = "MK";
     String DB_EXPENSES = "EXPENSES";
     String DB_COMMENTS = "COMMENTS";
-    String DB_INFO = "APP_INFO";
     String DB_RESULTS = "RESULTS";
     String DB_CREDITS = "CREDITS";
+    String DB_INFO = "APP_INFO";
 
     String STORAGE_USERS = "USERS";
     String STORAGE_EXPENSES = "EXPENSE";

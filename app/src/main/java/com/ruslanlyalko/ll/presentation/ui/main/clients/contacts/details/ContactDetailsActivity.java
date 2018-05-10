@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
@@ -59,7 +60,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @BindView(R.id.text_user_name) TextView mTextUserName;
     private Contact mContact;
     private String mContactKey = "";
-    private LessonsAdapter mLessonAdapter = new LessonsAdapter(this);
+    private LessonsAdapter mLessonsAdapter = new LessonsAdapter(this);
     private ValueEventListener mValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
 
@@ -99,6 +100,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         setupRecycler();
         loadDetails();
         showContactDetails();
+        loadContacts();
     }
 
     @Override
@@ -128,7 +130,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void removeCurrentContact() {
-        if (mLessonAdapter.getItemCount() != 0) {
+        if (mLessonsAdapter.getItemCount() != 0) {
             Toast.makeText(this, R.string.error_delete_contact, Toast.LENGTH_LONG).show();
             return;
         }
@@ -157,7 +159,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     private void setupRecycler() {
         mListBirthdays.setLayoutManager(new LinearLayoutManager(this));
-        mListBirthdays.setAdapter(mLessonAdapter);
+        mListBirthdays.setAdapter(mLessonsAdapter);
     }
 
     private void loadDetails() {
@@ -219,13 +221,36 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                         }
                         Collections.sort(lessons, (o1, o2) ->
                                 Long.compare(o2.getDateTime().getTime(), o1.getDateTime().getTime()));
-                        mLessonAdapter.setData(lessons);
+                        mLessonsAdapter.setData(lessons);
                     }
 
                     @Override
                     public void onCancelled(final DatabaseError databaseError) {
                     }
                 });
+    }
+
+    private void loadContacts() {
+        Query ref = FirebaseDatabase.getInstance()
+                .getReference(DC.DB_CONTACTS)
+                .orderByChild("name");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                List<Contact> contacts = new ArrayList<>();
+                for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
+                    Contact contact = clientSS.getValue(Contact.class);
+                    if (contact != null) {
+                        contacts.add(contact);
+                    }
+                }
+                mLessonsAdapter.setContacts(contacts);
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
