@@ -26,11 +26,155 @@ public class SettingsSalary {
     private int teacherOnLine15;
     private int studentGroup15;
     private int teacherGroup15;
+    private int studentPrivateChild;
+    private int teacherPrivateChild;
+    private int studentPairChild;
+    private int teacherPairChild;
+    private int studentOnLineChild;
+    private int teacherOnLineChild;
+    private int studentGroupChild;
+    private int teacherGroupChild;
+    private int studentPrivate15Child;
+    private int teacherPrivate15Child;
+    private int studentPair15Child;
+    private int teacherPair15Child;
+    private int studentOnLine15Child;
+    private int teacherOnLine15Child;
+    private int studentGroup15Child;
+    private int teacherGroup15Child;
 
     public SettingsSalary() {
         key = "first_key";
         dateFrom.setMonth(1);
         dateFrom.setDate(1);
+    }
+
+    public int getStudentPrivateChild() {
+        return studentPrivateChild;
+    }
+
+    public void setStudentPrivateChild(final int studentPrivateChild) {
+        this.studentPrivateChild = studentPrivateChild;
+    }
+
+    public int getTeacherPrivateChild() {
+        return teacherPrivateChild;
+    }
+
+    public void setTeacherPrivateChild(final int teacherPrivateChild) {
+        this.teacherPrivateChild = teacherPrivateChild;
+    }
+
+    public int getStudentPairChild() {
+        return studentPairChild;
+    }
+
+    public void setStudentPairChild(final int studentPairChild) {
+        this.studentPairChild = studentPairChild;
+    }
+
+    public int getTeacherPairChild() {
+        return teacherPairChild;
+    }
+
+    public void setTeacherPairChild(final int teacherPairChild) {
+        this.teacherPairChild = teacherPairChild;
+    }
+
+    public int getStudentOnLineChild() {
+        return studentOnLineChild;
+    }
+
+    public void setStudentOnLineChild(final int studentOnLineChild) {
+        this.studentOnLineChild = studentOnLineChild;
+    }
+
+    public int getTeacherOnLineChild() {
+        return teacherOnLineChild;
+    }
+
+    public void setTeacherOnLineChild(final int teacherOnLineChild) {
+        this.teacherOnLineChild = teacherOnLineChild;
+    }
+
+    public int getStudentGroupChild() {
+        return studentGroupChild;
+    }
+
+    public void setStudentGroupChild(final int studentGroupChild) {
+        this.studentGroupChild = studentGroupChild;
+    }
+
+    public int getTeacherGroupChild() {
+        return teacherGroupChild;
+    }
+
+    public void setTeacherGroupChild(final int teacherGroupChild) {
+        this.teacherGroupChild = teacherGroupChild;
+    }
+
+    public int getStudentPrivate15Child() {
+        return studentPrivate15Child;
+    }
+
+    public void setStudentPrivate15Child(final int studentPrivate15Child) {
+        this.studentPrivate15Child = studentPrivate15Child;
+    }
+
+    public int getTeacherPrivate15Child() {
+        return teacherPrivate15Child;
+    }
+
+    public void setTeacherPrivate15Child(final int teacherPrivate15Child) {
+        this.teacherPrivate15Child = teacherPrivate15Child;
+    }
+
+    public int getStudentPair15Child() {
+        return studentPair15Child;
+    }
+
+    public void setStudentPair15Child(final int studentPair15Child) {
+        this.studentPair15Child = studentPair15Child;
+    }
+
+    public int getTeacherPair15Child() {
+        return teacherPair15Child;
+    }
+
+    public void setTeacherPair15Child(final int teacherPair15Child) {
+        this.teacherPair15Child = teacherPair15Child;
+    }
+
+    public int getStudentOnLine15Child() {
+        return studentOnLine15Child;
+    }
+
+    public void setStudentOnLine15Child(final int studentOnLine15Child) {
+        this.studentOnLine15Child = studentOnLine15Child;
+    }
+
+    public int getTeacherOnLine15Child() {
+        return teacherOnLine15Child;
+    }
+
+    public void setTeacherOnLine15Child(final int teacherOnLine15Child) {
+        this.teacherOnLine15Child = teacherOnLine15Child;
+    }
+
+    public int getStudentGroup15Child() {
+        return studentGroup15Child;
+    }
+
+    public void setStudentGroup15Child(final int studentGroup15Child) {
+        this.studentGroup15Child = studentGroup15Child;
+    }
+
+    public int getTeacherGroup15Child() {
+        return teacherGroup15Child;
+    }
+
+    public void setTeacherGroup15Child(final int teacherGroup15Child) {
+        this.teacherGroup15Child = teacherGroup15Child;
     }
 
     public int getStudentPrivate15() {

@@ -120,7 +120,6 @@ public class SalaryEditActivity extends BaseActivity {
     }
 
     private void loadSalaries() {
-        //todo
         getDatabase().getReference(DC.DB_SETTINGS_SALARY).child("first_key")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
