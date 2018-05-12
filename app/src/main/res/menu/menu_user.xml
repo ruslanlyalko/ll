@@ -8,6 +8,11 @@
         android:title="@string/action_new_user" />
 
     <item
+        android:id="@+id/action_settings_salary"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings_salary" />
+
+    <item
         android:id="@+id/action_change_ava"
         android:icon="@drawable/ic_settings"
         android:title="@string/action_change_ava" />

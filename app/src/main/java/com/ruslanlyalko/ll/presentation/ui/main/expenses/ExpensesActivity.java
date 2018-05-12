@@ -25,7 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
@@ -88,7 +87,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         mButtonCostDeleteAll.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
         mTextUserName.setText(mCurrentUser.getDisplayName());
         Calendar month = Calendar.getInstance();
-        mTextMonth.setText(Constants.MONTH_FULL[month.get(Calendar.MONTH)]);
+        mTextMonth.setText(DateUtils.getMonth(getResources(), month));
         // define a listener to receive callbacks when certain events happen.
         mCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -100,7 +99,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
                 Calendar month = Calendar.getInstance();
                 month.setTime(firstDayOfNewMonth);
                 String yearSimple = new SimpleDateFormat("yy", Locale.US).format(firstDayOfNewMonth);
-                String str = Constants.MONTH_FULL[month.get(Calendar.MONTH)];
+                String str = DateUtils.getMonth(getResources(), month);
                 if (!DateUtils.isCurrentYear(firstDayOfNewMonth))
                     str = str + "'" + yearSimple;
                 mTextMonth.setText(str);
@@ -112,6 +111,15 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         String yearStr = new SimpleDateFormat("yyyy", Locale.US).format(new Date());
         String monthStr = new SimpleDateFormat("M", Locale.US).format(new Date());
         loadExpenses(yearStr, monthStr);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mProgressBarUpload.getVisibility() == View.VISIBLE) {
+            Toast.makeText(this, R.string.photo_uploading, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        super.onBackPressed();
     }
 
     private void initSwitcher() {
@@ -178,15 +186,6 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         mTextCostCommon.setText(getString(R.string.hrn, DateUtils.getIntWithSpace(common)));
         mTextCostMk.setText(getString(R.string.hrn, DateUtils.getIntWithSpace(mk)));
         mTotalSwitcher.setText(getString(R.string.HRN, DateUtils.getIntWithSpace(total)));
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mProgressBarUpload.getVisibility() == View.VISIBLE) {
-            Toast.makeText(this, R.string.photo_uploading, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        super.onBackPressed();
     }
 
     @OnClick({R.id.fab, R.id.faded_background})

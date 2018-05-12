@@ -31,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.ViewUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
@@ -119,7 +118,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
         initBarChart();
         initBarChartIncome();
         initRecycler();
-        textMonth.setText(Constants.MONTH_FULL[Calendar.getInstance().get(Calendar.MONTH)]);
+        textMonth.setText(DateUtils.getMonth(getResources(), Calendar.getInstance()));
         yearStr = new SimpleDateFormat("yyyy", Locale.US).format(new Date());
         monthStr = new SimpleDateFormat("M", Locale.US).format(new Date());
         loadReports(yearStr, monthStr);
@@ -226,7 +225,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
                 Calendar month = Calendar.getInstance();
                 month.setTime(firstDayOfNewMonth);
                 String yearSimple = new SimpleDateFormat("yy", Locale.US).format(firstDayOfNewMonth);
-                String str = Constants.MONTH_FULL[month.get(Calendar.MONTH)];
+                String str = DateUtils.getMonth(getResources(), month);
                 if (!DateUtils.isCurrentYear(firstDayOfNewMonth))
                     str = str + "'" + yearSimple;
                 textMonth.setText(str);
@@ -263,6 +262,20 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
         loadCredits(yearStr, monthStr);
     }
 
+    @Override
+    public void onBackPressed() {
+        // save comments before exit
+        saveCommentToDB(editComment.getText().toString());
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        calcIncome();
+        calcCostTotal();
+    }
+
     private void loadCredits(String yearStr, String monthStr) {
         mDatabase.getReference(DC.DB_CREDITS)
                 .child(yearStr)
@@ -296,20 +309,6 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
         mMaxMoney = (int) (incomeTotal * 0.8 - mCreditTotal);
         mTextCreditTotal.setText(String.format(getString(R.string.text_credit),
                 DateUtils.getIntWithSpace(mCreditTotal), DateUtils.getIntWithSpace(mMaxMoney)));
-    }
-
-    @Override
-    public void onBackPressed() {
-        // save comments before exit
-        saveCommentToDB(editComment.getText().toString());
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        calcIncome();
-        calcCostTotal();
     }
 
     private void calcIncome() {
@@ -610,9 +609,7 @@ public class DashboardActivity extends AppCompatActivity implements OnItemClickL
     @Override
     public void onItemClicked(final int position) {
         User user = mUsersSalaryAdapter.getItemAtPosition(position);
-        startActivity(SalaryActivity.getLaunchIntent(this,
-                user.getId(),
-                user));
+        startActivity(SalaryActivity.getLaunchIntent(this, user));
     }
 
     @OnClick(R.id.card_expenses)

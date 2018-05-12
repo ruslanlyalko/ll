@@ -66,19 +66,12 @@ public class RoomsTabActivity extends BaseActivity {
 
     @Override
     protected void setupView() {
-        initToolbar();
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         setTitle(getString(R.string.title_activity_rooms_tab, DateUtils.toString(mCurrentDate, "dd.MM  EEEE")));
     }
 
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

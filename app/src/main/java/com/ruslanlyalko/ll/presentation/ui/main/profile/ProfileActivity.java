@@ -16,7 +16,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +45,9 @@ import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.SignupActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.adapter.UsersAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.profile.dashboard.DashboardActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.SalaryActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.profile.salary_edit.SalaryEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.settings.ProfileSettingsActivity;
 import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
 
@@ -99,6 +101,12 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         return new Intent(launchIntent, ProfileActivity.class);
     }
 
+    public static Intent getLaunchIntent(final Activity launchIntent, final String userId) {
+        Intent intent = new Intent(launchIntent, ProfileActivity.class);
+        intent.putExtra(Keys.Extras.EXTRA_UID, userId);
+        return intent;
+    }
+
     @Override
     protected boolean isLeftView() {
         return true;
@@ -121,17 +129,36 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
 
     @Override
     protected void setupView() {
-        initToolbar();
         initRecycle();
         loadUsers();
         checkConnection();
     }
 
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_user: {
+                startActivity(new Intent(this, SignupActivity.class));
+                return true;
+            }
+            case R.id.action_settings: {
+                startActivity(ProfileSettingsActivity.getLaunchIntent(this, mUID));
+                return true;
+            }
+            case R.id.action_settings_salary: {
+                startActivity(SalaryEditActivity.getLaunchIntent(this));
+                return true;
+            }
+            case R.id.action_change_ava: {
+                choosePhoto();
+                return true;
+            }
+            case R.id.action_logout: {
+                logout();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initRecycle() {
@@ -143,6 +170,51 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         } else {
             mCardView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                //Some error handling
+            }
+
+            @Override
+            public void onImagePicked(final File imageFile, final EasyImage.ImageSource source, final int type) {
+                onPhotosReturned(imageFile);
+            }
+        });
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> list) {
+        switch (requestCode) {
+            case REQUEST_IMAGE_PERMISSION:
+                EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
+                break;
+        }
+    }
+
+    @Override
+    public void onPermissionsDenied(final int requestCode, final List<String> perms) {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        menu.findItem(R.id.action_add_user).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
+        menu.findItem(R.id.action_settings_salary).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
+        menu.findItem(R.id.action_settings).setVisible(FirebaseUtils.isAdmin() || mIsCurrentUserPage);
+        menu.findItem(R.id.action_change_ava).setVisible(mIsCurrentUserPage);
+        menu.findItem(R.id.action_logout).setVisible(mIsCurrentUserPage);
+        return true;
     }
 
     private void loadUsers() {
@@ -304,29 +376,6 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add_user: {
-                startActivity(new Intent(this, SignupActivity.class));
-                return true;
-            }
-            case R.id.action_settings: {
-                startActivity(ProfileSettingsActivity.getLaunchIntent(this, mUID));
-                return true;
-            }
-            case R.id.action_change_ava: {
-                choosePhoto();
-                return true;
-            }
-            case R.id.action_logout: {
-                logout();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void choosePhoto() {
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
@@ -348,22 +397,6 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 })
                 .setNegativeButton("Повернутись", null)
                 .show();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
-            @Override
-            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
-                //Some error handling
-            }
-
-            @Override
-            public void onImagePicked(final File imageFile, final EasyImage.ImageSource source, final int type) {
-                onPhotosReturned(imageFile);
-            }
-        });
     }
 
     private void onPhotosReturned(final File imageFile) {
@@ -403,51 +436,17 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     }
 
     @Override
-    public void onPermissionsGranted(int requestCode, List<String> list) {
-        switch (requestCode) {
-            case REQUEST_IMAGE_PERMISSION:
-                EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
-                break;
-        }
-    }
-
-    @Override
-    public void onPermissionsDenied(final int requestCode, final List<String> perms) {
+    public void onItemClicked(final int position) {
+        startActivity(ProfileActivity.getLaunchIntent(this, mUsersAdapter.getItemAtPosition(position).getId()));
     }
 
     @OnClick(R.id.fab)
     void onFabClicked() {
         final boolean myPage = mUser.getId().equals(mFirebaseUser.getUid());
         if (FirebaseUtils.isAdmin() && myPage) {
-            //todo   startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
+            startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
         } else {
-            //todo   startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUID, mUser));
+            startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUser));
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_user, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        menu.findItem(R.id.action_add_user).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
-        menu.findItem(R.id.action_settings).setVisible(FirebaseUtils.isAdmin() || mIsCurrentUserPage);
-        menu.findItem(R.id.action_change_ava).setVisible(mIsCurrentUserPage);
-        menu.findItem(R.id.action_logout).setVisible(mIsCurrentUserPage);
-        return true;
-    }
-
-    @Override
-    public void onItemClicked(final int position) {
-        startActivity(ProfileActivity.getLaunchIntent(this, mUsersAdapter.getItemAtPosition(position).getId()));
-    }
-
-    public static Intent getLaunchIntent(final Activity launchIntent, final String userId) {
-        Intent intent = new Intent(launchIntent, ProfileActivity.class);
-        intent.putExtra(Keys.Extras.EXTRA_UID, userId);
-        return intent;
     }
 }

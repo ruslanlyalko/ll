@@ -3,211 +3,368 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            tools:context=".presentation.ui.main.profile.salary.edit.SalaryEditActivity">
+            tools:context=".presentation.ui.main.profile.salary_edit.SalaryEditActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-        <Switch
-            android:id="@+id/switch_salary"
+        <requestFocus />
+        <!--Private-->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="@string/text_salary_switch" />
+            android:text="@string/text_salary_private"
+            android:textColor="@color/colorAccent" />
 
-        <!-- TILE  Date picker -->
-        <android.support.v7.widget.CardView
-            card_view:cardCornerRadius="@dimen/card_radius"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/card_margin"
-            android:layout_marginTop="@dimen/card_margin"
-            android:elevation="3dp">
+            android:layout_marginTop="8dp"
+            android:focusableInTouchMode="false"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/panel_date"
-                android:layout_width="match_parent"
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="horizontal">
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/ic_user_birthday" />
-
-                <LinearLayout
+                <EditText
+                    android:id="@+id/edit_private_student"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/text_date"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="16dp"
-                            android:text=""
-                            android:textSize="18sp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="16dp"
-                android:src="@drawable/ic_action_income" />
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <EditText
-                    android:id="@+id/edit_stavka"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:hint="@string/text_stavka"
-                    android:inputType="number" />
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/text_salary_student_1"
+                    android:inputType="number"
+                    android:nextFocusLeft="@+id/edit_private_student"
+                    android:nextFocusUp="@+id/edit_private_student"
+                    android:text="@string/text_zero" />
 
             </android.support.design.widget.TextInputLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="16dp"
-                android:src="@drawable/ic_action_income" />
-
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <EditText
-                    android:id="@+id/edit_percent"
+                    android:id="@+id/edit_private_teacher"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:hint="@string/text_percent"
-                    android:inputType="number" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/text_salary_teacher_1"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="16dp"
-                android:src="@drawable/ic_action_income" />
-
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <EditText
-                    android:id="@+id/edit_mk_birthday"
+                    android:id="@+id/edit_private_student_15"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:hint="@string/text_salary_detail_mk1"
-                    android:inputType="number" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/text_salary_student_1_5"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_private_teacher_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/text_salary_teacher_1_5"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <!--Pair-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/text_salary_pair"
+            android:textColor="@color/colorAccent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_pair_student"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/text_salary_student_1"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_pair_teacher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/text_salary_teacher_1"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="16dp"
-                android:src="@drawable/ic_action_income" />
-
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <EditText
-                    android:id="@+id/edit_mk_children"
+                    android:id="@+id/edit_pair_student_15"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:hint="@string/text_salary_detail_bd_children"
-                    android:inputType="number" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/text_salary_student_1_5"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_pair_teacher_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/text_salary_teacher_1_5"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <!--Group-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/text_salary_group"
+            android:textColor="@color/colorAccent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_group_student"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/text_salary_student_1"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_group_teacher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/text_salary_teacher_1"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="16dp"
-                android:src="@drawable/ic_action_income" />
-
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <EditText
-                    android:id="@+id/edit_mk_art"
+                    android:id="@+id/edit_group_student_15"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:hint="@string/text_salary_detail_art"
-                    android:inputType="number" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/text_salary_student_1_5"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_group_teacher_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/text_salary_teacher_1_5"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+        <!--OnLine-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/text_salary_online"
+            android:textColor="@color/colorAccent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_online_student"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/text_salary_student_1"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_online_teacher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/text_salary_teacher_1"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_online_student_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:hint="@string/text_salary_student_1_5"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/edit_online_teacher_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/text_salary_teacher_1_5"
+                    android:inputType="number"
+                    android:text="@string/text_zero" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

@@ -96,7 +96,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @Override
     protected void setupView() {
         if (isDestroyed()) return;
-        setupToolbar();
         setupRecycler();
         loadDetails();
         showContactDetails();
@@ -151,11 +150,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                 .show();
     }
 
-    private void setupToolbar() {
-        setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
     private void setupRecycler() {
         mListBirthdays.setLayoutManager(new LinearLayoutManager(this));

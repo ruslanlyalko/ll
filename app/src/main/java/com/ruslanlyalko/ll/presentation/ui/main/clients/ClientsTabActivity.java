@@ -47,9 +47,6 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
 
     @Override
     protected void setupView() {
-        setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(sectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabs));

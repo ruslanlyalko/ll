@@ -1,5 +1,9 @@
 package com.ruslanlyalko.ll.common;
 
+import android.content.res.Resources;
+
+import com.ruslanlyalko.ll.R;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -193,6 +197,10 @@ public class DateUtils {
         return calendar.getTime();
     }
 
+    public static String getMonth(Resources resources, Calendar date) {
+        String[] months = resources.getStringArray(R.array.months);
+        return months[date.get(Calendar.MONTH)];
+    }
 
     public static Date getDate(final Date date, final int hours, final int minutes) {
         Calendar calendar = Calendar.getInstance();

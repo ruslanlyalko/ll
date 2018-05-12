@@ -6,9 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,12 +17,12 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.text_version) TextView textVersion;
@@ -39,12 +37,22 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
-        ButterKnife.bind(this);
-        initToolbar();
-        parseExtras();
+    protected int getLayoutResource() {
+        return R.layout.activity_about;
+    }
+
+    @Override
+    protected void parseExtras() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String aboutText = bundle.getString(Keys.Extras.EXTRA_ABOUT, getString(R.string.text_about_company));
+            textAbout.setText(aboutText);
+            editAbout.setText(aboutText);
+        }
+    }
+
+    @Override
+    protected void setupView() {
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -60,21 +68,6 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
-    private void initToolbar() {
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void parseExtras() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            String aboutText = bundle.getString(Keys.Extras.EXTRA_ABOUT, getString(R.string.text_about_company));
-            textAbout.setText(aboutText);
-            editAbout.setText(aboutText);
-        }
-    }
-
     @OnClick(R.id.fab)
     void onFabClicked() {
         if (FirebaseUtils.isAdmin())
@@ -83,15 +76,5 @@ public class AboutActivity extends AppCompatActivity {
                     .setValue(editAbout.getText().toString().trim())
                     .addOnCompleteListener(task ->
                             Toast.makeText(AboutActivity.this, R.string.mk_updated, Toast.LENGTH_SHORT).show());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

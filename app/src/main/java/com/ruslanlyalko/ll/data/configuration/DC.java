@@ -9,6 +9,7 @@ public interface DC {
 
     String DB_LESSONS = "LESSONS";
     String DB_USERS = "USERS";
+    String DB_SETTINGS_SALARY = "SETTINGS_SALARY";
     String DB_USERS_NOTIFICATIONS = "USERS_NOTIFICATIONS";
     String DB_DIALOGS = "DIALOGS";
     String DB_MESSAGES = "DIALOGS_MESSAGES";

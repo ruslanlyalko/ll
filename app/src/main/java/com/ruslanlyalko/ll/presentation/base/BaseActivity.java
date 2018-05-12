@@ -6,6 +6,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutResource());
         mUnBinder = ButterKnife.bind(this);
         parseExtras();
+        initToolbar();
         setupView();
         if (isModalView())
             overridePendingTransition(R.anim.fadein, R.anim.nothing);
@@ -47,11 +49,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
     }
 
+    @Override
+    protected void onDestroy() {
+        mUnBinder.unbind();
+        super.onDestroy();
+    }
+
     protected boolean isRightView() {
         return false;
     }
 
-    protected  boolean isLeftView(){
+    protected boolean isLeftView() {
         return false;
     }
 
@@ -66,25 +74,26 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.w(TAG, "parseExtras not implemented!");
     }
 
+    protected void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null)
+            setSupportActionBar(toolbar);
+    }
+
     protected abstract void setupView();
 
     protected boolean isModalView() {
         return false;
     }
 
-
     protected FirebaseUser getUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
+
     protected FirebaseDatabase getDatabase() {
         return FirebaseDatabase.getInstance();
     }
 
-    @Override
-    protected void onDestroy() {
-        mUnBinder.unbind();
-        super.onDestroy();
-    }
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -104,6 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        hideKeyboard();
         super.onBackPressed();
         if (isModalView())
             overridePendingTransition(R.anim.nothing, R.anim.fadeout);

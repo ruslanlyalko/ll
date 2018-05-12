@@ -23,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Constants;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
@@ -91,8 +90,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
         mCompactCalendarView.shouldDrawIndicatorsBelowSelectedDays(true);
         mCompactCalendarView.shouldScrollMonth(false);
         mCompactCalendarView.displayOtherMonthDays(true);
-        Calendar month = Calendar.getInstance();
-        mTextMonth.setText(Constants.MONTH_FULL[month.get(Calendar.MONTH)]);
+        mTextMonth.setText(DateUtils.getMonth(getResources(), Calendar.getInstance()));
         // define a listener to receive callbacks when certain events happen.
         mCompactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -105,7 +103,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
                 Calendar month = Calendar.getInstance();
                 month.setTime(firstDayOfNewMonth);
                 String yearSimple = new SimpleDateFormat("yy", Locale.US).format(firstDayOfNewMonth);
-                String str = Constants.MONTH_FULL[month.get(Calendar.MONTH)];
+                String str = DateUtils.getMonth(getResources(), month);
                 if (!DateUtils.isCurrentYear(firstDayOfNewMonth))
                     str = str + "'" + yearSimple;
                 mTextMonth.setText(str);

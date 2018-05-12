@@ -224,5 +224,29 @@
     <string name="hint_comment">Коментар</string>
     <string name="error_delete_contact">Неможливо видалити контакт! Спочатку видаліть всі заняття</string>
     <string name="error_delete_contact_other">Неможливо видалити контакт! В конакта є заняття з іншими викладачами</string>
+    <string name="text_zero">0</string>
+    <string name="text_salary_student_1">Із Студента (1 год))</string>
+    <string name="text_salary_teacher_1">Викладачу (1 год)</string>
+    <string name="text_salary_student_1_5">Із Студента (1.5 год)</string>
+    <string name="text_salary_teacher_1_5">Викладачу (1.5 год)</string>
+    <string name="text_salary_private">Приватні</string>
+    <string name="text_salary_pair">Парні</string>
+    <string name="text_salary_group">Групові</string>
+    <string name="text_salary_online">OnLine</string>
+    <string name="action_settings_salary">Тарифи</string>
+    <string-array name="months">
+        <item>Січень</item>
+        <item>Лютий</item>
+        <item>Березень</item>
+        <item>Квітень</item>
+        <item>Травень</item>
+        <item>Червень</item>
+        <item>Липень</item>
+        <item>Серпень</item>
+        <item>Вересень</item>
+        <item>Жовтень</item>
+        <item>Листопад</item>
+        <item>Грудень</item>
+    </string-array>
 
 </resources>
