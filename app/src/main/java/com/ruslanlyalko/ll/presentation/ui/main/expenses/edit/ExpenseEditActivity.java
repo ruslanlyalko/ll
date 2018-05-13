@@ -164,7 +164,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
         }
         if (mNeedToSave) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ExpenseEditActivity.this);
-            builder.setTitle(R.string.dialog_discart_changes)
+            builder.setTitle(R.string.dialog_discard_changes)
                     .setPositiveButton(R.string.action_discard, (dialog, which) -> {
                         mNeedToSave = false;
                         onBackPressed();

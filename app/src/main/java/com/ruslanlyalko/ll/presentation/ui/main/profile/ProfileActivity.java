@@ -45,7 +45,6 @@ import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.SignupActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.adapter.UsersAdapter;
-import com.ruslanlyalko.ll.presentation.ui.main.profile.dashboard.DashboardActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.SalaryActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary_edit.SalaryEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.settings.ProfileSettingsActivity;
@@ -315,8 +314,8 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         if (mUser == null || mFirebaseUser == null) return;
         // if current mUser is admin or open his friends
         fab.setVisibility(FirebaseUtils.isAdmin() || mIsCurrentUserPage ? View.VISIBLE : View.GONE);
-        if (mUser.getIsAdmin() && mIsCurrentUserPage)
-            fab.setImageResource(R.drawable.ic_action_money);
+//        if (mUser.getIsAdmin() && mIsCurrentUserPage)
+//            fab.setImageResource(R.drawable.ic_action_money);
         mTitlePositionText.setText(mUser.getPositionTitle());
         collapsingToolbar.setTitle(mUser.getFullName());
         mPhoneText.setText(mUser.getPhone());
@@ -443,9 +442,10 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     @OnClick(R.id.fab)
     void onFabClicked() {
         final boolean myPage = mUser.getId().equals(mFirebaseUser.getUid());
-        if (FirebaseUtils.isAdmin() && myPage) {
-            startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
-        } else {
+//        if (FirebaseUtils.isAdmin() && myPage) {
+//            startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
+//        } else
+        {
             startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUser));
         }
     }

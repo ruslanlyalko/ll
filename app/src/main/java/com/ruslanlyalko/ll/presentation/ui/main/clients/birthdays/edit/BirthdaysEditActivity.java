@@ -123,7 +123,7 @@ public class BirthdaysEditActivity extends BaseActivity {
     public void onBackPressed() {
         if (mNeedToSave) {
             AlertDialog.Builder builder = new AlertDialog.Builder(BirthdaysEditActivity.this);
-            builder.setTitle(R.string.dialog_discart_changes)
+            builder.setTitle(R.string.dialog_discard_changes)
                     .setPositiveButton(R.string.action_discard, (dialog, which) -> {
                         mNeedToSave = false;
                         onBackPressed();

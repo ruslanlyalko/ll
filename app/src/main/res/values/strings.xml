@@ -152,12 +152,13 @@
     <string name="toast_nothing_to_change">Немає змін в даних</string>
     <string name="button_link">Поділитись</string>
 
+    <string name="just_hrn">"грн"</string>
     <string name="hrn">"%1$s грн"</string>
     <string name="HRN">"%1$s ГРН"</string>
     <string name="income">"%1$s/%2$s ГРН"</string>
     <string name="text_show_details">Показати детальніше</string>
     <string name="text_salary_switch">Використовувати спеціальні умови</string>
-    <string name="dialog_discart_changes">Вийти без збереження?</string>
+    <string name="dialog_discard_changes">Вийти без збереження?</string>
 
     <string name="action_discard">ВИЙТИ</string>
     <string name="action_cancel">СКАСУВАТИ</string>
@@ -225,10 +226,8 @@
     <string name="error_delete_contact">Неможливо видалити контакт! Спочатку видаліть всі заняття</string>
     <string name="error_delete_contact_other">Неможливо видалити контакт! В конакта є заняття з іншими викладачами</string>
     <string name="text_zero">0</string>
-    <string name="text_salary_student_1">Із Студента (1 год, 1.5 год)</string>
-    <string name="text_salary_teacher_1">Викладачу (1 год, 1.5 год)</string>
-    <string name="text_salary_student_1_5">Із Студента (1.5 год)</string>
-    <string name="text_salary_teacher_1_5">Викладачу (1.5 год)</string>
+    <string name="text_salary_student">Із Студента (1 год, 1.5 год); Викладачу (1 / 1.5)</string>
+    <string name="text_salary_student_child">Із Дитини (1 год, 1.5 год); Викладачу (1 / 1.5)</string>
     <string name="text_salary_private">Приватні</string>
     <string name="text_salary_pair">Парні</string>
     <string name="text_salary_group">Групові</string>
