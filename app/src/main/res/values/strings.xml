@@ -180,8 +180,6 @@
     <string name="dialog_remove_contact_message">Якщо ви видалите контакт всі дані будуть втрачені</string>
     <string name="title_activity_birth">Дні Народження Клієнтів</string>
     <string name="hint_show_clients">Доступ до витрат</string>
-    <string name="hint_money">Сума</string>
-    <string name="text_max_money">Всю суму (%1$s грн)</string>
     <string name="text_members">Учасники</string>
     <string name="shortcut_calendar_short_label">Календар</string>
     <string name="shortcut_calendar_long_label">Перейти в Календар</string>

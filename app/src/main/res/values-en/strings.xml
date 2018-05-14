@@ -102,8 +102,6 @@
     <string name="user_type_child">Children</string>
     <string name="lesson_length_one_half_hour">1.5h</string>
     <string name="toast_duplicate">Date changed! Will be duplicated</string>
-    <string name="hint_money">Price</string>
-    <string name="text_max_money">Total price (%1$s uah)</string>
     <string name="text_members">Members</string>
     <string name="shortcut_calendar_short_label">Calendar</string>
     <string name="shortcut_calendar_long_label">Open Calendar</string>
