@@ -1,5 +1,7 @@
 package com.ruslanlyalko.ll.presentation.base;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -81,6 +83,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    protected void copyToClipboard(String label, String text) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(text, text);
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
+        }
     }
 
     protected abstract void setupView();

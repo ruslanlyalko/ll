@@ -175,45 +175,51 @@ public class SalaryEditActivity extends BaseActivity {
     }
 
     private void saveToDb() {
-        mSettingsSalary.setStudentPrivate(Integer.valueOf(mEditPrivateStudent.getText().toString()));
-        mSettingsSalary.setTeacherPrivate(Integer.valueOf(mEditPrivateTeacher.getText().toString()));
-        mSettingsSalary.setStudentPrivate15(Integer.valueOf(mEditPrivateStudent15.getText().toString()));
-        mSettingsSalary.setTeacherPrivate15(Integer.valueOf(mEditPrivateTeacher15.getText().toString()));
-        //
-        mSettingsSalary.setStudentPair(Integer.valueOf(mEditPairStudent.getText().toString()));
-        mSettingsSalary.setTeacherPair(Integer.valueOf(mEditPairTeacher.getText().toString()));
-        mSettingsSalary.setStudentPair15(Integer.valueOf(mEditPairStudent15.getText().toString()));
-        mSettingsSalary.setTeacherPair15(Integer.valueOf(mEditPairTeacher15.getText().toString()));
-        //
-        mSettingsSalary.setStudentGroup(Integer.valueOf(mEditGroupStudent.getText().toString()));
-        mSettingsSalary.setTeacherGroup(Integer.valueOf(mEditGroupTeacher.getText().toString()));
-        mSettingsSalary.setStudentGroup15(Integer.valueOf(mEditGroupStudent15.getText().toString()));
-        mSettingsSalary.setTeacherGroup15(Integer.valueOf(mEditGroupTeacher15.getText().toString()));
-        //
-        mSettingsSalary.setStudentOnLine(Integer.valueOf(mEditOnLineStudent.getText().toString()));
-        mSettingsSalary.setTeacherOnLine(Integer.valueOf(mEditOnLineTeacher.getText().toString()));
-        mSettingsSalary.setStudentOnLine15(Integer.valueOf(mEditOnLineStudent15.getText().toString()));
-        mSettingsSalary.setTeacherOnLine15(Integer.valueOf(mEditOnLineTeacher15.getText().toString()));
-        //****
-        mSettingsSalary.setStudentPrivateChild(Integer.valueOf(mEditPrivateStudentChild.getText().toString()));
-        mSettingsSalary.setTeacherPrivateChild(Integer.valueOf(mEditPrivateTeacherChild.getText().toString()));
-        mSettingsSalary.setStudentPrivate15Child(Integer.valueOf(mEditPrivateStudent15Child.getText().toString()));
-        mSettingsSalary.setTeacherPrivate15Child(Integer.valueOf(mEditPrivateTeacher15Child.getText().toString()));
-        //
-        mSettingsSalary.setStudentPairChild(Integer.valueOf(mEditPairStudentChild.getText().toString()));
-        mSettingsSalary.setTeacherPairChild(Integer.valueOf(mEditPairTeacherChild.getText().toString()));
-        mSettingsSalary.setStudentPair15Child(Integer.valueOf(mEditPairStudent15Child.getText().toString()));
-        mSettingsSalary.setTeacherPair15Child(Integer.valueOf(mEditPairTeacher15Child.getText().toString()));
-        //
-        mSettingsSalary.setStudentGroupChild(Integer.valueOf(mEditGroupStudentChild.getText().toString()));
-        mSettingsSalary.setTeacherGroupChild(Integer.valueOf(mEditGroupTeacherChild.getText().toString()));
-        mSettingsSalary.setStudentGroup15Child(Integer.valueOf(mEditGroupStudent15Child.getText().toString()));
-        mSettingsSalary.setTeacherGroup15Child(Integer.valueOf(mEditGroupTeacher15Child.getText().toString()));
-        //
-        mSettingsSalary.setStudentOnLineChild(Integer.valueOf(mEditOnLineStudentChild.getText().toString()));
-        mSettingsSalary.setTeacherOnLineChild(Integer.valueOf(mEditOnLineTeacherChild.getText().toString()));
-        mSettingsSalary.setStudentOnLine15Child(Integer.valueOf(mEditOnLineStudent15Child.getText().toString()));
-        mSettingsSalary.setTeacherOnLine15Child(Integer.valueOf(mEditOnLineTeacher15Child.getText().toString()));
+        try {
+            mSettingsSalary.setStudentPrivate(Integer.valueOf(mEditPrivateStudent.getText().toString()));
+            mSettingsSalary.setTeacherPrivate(Integer.valueOf(mEditPrivateTeacher.getText().toString()));
+            mSettingsSalary.setStudentPrivate15(Integer.valueOf(mEditPrivateStudent15.getText().toString()));
+            mSettingsSalary.setTeacherPrivate15(Integer.valueOf(mEditPrivateTeacher15.getText().toString()));
+            //
+            mSettingsSalary.setStudentPair(Integer.valueOf(mEditPairStudent.getText().toString()));
+            mSettingsSalary.setTeacherPair(Integer.valueOf(mEditPairTeacher.getText().toString()));
+            mSettingsSalary.setStudentPair15(Integer.valueOf(mEditPairStudent15.getText().toString()));
+            mSettingsSalary.setTeacherPair15(Integer.valueOf(mEditPairTeacher15.getText().toString()));
+            //
+            mSettingsSalary.setStudentGroup(Integer.valueOf(mEditGroupStudent.getText().toString()));
+            mSettingsSalary.setTeacherGroup(Integer.valueOf(mEditGroupTeacher.getText().toString()));
+            mSettingsSalary.setStudentGroup15(Integer.valueOf(mEditGroupStudent15.getText().toString()));
+            mSettingsSalary.setTeacherGroup15(Integer.valueOf(mEditGroupTeacher15.getText().toString()));
+            //
+            mSettingsSalary.setStudentOnLine(Integer.valueOf(mEditOnLineStudent.getText().toString()));
+            mSettingsSalary.setTeacherOnLine(Integer.valueOf(mEditOnLineTeacher.getText().toString()));
+            mSettingsSalary.setStudentOnLine15(Integer.valueOf(mEditOnLineStudent15.getText().toString()));
+            mSettingsSalary.setTeacherOnLine15(Integer.valueOf(mEditOnLineTeacher15.getText().toString()));
+            //****
+            mSettingsSalary.setStudentPrivateChild(Integer.valueOf(mEditPrivateStudentChild.getText().toString()));
+            mSettingsSalary.setTeacherPrivateChild(Integer.valueOf(mEditPrivateTeacherChild.getText().toString()));
+            mSettingsSalary.setStudentPrivate15Child(Integer.valueOf(mEditPrivateStudent15Child.getText().toString()));
+            mSettingsSalary.setTeacherPrivate15Child(Integer.valueOf(mEditPrivateTeacher15Child.getText().toString()));
+            //
+            mSettingsSalary.setStudentPairChild(Integer.valueOf(mEditPairStudentChild.getText().toString()));
+            mSettingsSalary.setTeacherPairChild(Integer.valueOf(mEditPairTeacherChild.getText().toString()));
+            mSettingsSalary.setStudentPair15Child(Integer.valueOf(mEditPairStudent15Child.getText().toString()));
+            mSettingsSalary.setTeacherPair15Child(Integer.valueOf(mEditPairTeacher15Child.getText().toString()));
+            //
+            mSettingsSalary.setStudentGroupChild(Integer.valueOf(mEditGroupStudentChild.getText().toString()));
+            mSettingsSalary.setTeacherGroupChild(Integer.valueOf(mEditGroupTeacherChild.getText().toString()));
+            mSettingsSalary.setStudentGroup15Child(Integer.valueOf(mEditGroupStudent15Child.getText().toString()));
+            mSettingsSalary.setTeacherGroup15Child(Integer.valueOf(mEditGroupTeacher15Child.getText().toString()));
+            //
+            mSettingsSalary.setStudentOnLineChild(Integer.valueOf(mEditOnLineStudentChild.getText().toString()));
+            mSettingsSalary.setTeacherOnLineChild(Integer.valueOf(mEditOnLineTeacherChild.getText().toString()));
+            mSettingsSalary.setStudentOnLine15Child(Integer.valueOf(mEditOnLineStudent15Child.getText().toString()));
+            mSettingsSalary.setTeacherOnLine15Child(Integer.valueOf(mEditOnLineTeacher15Child.getText().toString()));
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, R.string.error_empty_errror, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            return;
+        }
         if (!mSettingsSalary.hasKey()) {
             String key = getDatabase().getReference(DC.DB_SETTINGS_SALARY).push().getKey();
             mSettingsSalary.setKey(key);

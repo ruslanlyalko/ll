@@ -41,6 +41,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:nextFocusLeft="@+id/edit_private_student"
@@ -54,6 +55,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -65,6 +67,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -76,6 +79,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -101,6 +105,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:nextFocusLeft="@+id/edit_private_student"
@@ -114,6 +119,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -125,6 +131,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -136,6 +143,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -171,6 +179,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:nextFocusLeft="@+id/edit_pair_student"
@@ -184,6 +193,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -195,6 +205,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -206,6 +217,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -231,6 +243,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:nextFocusLeft="@+id/edit_pair_student"
@@ -244,6 +257,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -255,6 +269,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -266,6 +281,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -301,6 +317,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:nextFocusLeft="@+id/edit_group_student"
@@ -314,6 +331,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -325,6 +343,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -336,6 +355,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -361,6 +381,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:nextFocusLeft="@+id/edit_group_student"
@@ -374,6 +395,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -385,6 +407,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -396,6 +419,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -430,6 +454,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:nextFocusLeft="@+id/edit_online_student"
@@ -443,6 +468,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -454,6 +480,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -465,6 +492,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -481,6 +509,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal">
 
             <EditText
@@ -490,6 +519,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:nextFocusLeft="@+id/edit_online_student"
@@ -503,6 +533,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorAccent"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -514,6 +545,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />
@@ -525,6 +557,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
                 android:hint="@string/just_hrn"
                 android:inputType="number"
                 android:text="@string/text_zero" />

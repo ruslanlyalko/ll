@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -360,7 +361,9 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
             mAvaImageView.setVisibility(View.VISIBLE);
             mBackImageView.setVisibility(View.VISIBLE);
             if (!isDestroyed())
-                Glide.with(this).load(mUser.getAvatar()).into(mAvaImageView);
+                Glide.with(this)
+                        .load(mUser.getAvatar())
+                        .into(mAvaImageView);
         } else {
             mAvaImageView.setVisibility(View.GONE);
             mBackImageView.setVisibility(View.GONE);

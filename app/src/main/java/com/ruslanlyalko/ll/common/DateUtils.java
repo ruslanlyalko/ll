@@ -187,7 +187,6 @@ public class DateUtils {
         return calendar.getTime();
     }
 
-
     public static Date getDate(Date date, final int year, final int month, final int day) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -200,6 +199,15 @@ public class DateUtils {
     public static String getMonth(Resources resources, Calendar date) {
         String[] months = resources.getStringArray(R.array.months);
         return months[date.get(Calendar.MONTH)];
+    }
+
+    public static String getMonthWithYear(Resources resources, Calendar date) {
+        String[] months = resources.getStringArray(R.array.months);
+        String yearSimple = toString(date.getTime(), "yy");
+        String result = months[date.get(Calendar.MONTH)];
+        if (!DateUtils.isCurrentYear(date.getTime()))
+            result = result + "'" + yearSimple;
+        return result;
     }
 
     public static Date getDate(final Date date, final int hours, final int minutes) {

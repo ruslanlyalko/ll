@@ -1,8 +1,5 @@
 package com.ruslanlyalko.ll.presentation.ui.main.profile.salary;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -104,8 +101,7 @@ public class SalaryActivity extends BaseActivity {
     }
 
     private void updateMonth() {
-        String[] months = getResources().getStringArray(R.array.months);
-        mTextMonth.setText(months[mCurrentMonth.get(Calendar.MONTH)]);
+        mTextMonth.setText(DateUtils.getMonthWithYear(getResources(), mCurrentMonth));
     }
 
     private void setSwitcherAnim(final boolean right) {
@@ -127,6 +123,7 @@ public class SalaryActivity extends BaseActivity {
         setSwitcherAnim(true);
         mCurrentMonth.add(Calendar.MONTH, -1);
         updateMonth();
+        loadLessons();
     }
 
     @OnClick(R.id.button_next)
@@ -134,15 +131,20 @@ public class SalaryActivity extends BaseActivity {
         setSwitcherAnim(false);
         mCurrentMonth.add(Calendar.MONTH, 1);
         updateMonth();
+        loadLessons();
     }
 
     @OnClick(R.id.panel_copy)
     void onCardClicked() {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(mTextCard.getText().toString(), mTextCard.getText().toString());
-        if (clipboard != null) {
-            clipboard.setPrimaryClip(clip);
-        }
+        String text = mTextCard.getText().toString().replaceAll("[^\\.0123456789]", "");
+        copyToClipboard(text, text);
+        Toast.makeText(SalaryActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.text_total)
+    void onTotalClicked() {
+        String text = mTotalSwitcher.getText().toString().replaceAll("[^\\.0123456789]", "");
+        copyToClipboard(text, text);
         Toast.makeText(SalaryActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
     }
 
