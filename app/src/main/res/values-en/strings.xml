@@ -186,5 +186,26 @@
     <string name="client_added">Contact created</string>
     <string name="dialog_remove_contact_title">Remove?</string>
     <string name="text_income_">Income</string>
+    <string name="add_birthday">Recharge account</string>
+    <string name="hint_notif">Recive notifications</string>
+    <string name="dialog_remove_contact_message">After removing all data will be lost</string>
+    <string name="title_activity_birth">Birthdays</string>
+    <string name="hint_show_clients">Allow view expenses</string>
+    <string name="error_delete_contact_other">Can\'t remove</string>
+    <string name="online">Online</string>
+    <string name="stop_alarm">Stop alarm</string>
+    <string name="maps_marker_title">Location</string>
+    <string name="image_permissions">Please allow use GPS</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_discard">Exit</string>
+    <string name="dialog_discard_changes">Exit without saving changes</string>
+    <string name="title_activity_notification_item">Messages</string>
+    <string name="text_about_company">About</string>
+    <string name="action_plan">"Plan "</string>
+    <string name="hint_time">Working time</string>
+    <string name="dialog_about_message">Live&amp;Learn  \nv </string>
+    <string name="empty_string">" "</string>
+    <string name="title_activity_alarm">" "</string>
+    <string name="app_title">Live&amp;Learn</string>
 
 </resources>
