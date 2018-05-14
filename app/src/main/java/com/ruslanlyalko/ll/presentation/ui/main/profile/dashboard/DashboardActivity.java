@@ -58,7 +58,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     @BindView(R.id.text_cost_total) TextView mTextExpensesTotal;
     @BindView(R.id.text_expenses_type0) TextView mTextExpensesType0;
     @BindView(R.id.text_expenses_type1) TextView mTextExpensesType1;
-    @BindView(R.id.text_birthdays) TextView textBirthdays;
+    @BindView(R.id.text_birthdays) TextView mTextBirthdays;
     @BindView(R.id.edit_comment) EditText editComment;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.progress_bar_cost) ProgressBar mProgressBarExpenses;
@@ -248,6 +248,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                     .child(year)
                     .child(month)
                     .setValue(result);
+        loadResults();
     }
 
     @OnClick(R.id.panel_action)
@@ -331,6 +332,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     private void calcSalaryForUsers() {
         mSalaryTotal = 0;
         mIncomeTotal = 0;
+        String birthdays = "";
         //income
         int iPrivate = 0;
         int iPair = 0;
@@ -383,11 +385,11 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                             case 1:
                                 pairTotalCount += 1;
                                 pairTotal += mSettingsSalary.getTeacherPair();
-                                pairTotalIncome += mSettingsSalary.getStudentPair();
+                                pairTotalIncome += mSettingsSalary.getStudentPair() * lesson.getClients().size();
                             case 2:
                                 groupTotalCount += 1;
                                 groupTotal += mSettingsSalary.getTeacherGroup();
-                                groupTotalIncome += mSettingsSalary.getStudentGroup();
+                                groupTotalIncome += mSettingsSalary.getStudentGroup() * lesson.getClients().size();
                             case 3:
                                 onlineTotalCount += 1;
                                 onlineTotal += mSettingsSalary.getTeacherOnLine();
@@ -402,11 +404,11 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                             case 1:
                                 pairTotalCount += 1;
                                 pairTotal += mSettingsSalary.getTeacherPair15();
-                                pairTotalIncome += mSettingsSalary.getStudentPair15();
+                                pairTotalIncome += mSettingsSalary.getStudentPair15() * lesson.getClients().size();
                             case 2:
                                 groupTotalCount += 1;
                                 groupTotal += mSettingsSalary.getTeacherGroup15();
-                                groupTotalIncome += mSettingsSalary.getStudentGroup15();
+                                groupTotalIncome += mSettingsSalary.getStudentGroup15() * lesson.getClients().size();
                             case 3:
                                 onlineTotalCount += 1;
                                 onlineTotal += mSettingsSalary.getTeacherOnLine15();
@@ -423,11 +425,11 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                             case 1:
                                 pairTotalChildCount += 1;
                                 pairTotalChild += mSettingsSalary.getTeacherPairChild();
-                                pairTotalChildIncome += mSettingsSalary.getStudentPairChild();
+                                pairTotalChildIncome += mSettingsSalary.getStudentPairChild() * lesson.getClients().size();
                             case 2:
                                 groupTotalChildCount += 1;
                                 groupTotalChild += mSettingsSalary.getTeacherGroupChild();
-                                groupTotalChildIncome += mSettingsSalary.getStudentGroupChild();
+                                groupTotalChildIncome += mSettingsSalary.getStudentGroupChild() * lesson.getClients().size();
                             case 3:
                                 onlineTotalChildCount += 1;
                                 onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
@@ -442,11 +444,11 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                             case 1:
                                 pairTotalChildCount += 1;
                                 pairTotalChild += mSettingsSalary.getTeacherPair15Child();
-                                pairTotalChildIncome += mSettingsSalary.getStudentPair15Child();
+                                pairTotalChildIncome += mSettingsSalary.getStudentPair15Child() * lesson.getClients().size();
                             case 2:
                                 groupTotalChildCount += 1;
                                 groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
-                                groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child();
+                                groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child() * lesson.getClients().size();
                             case 3:
                                 onlineTotalChildCount += 1;
                                 onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
@@ -473,6 +475,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             aOnLine += onlineTotal + onlineTotalChild;
             if (total != 0)
                 mUsersSalaryAdapter.add(user, total);
+            birthdays = birthdays.concat(user.getBirthdayDate() + " - " + user.getFullName() + "\n");
         }//user
         mTextIncomePrivate.setText(String.format(getString(R.string.hrn_d), iPrivate));
         mTextIncomePair.setText(String.format(getString(R.string.hrn_d), iPair));
@@ -484,6 +487,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         mTextSalaryOnline.setText(String.format(getString(R.string.hrn_d), aOnLine));
         mTextSalaryTotal.setText(String.format(getString(R.string.HRN), DateUtils.getIntWithSpace(mSalaryTotal)));
         mTextIncomeTotal.setText(String.format(getString(R.string.HRN), DateUtils.getIntWithSpace(mIncomeTotal)));
+        mTextBirthdays.setText(birthdays);
         updateNetIncome();
     }
 
@@ -563,7 +567,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                 mBarChartIncome.getData().getDataSetCount() == 1) {
             set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
             set1.setValues(values);
-        }  else if (mBarChartIncome.getData() != null &&
+        } else if (mBarChartIncome.getData() != null &&
                 mBarChartIncome.getData().getDataSetCount() == 2) {
             set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
             set1.setValues(values);
