@@ -85,7 +85,7 @@
     <string name="text_room">Кабінет</string>
     <string name="text_all">Всього</string>
     <string name="text_birthdays">Дні Народження</string>
-    <string name="text_charts_income">Виручка / 80% / Прибуток</string>
+    <string name="text_charts_income">Виручка / Прибуток</string>
     <string name="text_charts">Чистий прибуток</string>
     <string name="dialog_delete_notification_title">Видалити діалог</string>
     <string name="dialog_delete_notification_message">Після видаленння відновити діалог буде неможливо</string>

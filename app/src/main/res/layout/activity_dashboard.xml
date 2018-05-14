@@ -177,7 +177,7 @@
                                         android:textColor="@color/colorBlack" />
 
                                     <TextView
-                                        android:id="@+id/text_salary_private_total"
+                                        android:id="@+id/text_income_private"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:text="@string/text_zero" />
@@ -197,7 +197,7 @@
                                         android:textColor="@color/colorBlack" />
 
                                     <TextView
-                                        android:id="@+id/text_salary_pair_total"
+                                        android:id="@+id/text_income_pair"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:text="@string/text_zero" />
@@ -217,7 +217,7 @@
                                         android:textColor="@color/colorBlack" />
 
                                     <TextView
-                                        android:id="@+id/text_salary_group_total"
+                                        android:id="@+id/text_income_group"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:text="@string/text_zero" />
@@ -237,7 +237,7 @@
                                         android:textColor="@color/colorBlack" />
 
                                     <TextView
-                                        android:id="@+id/text_salary_online_total"
+                                        android:id="@+id/text_income_online"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:text="@string/text_zero" />
@@ -593,6 +593,7 @@
                 android:layout_marginBottom="@dimen/card_margin"
                 android:layout_marginTop="@dimen/card_margin"
                 android:elevation="3dp"
+                android:visibility="gone"
                 card_view:cardCornerRadius="@dimen/card_radius">
 
                 <LinearLayout

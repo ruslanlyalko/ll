@@ -35,6 +35,7 @@ import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Expense;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.data.models.Result;
+import com.ruslanlyalko.ll.data.models.SettingsSalary;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
@@ -52,9 +53,9 @@ import butterknife.OnClick;
 public class DashboardActivity extends BaseActivity implements OnItemClickListener {
 
     @BindView(R.id.calendar_view) CompactCalendarView mCompactCalendarView;
-    @BindView(R.id.text_total) TextView textTotal;
+    @BindView(R.id.text_total) TextView mTextIncomeTotal;
     @BindView(R.id.text_month) TextView mTextMonth;
-    @BindView(R.id.text_cost_total) TextView textCostTotal;
+    @BindView(R.id.text_cost_total) TextView mTextExpensesTotal;
     @BindView(R.id.text_expenses_type0) TextView mTextExpensesType0;
     @BindView(R.id.text_expenses_type1) TextView mTextExpensesType1;
     @BindView(R.id.text_birthdays) TextView textBirthdays;
@@ -69,10 +70,10 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     @BindView(R.id.bar_chart_income) BarChart mBarChartIncome;
     @BindView(R.id.card_expenses) CardView mCardExpenses;
     //--
-    @BindView(R.id.text_salary_private_total) TextView mTextSalaryPrivateTotal;
-    @BindView(R.id.text_salary_pair_total) TextView mTextSalaryPairTotal;
-    @BindView(R.id.text_salary_group_total) TextView mTextSalaryGroupTotal;
-    @BindView(R.id.text_salary_online_total) TextView mTextSalaryOnlineTotal;
+    @BindView(R.id.text_income_private) TextView mTextIncomePrivate;
+    @BindView(R.id.text_income_pair) TextView mTextIncomePair;
+    @BindView(R.id.text_income_group) TextView mTextIncomeGroup;
+    @BindView(R.id.text_income_online) TextView mTextIncomeOnline;
     @BindView(R.id.text_salary_total) TextView mTextSalaryTotal;
     @BindView(R.id.text_salary_private) TextView mTextSalaryPrivate;
     @BindView(R.id.text_salary_pair) TextView mTextSalaryPair;
@@ -87,6 +88,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     private int mSalaryTotal;
     private int mExpensesTotal;
     private Calendar mCurrentMonth = Calendar.getInstance();
+    private SettingsSalary mSettingsSalary;
 
     public static Intent getLaunchIntent(final AppCompatActivity launchActivity) {
         return new Intent(launchActivity, DashboardActivity.class);
@@ -103,6 +105,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         initBarChartIncome();
         initRecycler();
         updateMonth();
+        loadSettingsSalaries();
         loadResults();
         loadEverything();
     }
@@ -229,7 +232,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         mProgressBarExpenses.setSecondaryProgress(type0 + type1);
         mTextExpensesType0.setText(String.format(getString(R.string.hrn), DateUtils.getIntWithSpace(type0)));
         mTextExpensesType1.setText(String.format(getString(R.string.hrn), DateUtils.getIntWithSpace(type1)));
-        textCostTotal.setText(String.format(getString(R.string.HRN), DateUtils.getIntWithSpace(mExpensesTotal)));
+        mTextExpensesTotal.setText(String.format(getString(R.string.HRN), DateUtils.getIntWithSpace(mExpensesTotal)));
         updateNetIncome();
     }
 
@@ -326,10 +329,179 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void calcSalaryForUsers() {
-        if (mUsers.isEmpty() || mLessonList.isEmpty()) {
-            return;
-        }
-        //todo
+        mSalaryTotal = 0;
+        mIncomeTotal = 0;
+        //income
+        int iPrivate = 0;
+        int iPair = 0;
+        int iGroup = 0;
+        int iOnLine = 0;
+        // global
+        int aPrivate = 0;
+        int aPair = 0;
+        int aGroup = 0;
+        int aOnLine = 0;
+        for (int i = 0; i < mUsers.size(); i++) {
+            User user = mUsers.get(i);
+            // income
+            int totalIncome = 0;
+            int privateTotalIncome = 0;
+            int pairTotalIncome = 0;
+            int groupTotalIncome = 0;
+            int onlineTotalIncome = 0;
+            int privateTotalChildIncome = 0;
+            int pairTotalChildIncome = 0;
+            int groupTotalChildIncome = 0;
+            int onlineTotalChildIncome = 0;
+            // local
+            int total;
+            int privateTotal = 0;
+            int pairTotal = 0;
+            int groupTotal = 0;
+            int onlineTotal = 0;
+            int privateTotalChild = 0;
+            int pairTotalChild = 0;
+            int groupTotalChild = 0;
+            int onlineTotalChild = 0;
+            int privateTotalCount = 0;
+            int pairTotalCount = 0;
+            int groupTotalCount = 0;
+            int onlineTotalCount = 0;
+            int privateTotalChildCount = 0;
+            int pairTotalChildCount = 0;
+            int groupTotalChildCount = 0;
+            int onlineTotalChildCount = 0;
+            for (Lesson lesson : mLessonList) {
+                if (!lesson.getUserId().equals(user.getId())) continue;
+                if (lesson.getUserType() == 0) {
+                    if (lesson.getLessonLengthId() == 0) {
+                        switch (lesson.getLessonType()) {
+                            case 0:
+                                privateTotalCount += 1;
+                                privateTotal += mSettingsSalary.getTeacherPrivate();
+                                privateTotalIncome += mSettingsSalary.getStudentPrivate();
+                            case 1:
+                                pairTotalCount += 1;
+                                pairTotal += mSettingsSalary.getTeacherPair();
+                                pairTotalIncome += mSettingsSalary.getStudentPair();
+                            case 2:
+                                groupTotalCount += 1;
+                                groupTotal += mSettingsSalary.getTeacherGroup();
+                                groupTotalIncome += mSettingsSalary.getStudentGroup();
+                            case 3:
+                                onlineTotalCount += 1;
+                                onlineTotal += mSettingsSalary.getTeacherOnLine();
+                                onlineTotalIncome += mSettingsSalary.getStudentOnLine();
+                        }
+                    } else {
+                        switch (lesson.getLessonType()) {
+                            case 0:
+                                privateTotalCount += 1;
+                                privateTotal += mSettingsSalary.getTeacherPrivate15();
+                                privateTotalIncome += mSettingsSalary.getStudentPrivate15();
+                            case 1:
+                                pairTotalCount += 1;
+                                pairTotal += mSettingsSalary.getTeacherPair15();
+                                pairTotalIncome += mSettingsSalary.getStudentPair15();
+                            case 2:
+                                groupTotalCount += 1;
+                                groupTotal += mSettingsSalary.getTeacherGroup15();
+                                groupTotalIncome += mSettingsSalary.getStudentGroup15();
+                            case 3:
+                                onlineTotalCount += 1;
+                                onlineTotal += mSettingsSalary.getTeacherOnLine15();
+                                onlineTotalIncome += mSettingsSalary.getStudentOnLine15();
+                        }
+                    }
+                } else {
+                    if (lesson.getLessonLengthId() == 0) {
+                        switch (lesson.getLessonType()) {
+                            case 0:
+                                privateTotalChildCount += 1;
+                                privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
+                                privateTotalChildIncome += mSettingsSalary.getStudentPrivateChild();
+                            case 1:
+                                pairTotalChildCount += 1;
+                                pairTotalChild += mSettingsSalary.getTeacherPairChild();
+                                pairTotalChildIncome += mSettingsSalary.getStudentPairChild();
+                            case 2:
+                                groupTotalChildCount += 1;
+                                groupTotalChild += mSettingsSalary.getTeacherGroupChild();
+                                groupTotalChildIncome += mSettingsSalary.getStudentGroupChild();
+                            case 3:
+                                onlineTotalChildCount += 1;
+                                onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
+                                onlineTotalChildIncome += mSettingsSalary.getStudentOnLineChild();
+                        }
+                    } else {
+                        switch (lesson.getLessonType()) {
+                            case 0:
+                                privateTotalChildCount += 1;
+                                privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
+                                privateTotalChildIncome += mSettingsSalary.getStudentPrivate15Child();
+                            case 1:
+                                pairTotalChildCount += 1;
+                                pairTotalChild += mSettingsSalary.getTeacherPair15Child();
+                                pairTotalChildIncome += mSettingsSalary.getStudentPair15Child();
+                            case 2:
+                                groupTotalChildCount += 1;
+                                groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
+                                groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child();
+                            case 3:
+                                onlineTotalChildCount += 1;
+                                onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
+                                onlineTotalChildIncome += mSettingsSalary.getStudentOnLine15Child();
+                        }
+                    }
+                }
+            }//lessons
+            total = privateTotal + pairTotal + groupTotal + onlineTotal +
+                    privateTotalChild + pairTotalChild + groupTotalChild + onlineTotalChild;
+            totalIncome = privateTotalIncome + pairTotalIncome + groupTotalIncome + onlineTotalIncome +
+                    privateTotalChildIncome + pairTotalChildIncome + groupTotalChildIncome + onlineTotalChildIncome;
+            mSalaryTotal += total;
+            mIncomeTotal += totalIncome;
+            //
+            iPrivate += privateTotalIncome + privateTotalChildIncome;
+            iPair += pairTotalIncome + pairTotalChildIncome;
+            iGroup += groupTotalIncome + groupTotalChildIncome;
+            iOnLine += onlineTotalIncome + onlineTotalChildIncome;
+            //
+            aPrivate += privateTotal + privateTotalChild;
+            aPair += pairTotal + pairTotalChild;
+            aGroup += groupTotal + groupTotalChild;
+            aOnLine += onlineTotal + onlineTotalChild;
+            if (total != 0)
+                mUsersSalaryAdapter.add(user, total);
+        }//user
+        mTextIncomePrivate.setText(String.format(getString(R.string.hrn_d), iPrivate));
+        mTextIncomePair.setText(String.format(getString(R.string.hrn_d), iPair));
+        mTextIncomeGroup.setText(String.format(getString(R.string.hrn_d), iGroup));
+        mTextIncomeOnline.setText(String.format(getString(R.string.hrn_d), iOnLine));
+        mTextSalaryPrivate.setText(String.format(getString(R.string.hrn_d), aPrivate));
+        mTextSalaryPair.setText(String.format(getString(R.string.hrn_d), aPair));
+        mTextSalaryGroup.setText(String.format(getString(R.string.hrn_d), aGroup));
+        mTextSalaryOnline.setText(String.format(getString(R.string.hrn_d), aOnLine));
+        mTextSalaryTotal.setText(String.format(getString(R.string.HRN), DateUtils.getIntWithSpace(mSalaryTotal)));
+        mTextIncomeTotal.setText(String.format(getString(R.string.HRN), DateUtils.getIntWithSpace(mIncomeTotal)));
+        updateNetIncome();
+    }
+
+    private void loadSettingsSalaries() {
+        getDatabase().getReference(DC.DB_SETTINGS_SALARY).child("first_key")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        SettingsSalary settingsSalary = dataSnapshot.getValue(SettingsSalary.class);
+                        if (settingsSalary != null) {
+                            mSettingsSalary = settingsSalary;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
     }
 
     private void updateBarChart(List<Result> resultList) {
