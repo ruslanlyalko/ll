@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name"></string>
+    <string name="app_name">Live&amp;Learn</string>
     <string name="title_activity_login">Live Learn</string>
     <string name="toast_minimum_password">Min length 6 symbols</string>
     <string name="toast_auth_failed">Wrong credentials</string>
@@ -94,7 +94,7 @@
     <string name="action_dashboard">Admin</string>
     <string name="text_salary_adult_1h">" 1h"</string>
     <string name="text_salary_adult_15h">1.5h</string>
-    <string name="error_empty_errror">No all data entered</string>
+    <string name="error_empty_error">No all data entered</string>
     <string name="lesson_type_1">Private</string>
     <string name="lesson_type_2">Pair</string>
     <string name="lesson_type_3">Group</string>
