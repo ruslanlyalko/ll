@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -51,6 +51,8 @@ import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.SalaryActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary_edit.SalaryEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.settings.ProfileSettingsActivity;
 import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -88,6 +90,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.text_available) TextView mTextAvailable;
     @BindView(R.id.text_last_online) TextView mTextLastOnline;
+    @BindView(R.id.progress_bar) ContentLoadingProgressBar mProgressBar;
 
     private FirebaseUser mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -191,6 +194,26 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 onPhotosReturned(imageFile);
             }
         });
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                showProgressBarUpload();
+                String imageFileName = DateUtils.getCurrentTimeStamp() + "_original" + ".jpg";
+                uploadFile(resultUri, imageFileName, 95).addOnSuccessListener(taskSnapshot -> {
+                    if (taskSnapshot.getDownloadUrl() != null) {
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("avatar", taskSnapshot.getDownloadUrl().toString());
+                        mDatabase.getReference().child(DC.DB_USERS).child(mUID).updateChildren(childUpdates)
+                                .addOnCompleteListener(task ->
+                                        hideProgressBarUpload());
+                    }
+                }).addOnFailureListener(exception -> hideProgressBarUpload());
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                error.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -408,22 +431,15 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     }
 
     private void onPhotosReturned(final File imageFile) {
-        Toast.makeText(ProfileActivity.this, R.string.toast_data_started_updated, Toast.LENGTH_LONG).show();
-        String imageFileName = DateUtils.getCurrentTimeStamp() + "_original" + ".jpg";
-        uploadFile(imageFile, imageFileName, 95).addOnSuccessListener(taskSnapshot -> {
-            if (taskSnapshot.getDownloadUrl() != null) {
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("avatar", taskSnapshot.getDownloadUrl().toString());
-                mDatabase.getReference().child(DC.DB_USERS).child(mUID).updateChildren(childUpdates)
-                        .addOnCompleteListener(task ->
-                                Toast.makeText(ProfileActivity.this, R.string.toast_data_updated, Toast.LENGTH_SHORT).show());
-                hideProgressBarUpload();
-            }
-        }).addOnFailureListener(exception -> hideProgressBarUpload());
+        CropImage.activity(Uri.fromFile(imageFile))
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
+                .setAspectRatio(4, 3)
+                .setFixAspectRatio(true)
+                .start(this);
     }
 
-    private UploadTask uploadFile(File file, String fileName, int quality) {
-        Bitmap bitmapOriginal = BitmapFactory.decodeFile(file.toString());//= imageView.getDrawingCache();
+    private UploadTask uploadFile(Uri file, String fileName, int quality) {
+        Bitmap bitmapOriginal = BitmapFactory.decodeFile(file.getPath());//= imageView.getDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmapOriginal.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         byte[] bytes = baos.toByteArray();
@@ -440,7 +456,13 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     }
 
     private void hideProgressBarUpload() {
-        //todo
+        Toast.makeText(ProfileActivity.this, R.string.toast_data_updated, Toast.LENGTH_SHORT).show();
+        mProgressBar.hide();
+    }
+
+    private void showProgressBarUpload() {
+        Toast.makeText(ProfileActivity.this, R.string.toast_data_started_updated, Toast.LENGTH_LONG).show();
+        mProgressBar.show();
     }
 
     @Override
