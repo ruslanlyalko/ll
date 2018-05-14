@@ -547,7 +547,6 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         int[] colors = new int[resultList.size()];
         int[] colorsProfit = new int[resultList.size()];
         ArrayList<BarEntry> values = new ArrayList<>();
-        ArrayList<BarEntry> values80 = new ArrayList<>();
         ArrayList<BarEntry> valuesProfit = new ArrayList<>();
         for (int i = 0; i < resultList.size(); i++) {
             Result current = resultList.get(i);
@@ -559,32 +558,23 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             valuesProfit.add(new BarEntry(i, valProfit, valProfit));
         }
         BarDataSet set1;
-        BarDataSet set180;
         BarDataSet set1Profit;
         if (mBarChartIncome.getData() != null &&
                 mBarChartIncome.getData().getDataSetCount() == 1) {
             set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
             set1.setValues(values);
-        } else if (mBarChartIncome.getData() != null &&
+        }  else if (mBarChartIncome.getData() != null &&
                 mBarChartIncome.getData().getDataSetCount() == 2) {
             set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
             set1.setValues(values);
-            set180 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(1);
-            set180.setValues(values80);
-        } else if (mBarChartIncome.getData() != null &&
-                mBarChartIncome.getData().getDataSetCount() == 3) {
-            set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            set180 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(1);
-            set180.setValues(values80);
-            set1Profit = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(2);
+            set1Profit = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(1);
             set1Profit.setValues(valuesProfit);
         } else {
             set1 = new BarDataSet(values, "");
             set1.setColors(colors);
             set1.setDrawIcons(true);
             set1.setDrawValues(true);
-            set1Profit = new BarDataSet(values, "");
+            set1Profit = new BarDataSet(valuesProfit, "");
             set1Profit.setColors(colorsProfit);
             set1Profit.setDrawIcons(true);
             set1Profit.setDrawValues(true);
