@@ -68,7 +68,6 @@ public class ProfileSettingsActivity extends BaseActivity {
     private String mUid;
     private boolean isCurrentUser;
 
-
     public static Intent getLaunchIntent(final Activity launchIntent, final String uId) {
         Intent intent = new Intent(launchIntent, ProfileSettingsActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_UID, uId);
@@ -211,6 +210,7 @@ public class ProfileSettingsActivity extends BaseActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (isDestroyed()) return;
                 User user = dataSnapshot.getValue(User.class);
                 if (user == null) return;
                 textName.setText(user.getFullName());
@@ -249,8 +249,6 @@ public class ProfileSettingsActivity extends BaseActivity {
             }
         });
     }
-
-
 
     @OnClick(R.id.button_change_password)
     void onChangePasswordClicked() {

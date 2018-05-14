@@ -234,6 +234,24 @@
     <string name="text_salary_online">OnLine</string>
     <string name="action_settings_salary">Тарифи</string>
     <string name="hrn_d">%d грн</string>
+    <string name="text_salary_description_d">
+        "Всього проведено %1$d занять.\n\n"
+        ""
+        "З дорослими: \n"
+        "%2$d Приватних. Зароблено: %3$d\n"
+        "%4$d Парних. Зароблено: %5$d\n"
+        "%6$d Групових. Зароблено: %7$d\n"
+        "%8$d OnLine. Зароблено: %9$d\n\n"
+        ""
+        "З дітьми: \n"
+        "%10$d Приватних. Зароблено: %11$d\n"
+        "%12$d Парних. Зароблено: %13$d\n"
+        "%14$d Групових. Зароблено: %15$d\n"
+        "%16$d OnLine. Зароблено: %17$d"
+    </string>
+    <string name="action_dashboard">Адмін панель</string>
+    <string name="text_salary_adult_1h">1 год</string>
+    <string name="text_salary_adult_15h">1.5 год</string>
     <string-array name="months">
         <item>Січень</item>
         <item>Лютий</item>

@@ -315,16 +315,49 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:paddingBottom="4dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="6"
+                            android:paddingBottom="4dp"
+                            android:text="@string/user_type_adult" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="6"
+                            android:paddingBottom="4dp"
+                            android:text="@string/user_type_child" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:layout_marginTop="16dp"
                         android:baselineAligned="false"
                         android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
+                            android:layout_weight="4"
                             android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -355,8 +388,14 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="3"
                             android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_salary_adult_1h" />
 
                             <TextView
                                 android:id="@+id/text_salary_private"
@@ -394,8 +433,14 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="3"
                             android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_salary_adult_15h" />
 
                             <TextView
                                 android:id="@+id/text_salary_private15"
@@ -423,6 +468,96 @@
 
                             <TextView
                                 android:id="@+id/text_salary_online15"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_zero"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_salary_adult_1h" />
+
+                            <TextView
+                                android:id="@+id/text_salary_private_child"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_zero"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text_salary_pair_child"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_zero"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text_salary_group_child"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_zero"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text_salary_online_child"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_zero"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_salary_adult_15h" />
+
+                            <TextView
+                                android:id="@+id/text_salary_private15_child"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_zero"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text_salary_pair15_child"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_zero"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text_salary_group15_child"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="4dp"
+                                android:text="@string/text_zero"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text_salary_online15_child"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="4dp"

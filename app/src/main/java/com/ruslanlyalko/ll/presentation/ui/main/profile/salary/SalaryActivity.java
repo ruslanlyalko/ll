@@ -46,6 +46,7 @@ public class SalaryActivity extends BaseActivity {
     @BindView(R.id.text_salary_pair_total) TextView mTextSalaryPairTotal;
     @BindView(R.id.text_salary_group_total) TextView mTextSalaryGroupTotal;
     @BindView(R.id.text_salary_online_total) TextView mTextSalaryOnlineTotal;
+
     @BindView(R.id.text_salary_private) TextView mTextSalaryPrivate;
     @BindView(R.id.text_salary_pair) TextView mTextSalaryPair;
     @BindView(R.id.text_salary_group) TextView mTextSalaryGroup;
@@ -54,6 +55,15 @@ public class SalaryActivity extends BaseActivity {
     @BindView(R.id.text_salary_pair15) TextView mTextSalaryPair15;
     @BindView(R.id.text_salary_group15) TextView mTextSalaryGroup15;
     @BindView(R.id.text_salary_online15) TextView mTextSalaryOnline15;
+
+    @BindView(R.id.text_salary_private_child) TextView mTextSalaryPrivateChild;
+    @BindView(R.id.text_salary_pair_child) TextView mTextSalaryPairChild;
+    @BindView(R.id.text_salary_group_child) TextView mTextSalaryGroupChild;
+    @BindView(R.id.text_salary_online_child) TextView mTextSalaryOnlineChild;
+    @BindView(R.id.text_salary_private15_child) TextView mTextSalaryPrivate15Child;
+    @BindView(R.id.text_salary_pair15_child) TextView mTextSalaryPair15Child;
+    @BindView(R.id.text_salary_group15_child) TextView mTextSalaryGroup15Child;
+    @BindView(R.id.text_salary_online15_child) TextView mTextSalaryOnline15Child;
 
     private SettingsSalary mSettingsSalary = new SettingsSalary();
     private List<Lesson> mLessons = new ArrayList<>();
@@ -177,6 +187,18 @@ public class SalaryActivity extends BaseActivity {
         //
         mTextSalaryOnline.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherOnLine()));
         mTextSalaryOnline15.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherOnLine15()));
+        //
+        mTextSalaryPrivateChild.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPrivateChild()));
+        mTextSalaryPrivate15Child.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPrivate15Child()));
+        //
+        mTextSalaryPairChild.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPairChild()));
+        mTextSalaryPair15Child.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPair15Child()));
+        //
+        mTextSalaryGroupChild.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherGroupChild()));
+        mTextSalaryGroup15Child.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherGroup15Child()));
+        //
+        mTextSalaryOnlineChild.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherOnLineChild()));
+        mTextSalaryOnline15Child.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherOnLine15Child()));
     }
 
     private void loadLessons() {
@@ -209,40 +231,108 @@ public class SalaryActivity extends BaseActivity {
         int pairTotal = 0;
         int groupTotal = 0;
         int onlineTotal = 0;
+        int privateTotalChild = 0;
+        int pairTotalChild = 0;
+        int groupTotalChild = 0;
+        int onlineTotalChild = 0;
+        int privateTotalCount = 0;
+        int pairTotalCount = 0;
+        int groupTotalCount = 0;
+        int onlineTotalCount = 0;
+        int privateTotalChildCount = 0;
+        int pairTotalChildCount = 0;
+        int groupTotalChildCount = 0;
+        int onlineTotalChildCount = 0;
         if (mLessons == null || mSettingsSalary == null) {
             Log.e("Salary", "Wrong argument!");
             return;
         }
         for (Lesson lesson : mLessons) {
-            if (lesson.getLessonLengthId() == 0) {
-                switch (lesson.getLessonType()) {
-                    case 0:
-                        privateTotal += mSettingsSalary.getTeacherPrivate();
-                    case 1:
-                        pairTotal += mSettingsSalary.getTeacherPair();
-                    case 2:
-                        groupTotal += mSettingsSalary.getTeacherGroup();
-                    case 3:
-                        onlineTotal += mSettingsSalary.getTeacherOnLine();
+            if (lesson.getUserType() == 0) {
+                if (lesson.getLessonLengthId() == 0) {
+                    switch (lesson.getLessonType()) {
+                        case 0:
+                            privateTotalCount += 1;
+                            privateTotal += mSettingsSalary.getTeacherPrivate();
+                        case 1:
+                            pairTotalCount += 1;
+                            pairTotal += mSettingsSalary.getTeacherPair();
+                        case 2:
+                            groupTotalCount += 1;
+                            groupTotal += mSettingsSalary.getTeacherGroup();
+                        case 3:
+                            onlineTotalCount += 1;
+                            onlineTotal += mSettingsSalary.getTeacherOnLine();
+                    }
+                } else {
+                    switch (lesson.getLessonType()) {
+                        case 0:
+                            privateTotalCount += 1;
+                            privateTotal += mSettingsSalary.getTeacherPrivate15();
+                        case 1:
+                            pairTotalCount += 1;
+                            pairTotal += mSettingsSalary.getTeacherPair15();
+                        case 2:
+                            groupTotalCount += 1;
+                            groupTotal += mSettingsSalary.getTeacherGroup15();
+                        case 3:
+                            onlineTotalCount += 1;
+                            onlineTotal += mSettingsSalary.getTeacherOnLine15();
+                    }
                 }
             } else {
-                switch (lesson.getLessonType()) {
-                    case 0:
-                        privateTotal += mSettingsSalary.getTeacherPrivate15();
-                    case 1:
-                        pairTotal += mSettingsSalary.getTeacherPair15();
-                    case 2:
-                        groupTotal += mSettingsSalary.getTeacherGroup15();
-                    case 3:
-                        onlineTotal += mSettingsSalary.getTeacherOnLine15();
+                if (lesson.getLessonLengthId() == 0) {
+                    switch (lesson.getLessonType()) {
+                        case 0:
+                            privateTotalChildCount += 1;
+                            privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
+                        case 1:
+                            pairTotalChildCount += 1;
+                            pairTotalChild += mSettingsSalary.getTeacherPairChild();
+                        case 2:
+                            groupTotalChildCount += 1;
+                            groupTotalChild += mSettingsSalary.getTeacherGroupChild();
+                        case 3:
+                            onlineTotalChildCount += 1;
+                            onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
+                    }
+                } else {
+                    switch (lesson.getLessonType()) {
+                        case 0:
+                            privateTotalChildCount += 1;
+                            privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
+                        case 1:
+                            pairTotalChildCount += 1;
+                            pairTotalChild += mSettingsSalary.getTeacherPair15Child();
+                        case 2:
+                            groupTotalChildCount += 1;
+                            groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
+                        case 3:
+                            onlineTotalChildCount += 1;
+                            onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
+                    }
                 }
             }
         }
         total = privateTotal + pairTotal + groupTotal + onlineTotal;
-        mTextSalaryPrivateTotal.setText(String.format(getString(R.string.hrn_d), privateTotal));
-        mTextSalaryPairTotal.setText(String.format(getString(R.string.hrn_d), pairTotal));
-        mTextSalaryGroupTotal.setText(String.format(getString(R.string.hrn_d), groupTotal));
-        mTextSalaryOnlineTotal.setText(String.format(getString(R.string.hrn_d), onlineTotal));
+        total += privateTotalChild + pairTotalChild + groupTotalChild + onlineTotalChild;
+        mTextSalaryPrivateTotal.setText(String.format(getString(R.string.hrn_d), privateTotal + privateTotalChild));
+        mTextSalaryPairTotal.setText(String.format(getString(R.string.hrn_d), pairTotal + pairTotalChild));
+        mTextSalaryGroupTotal.setText(String.format(getString(R.string.hrn_d), groupTotal + groupTotalChild));
+        mTextSalaryOnlineTotal.setText(String.format(getString(R.string.hrn_d), onlineTotal + onlineTotalChild));
         mTotalSwitcher.setText(String.format(getString(R.string.hrn_d), total));
+        int totalCount = privateTotalCount + pairTotalCount + groupTotalCount + onlineTotalCount
+                + privateTotalChildCount + pairTotalChildCount + groupTotalChildCount + onlineTotalChildCount;
+        String salaryDescription = String.format(getString(R.string.text_salary_description_d),
+                totalCount,
+                privateTotalCount, privateTotal,
+                pairTotalCount, pairTotal,
+                groupTotalCount, groupTotal,
+                onlineTotalCount, onlineTotal,
+                privateTotalChildCount, privateTotalChild,
+                pairTotalChildCount, pairTotalChild,
+                groupTotalChildCount, groupTotalChild,
+                onlineTotalChildCount, onlineTotalChild);
+        mTextExpand.setText(salaryDescription);
     }
 }
