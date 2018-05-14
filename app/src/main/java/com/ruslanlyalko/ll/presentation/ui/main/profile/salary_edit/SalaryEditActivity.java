@@ -216,7 +216,7 @@ public class SalaryEditActivity extends BaseActivity {
             mSettingsSalary.setStudentOnLine15Child(Integer.valueOf(mEditOnLineStudent15Child.getText().toString()));
             mSettingsSalary.setTeacherOnLine15Child(Integer.valueOf(mEditOnLineTeacher15Child.getText().toString()));
         } catch (NumberFormatException e) {
-            Toast.makeText(this, R.string.error_empty_errror, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.error_empty_error, Toast.LENGTH_LONG).show();
             e.printStackTrace();
             return;
         }
