@@ -343,6 +343,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         int aPair = 0;
         int aGroup = 0;
         int aOnLine = 0;
+        mUsersSalaryAdapter.clearAll();
         for (int i = 0; i < mUsers.size(); i++) {
             User user = mUsers.get(i);
             // income

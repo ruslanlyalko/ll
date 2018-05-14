@@ -126,11 +126,9 @@
     <string name="hint_link">Посилання (http://)</string>
     <string name="title_activity_about">Про проект</string>
     <string name="text_about_company">
-        "Чебурашка КІДС була створена 01,06,2016р.\n"
+        "Live&amp;Learn була створена 01,06,2016р.\n"
         "Наша мета:\n"
         "Наша місія:\n"
-        "Наша позиція на ринку:\n"
-
     </string>
     <string name="title_activity_notification_item">Повідомлення</string>
     <string name="hint_short_description">Короткий опис</string>
