@@ -95,7 +95,8 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.MyView
         void bindData(final Expense expense) {
             boolean isCurrentUserCost = expense.getUserId().endsWith(mCurrentUser.getUid());
             mTextView.setText(expense.getTitle1());
-            mTextTitle2.setText(isCurrentUserCost ? expense.getType() : expense.getType() + "  (" + expense.getUserName() + ")");
+            String type = mResources.getString(expense.getTypeId() == 0 ? R.string.text_expenses_type0 : R.string.text_expenses_type1);
+            mTextTitle2.setText(isCurrentUserCost ? type : type + "  (" + expense.getUserName() + ")");
             mTextPrice.setText(mResources.getString(R.string.hrn, expense.getPrice() + ""));
             mTextDate.setText(DateUtils.toString(expense.getExpenseDate()));
             mLogoImage.setImageResource(expense.getImage() != null && !expense.getImage().isEmpty() ?

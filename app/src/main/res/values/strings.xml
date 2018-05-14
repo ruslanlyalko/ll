@@ -74,8 +74,8 @@
     <string name="toast_saved">Збережено</string>
     <string name="hint_price">Ціна</string>
     <string name="hint_title1">Назва</string>
-    <string name="text_cost_common">Загальні</string>
-    <string name="text_cost_mk">На офіс</string>
+    <string name="text_expenses_type0">Загальні</string>
+    <string name="text_expenses_type1">На офіс</string>
     <string name="text_cost_list">Список витрат</string>
     <string name="action_delete_all">  ВИДАЛИТИ ВСЕ  </string>
     <string name="dialog_cost_delete_title">Видалити витрату</string>
@@ -85,7 +85,7 @@
     <string name="text_room">Кабінет</string>
     <string name="text_all">Всього</string>
     <string name="text_birthdays">Дні Народження</string>
-    <string name="text_charts_income">Виручка / 80% / Прибуток</string>
+    <string name="text_charts_income">Виручка / Прибуток</string>
     <string name="text_charts">Чистий прибуток</string>
     <string name="dialog_delete_notification_title">Видалити діалог</string>
     <string name="dialog_delete_notification_message">Після видаленння відновити діалог буде неможливо</string>
@@ -94,20 +94,10 @@
     <string name="dialog_report_save_before_close_title">Зберегти зміни</string>
     <string name="dialog_report_save_before_close_text">Ви хочете зберегти зміни?</string>
     <string name="title_activity_salary">Заробітна плата</string>
-    <string name="text_mk">МК</string>
-    <string name="text_stavka">Ставка</string>
-    <string name="text_percent">Відсотки</string>
     <string name="text_income_">Оборот</string>
     <string name="text_cost_total1">Витрати</string>
     <string name="text_salary">Заробітна плата</string>
-    <string name="text_salary_detail_title">Деталі</string>
     <string name="text_salary_condition_title">Умови</string>
-
-    <string name="text_salary_detail_stavka">"Ставка:"</string>
-    <string name="text_salary_detail_percent">"Відсоток від обороту:"</string>
-    <string name="text_salary_detail_mk1">"МК:"</string>
-    <string name="text_salary_detail_bd_children">МК за одну дитину:</string>
-    <string name="text_salary_detail_art">"Арт МК:"</string>
 
     <string name="hint_time">Час роботи</string>
     <string name="action_new_user">Новий користувач</string>
@@ -155,9 +145,7 @@
     <string name="just_hrn">"грн"</string>
     <string name="hrn">"%1$s грн"</string>
     <string name="HRN">"%1$s ГРН"</string>
-    <string name="income">"%1$s/%2$s ГРН"</string>
     <string name="text_show_details">Показати детальніше</string>
-    <string name="text_salary_switch">Використовувати спеціальні умови</string>
     <string name="dialog_discard_changes">Вийти без збереження?</string>
 
     <string name="action_discard">ВИЙТИ</string>
@@ -186,22 +174,12 @@
     <string name="contacts_filter_by_phone">Фільтр: Телефон</string>
     <string name="client_added">Контакт створено</string>
     <string name="hint_client_description">Опис</string>
-    <string name="hint_person">Ім\'я іменинника</string>
-    <string name="check_mk">МК</string>
-    <string name="check_aqua">Аквагрим</string>
-    <string name="check_cinema">Кінотеатр</string>
     <string name="add_birthday">Поповнити особистий рахунок</string>
-    <string name="text_kids">Кількість дітей:</string>
-    <string name="hint_date_celebrating">Дата Святкування ДН:</string>
-    <string name="text_kids_count">Кількість дітей: %s</string>
     <string name="hint_notif">Отримувати сповіщення</string>
     <string name="dialog_remove_contact_title">Видалити контакт?</string>
     <string name="dialog_remove_contact_message">Якщо ви видалите контакт всі дані будуть втрачені</string>
     <string name="title_activity_birth">Дні Народження Клієнтів</string>
     <string name="hint_show_clients">Доступ до витрат</string>
-    <string name="text_credit">Аванс %1$s грн. Залишилось %2$s грн</string>
-    <string name="hint_money">Сума</string>
-    <string name="text_max_money">Всю суму (%1$s грн)</string>
     <string name="text_members">Учасники</string>
     <string name="shortcut_calendar_short_label">Календар</string>
     <string name="shortcut_calendar_long_label">Перейти в Календар</string>

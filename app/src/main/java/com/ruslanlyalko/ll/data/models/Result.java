@@ -8,9 +8,8 @@ package com.ruslanlyalko.ll.data.models;
 public class Result {
 
     private int income;
-    private int income80;
     private int salary;
-    private int costs;
+    private int expenses;
     private int profit;
     private String year;
     private String month;
@@ -19,11 +18,10 @@ public class Result {
         //required
     }
 
-    public Result(final int income, final int income80, final int salary, final int costs, final int profit, final String year, final String month) {
+    public Result(final int income, final int salary, final int expenses, final int profit, final String year, final String month) {
         this.income = income;
-        this.income80 = income80;
         this.salary = salary;
-        this.costs = costs;
+        this.expenses = expenses;
         this.profit = profit;
         this.year = year;
         this.month = month;
@@ -45,14 +43,6 @@ public class Result {
         this.month = month;
     }
 
-    public int getIncome80() {
-        return income80;
-    }
-
-    public void setIncome80(final int income80) {
-        this.income80 = income80;
-    }
-
     public int getIncome() {
         return income;
     }
@@ -69,12 +59,12 @@ public class Result {
         this.salary = salary;
     }
 
-    public int getCosts() {
-        return costs;
+    public int getExpenses() {
+        return expenses;
     }
 
-    public void setCosts(final int costs) {
-        this.costs = costs;
+    public void setExpenses(final int expenses) {
+        this.expenses = expenses;
     }
 
     public int getProfit() {

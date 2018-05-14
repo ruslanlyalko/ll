@@ -62,7 +62,6 @@
     <string name="title_activity_salary">Salary</string>
     <string name="text_cost_total1">Expenses</string>
     <string name="text_salary">Salary</string>
-    <string name="text_salary_detail_title">Details</string>
     <string name="text_salary_condition_title">Condations</string>
     <string name="action_new_user">New user</string>
     <string name="text_friend_list">Colleagues</string>
@@ -91,7 +90,7 @@
     <string name="text_salary_online">OnLine</string>
     <string name="action_settings_salary">Tariffs</string>
     <string name="hrn_d">%d uah</string>
-    <string name="action_dashboard">Admin</string>
+    <string name="action_dashboard">Admin panel</string>
     <string name="text_salary_adult_1h">" 1h"</string>
     <string name="text_salary_adult_15h">1.5h</string>
     <string name="error_empty_error">No all data entered</string>
@@ -103,8 +102,6 @@
     <string name="user_type_child">Children</string>
     <string name="lesson_length_one_half_hour">1.5h</string>
     <string name="toast_duplicate">Date changed! Will be duplicated</string>
-    <string name="hint_money">Price</string>
-    <string name="text_max_money">Total price (%1$s uah)</string>
     <string name="text_members">Members</string>
     <string name="shortcut_calendar_short_label">Calendar</string>
     <string name="shortcut_calendar_long_label">Open Calendar</string>
@@ -123,7 +120,6 @@
     <string name="title_activity_clients_tab">Clients</string>
     <string name="hrn">%1$s uah</string>
     <string name="HRN">%1$s UAH</string>
-    <string name="income">%1$s/%2$s UAH</string>
     <string name="just_hrn">uah</string>
     <string name="button_link">Share</string>
     <string name="toast_nothing_to_change">No changes</string>
@@ -179,5 +175,16 @@
     <string name="hint_comment_add">Type message…</string>
     <string name="dialog_remove_title">Remove?</string>
     <string name="choose_images">Choose picture</string>
+    <string name="text_expenses_type0">Common</string>
+    <string name="text_expenses_type1">For office</string>
+    <string name="text_charts_income">Income / Profit</string>
+    <string name="text_charts">Profit</string>
+    <string name="dialog_delete_notification_message">After removing can\'t restore</string>
+    <string name="hint_password_one_more">Password</string>
+    <string name="toast_different_password">Password again</string>
+    <string name="action_change_password">CHANGE PASSWORD</string>
+    <string name="client_added">Contact created</string>
+    <string name="dialog_remove_contact_title">Remove?</string>
+    <string name="text_income_">Income</string>
 
 </resources>
