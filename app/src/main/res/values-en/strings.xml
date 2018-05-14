@@ -62,7 +62,6 @@
     <string name="title_activity_salary">Salary</string>
     <string name="text_cost_total1">Expenses</string>
     <string name="text_salary">Salary</string>
-    <string name="text_salary_detail_title">Details</string>
     <string name="text_salary_condition_title">Condations</string>
     <string name="action_new_user">New user</string>
     <string name="text_friend_list">Colleagues</string>
@@ -123,7 +122,6 @@
     <string name="title_activity_clients_tab">Clients</string>
     <string name="hrn">%1$s uah</string>
     <string name="HRN">%1$s UAH</string>
-    <string name="income">%1$s/%2$s UAH</string>
     <string name="just_hrn">uah</string>
     <string name="button_link">Share</string>
     <string name="toast_nothing_to_change">No changes</string>

@@ -186,14 +186,6 @@
             />
 
         <activity
-            android:name="com.ruslanlyalko.ll.presentation.ui.main.clients.birthdays.edit.BirthdaysEditActivity"
-            android:parentActivityName="com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit.ContactEditActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Close"
-            android:windowSoftInputMode="stateHidden"
-            />
-
-        <activity
             android:name="com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.ContactDetailsActivity"
             android:parentActivityName="com.ruslanlyalko.ll.presentation.ui.main.clients.ClientsTabActivity"
             android:screenOrientation="portrait"
