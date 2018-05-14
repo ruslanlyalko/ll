@@ -179,5 +179,15 @@
     <string name="hint_comment_add">Type message…</string>
     <string name="dialog_remove_title">Remove?</string>
     <string name="choose_images">Choose picture</string>
+    <string name="text_expenses_type0">Common</string>
+    <string name="text_expenses_type1">For office</string>
+    <string name="text_charts_income">Income / Profit</string>
+    <string name="text_charts">Profit</string>
+    <string name="dialog_delete_notification_message">After removing can\'t restore</string>
+    <string name="hint_password_one_more">Password</string>
+    <string name="toast_different_password">Password again</string>
+    <string name="action_change_password">CHANGE PASSWORD</string>
+    <string name="client_added">Contact created</string>
+    <string name="dialog_remove_contact_title">Remove?</string>
 
 </resources>
