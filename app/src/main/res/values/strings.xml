@@ -74,8 +74,8 @@
     <string name="toast_saved">Збережено</string>
     <string name="hint_price">Ціна</string>
     <string name="hint_title1">Назва</string>
-    <string name="text_cost_common">Загальні</string>
-    <string name="text_cost_mk">На офіс</string>
+    <string name="text_expenses_type0">Загальні</string>
+    <string name="text_expenses_type1">На офіс</string>
     <string name="text_cost_list">Список витрат</string>
     <string name="action_delete_all">  ВИДАЛИТИ ВСЕ  </string>
     <string name="dialog_cost_delete_title">Видалити витрату</string>

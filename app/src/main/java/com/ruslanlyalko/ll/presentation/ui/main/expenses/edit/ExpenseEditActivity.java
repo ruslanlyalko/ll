@@ -60,7 +60,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
     private Expense mExpense = new Expense();
-    private String mExpenseType;
+    private int mExpenseType;
     private boolean mNeedToSave = false;
     private boolean mIsNew = false;
 
@@ -70,7 +70,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
         return intent;
     }
 
-    public static Intent getLaunchIntent(final Activity launchIntent, String expenseType) {
+    public static Intent getLaunchIntent(final Activity launchIntent, int expenseType) {
         Intent intent = new Intent(launchIntent, ExpenseEditActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_EXPENSE_TYPE, expenseType);
         return intent;
@@ -86,7 +86,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mExpense = (Expense) bundle.getSerializable(Keys.Extras.EXTRA_ITEM_ID);
-            mExpenseType = bundle.getString(Keys.Extras.EXTRA_EXPENSE_TYPE);
+            mExpenseType = bundle.getInt(Keys.Extras.EXTRA_EXPENSE_TYPE);
         }
         mIsNew = mExpense == null;
         if (mIsNew) {

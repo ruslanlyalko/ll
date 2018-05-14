@@ -159,7 +159,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:text="@string/text_cost_common"
+                                    android:text="@string/text_expenses_type0"
                                     android:textColor="@color/colorBlack" />
 
                                 <TextView
@@ -179,7 +179,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:text="@string/text_cost_mk"
+                                    android:text="@string/text_expenses_type1"
                                     android:textColor="@color/colorBlack" />
 
                                 <TextView

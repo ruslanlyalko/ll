@@ -7,7 +7,7 @@ public class Expense implements Serializable {
 
     private String key;
     private String title1;
-    private String type;
+    private int typeId;
     private int price;
     private Date expenseDate;
     private String image;
@@ -17,16 +17,16 @@ public class Expense implements Serializable {
     public Expense() {
     }
 
-    public Expense(final String type, final Date date, final String userId, final String userName) {
-        this.type = type;
+    public Expense(final int typeId, final Date date, final String userId, final String userName) {
+        this.typeId = typeId;
         this.expenseDate = date;
         this.userId = userId;
         this.userName = userName;
     }
 
-    public Expense(String title1, String type, Date date, String image, String userId, String userName, int price) {
+    public Expense(String title1, int typeId, Date date, String image, String userId, String userName, int price) {
         this.title1 = title1;
-        this.type = type;
+        this.typeId = typeId;
         this.expenseDate = date;
         this.image = image;
         this.userId = userId;
@@ -90,11 +90,11 @@ public class Expense implements Serializable {
         this.title1 = title1;
     }
 
-    public String getType() {
-        return type;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 }

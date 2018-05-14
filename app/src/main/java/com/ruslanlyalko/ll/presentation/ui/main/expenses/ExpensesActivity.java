@@ -171,20 +171,20 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
 
     private void calcTotal() {
         if (isDestroyed()) return;
-        int common = 0;
-        int mk = 0;
+        int type0 = 0;
+        int type1 = 0;
         List<Expense> expenseList = mExpensesAdapter.getData();
         for (Expense expense : expenseList) {
-            if (expense.getType().equalsIgnoreCase(getString(R.string.text_cost_common)))
-                common += expense.getPrice();
-            if (expense.getType().equalsIgnoreCase(getString(R.string.text_cost_mk)))
-                mk += expense.getPrice();
+            if (expense.getTypeId() == 0)
+                type0 += expense.getPrice();
+            if (expense.getTypeId() == 1)
+                type1 += expense.getPrice();
         }
-        int total = common + mk;
+        int total = type0 + type1;
         mProgressBar.setMax(total);
-        mProgressBar.setProgress(common);
-        mTextCostCommon.setText(getString(R.string.hrn, DateUtils.getIntWithSpace(common)));
-        mTextCostMk.setText(getString(R.string.hrn, DateUtils.getIntWithSpace(mk)));
+        mProgressBar.setProgress(type0);
+        mTextCostCommon.setText(getString(R.string.hrn, DateUtils.getIntWithSpace(type0)));
+        mTextCostMk.setText(getString(R.string.hrn, DateUtils.getIntWithSpace(type1)));
         mTotalSwitcher.setText(getString(R.string.HRN, DateUtils.getIntWithSpace(total)));
     }
 
@@ -227,13 +227,13 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     @OnClick(R.id.fab1)
     void onFab1Clicked() {
         animateFAB();
-        startActivity(ExpenseEditActivity.getLaunchIntent(this, getString(R.string.text_cost_mk)));
+        startActivity(ExpenseEditActivity.getLaunchIntent(this, 1));
     }
 
     @OnClick(R.id.fab2)
     void onFab2Clicked() {
         animateFAB();
-        startActivity(ExpenseEditActivity.getLaunchIntent(this, getString(R.string.text_cost_common)));
+        startActivity(ExpenseEditActivity.getLaunchIntent(this, 0));
     }
 
     @OnClick(R.id.button_cost_delete_all)
