@@ -20,13 +20,13 @@
                 android:id="@+id/tab_type_adult"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Дорослий" />
+                android:text="@string/user_type_adult" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_type_child"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Дитина" />
+                android:text="@string/user_type_child" />
 
         </android.support.design.widget.TabLayout>
 

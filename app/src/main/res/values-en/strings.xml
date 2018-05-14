@@ -170,4 +170,14 @@
     </string-array>
     <string name="lesson_type">Type</string>
     <string name="client_type">Student</string>
+    <string name="text_show_details">More</string>
+    <string name="hint_client_description">Description</string>
+    <string name="text_user_details">Main data</string>
+    <string name="text_password_change">Change password</string>
+    <string name="hint_short_description">Short description</string>
+    <string name="text_comments_list">Allow to comment</string>
+    <string name="hint_comment_add">Type message…</string>
+    <string name="dialog_remove_title">Remove?</string>
+    <string name="choose_images">Choose picture</string>
+
 </resources>
