@@ -119,7 +119,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
                 mTextPhone2.setText(contact.getPhone2());
             else
                 mTextPhone2.setText("");
-            String subtitle = DateUtils.toString(contact.getBirthDay(), "dd.MM.yyyy  ") + contact.getEmail();
+            String subtitle = "";
+            if (contact.getBirthDay().getTime() != contact.getCreatedAt().getTime())
+                subtitle = DateUtils.toString(contact.getBirthDay(), "dd.MM.yyyy");
+            subtitle += "\n" + contact.getEmail();
             mTextSubTitle.setText(subtitle);
             mCheckBoxSelected.setVisibility(mIsSelectable ? View.VISIBLE : View.GONE);
             mCheckBoxSelected.setChecked(mCheckedContacts.contains(contact.getKey()));

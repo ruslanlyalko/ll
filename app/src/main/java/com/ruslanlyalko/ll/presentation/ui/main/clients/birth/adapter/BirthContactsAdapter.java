@@ -152,8 +152,9 @@ public class BirthContactsAdapter extends RecyclerView.Adapter<BirthContactsAdap
 
         private boolean isMatchFilter(final CharSequence charSequence, final Contact contact) {
             if (charSequence.toString().isEmpty()) return true;
+            if (contact.getCreatedAt().getTime() == contact.getBirthDay().getTime()) return false;
             String month = charSequence.toString();
-            if (contact.getBirthDay()!=null && DateUtils.toString(contact.getBirthDay(), "MM").equals(month)) {
+            if (contact.getBirthDay() != null && DateUtils.toString(contact.getBirthDay(), "MM").equals(month)) {
                 return true;
             }
 //            if (!contact.getChildName2().isEmpty() && DateUtils.toString(contact.getChildBd2(), "MM").equals(month)) {

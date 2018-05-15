@@ -249,7 +249,10 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         }
         setTitle("");
         mTextUserName.setText(mContact.getName());
-        String subtitle = DateUtils.toString(mContact.getBirthDay(), "dd.MM.yyyy") + "\n" + mContact.getEmail();
+        String subtitle = "";
+        if (mContact.getBirthDay().getTime() != mContact.getCreatedAt().getTime())
+            subtitle = DateUtils.toString(mContact.getBirthDay(), "dd.MM.yyyy");
+        subtitle += "\n" + mContact.getEmail();
         mTextSubTitle.setText(subtitle);
         mTextPhone1.setText(mContact.getPhone());
         mTextPhone2.setText(mContact.getPhone2());
