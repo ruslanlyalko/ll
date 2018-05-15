@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +62,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @BindView(R.id.text_phone2) TextView mTextPhone2;
     @BindView(R.id.text_balance) TextView mTextBalance;
     @BindView(R.id.card_phone2) CardView mCardPhone2;
+    @BindView(R.id.card_balance) CardView mCardBalance;
     @BindView(R.id.text_description) TextView mTextDescription;
     @BindView(R.id.list_lessons) RecyclerView mListLessons;
     @BindView(R.id.list_income) RecyclerView mListIncome;
@@ -109,11 +111,16 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     protected void setupView() {
         if (isDestroyed()) return;
         setupRecycler();
+        setupBalance();
         loadDetails();
         showContactDetails();
         loadSettingsSalaries();
         loadContacts();
         loadContactRecharges();
+    }
+
+    private void setupBalance() {
+        mCardBalance.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -425,6 +432,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 //        iOnLine += onlineTotalIncome + onlineTotalChildIncome;
         mContact.setSaldo(mTotalCharge - totalIncome);
         mTextBalance.setText(String.format(getString(R.string.hrn_d), mContact.getSaldo()));
+        mTextBalance.setTextColor(ContextCompat.getColor(this, mContact.getSaldo() < 0 ? R.color.colorPrimary : R.color.colorBlack));
     }
 
     private void loadContacts() {

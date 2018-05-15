@@ -277,4 +277,11 @@ public class DateUtils {
                 && yesterday.get(Calendar.MONTH) == calDate.get(Calendar.MONTH)
                 && yesterday.get(Calendar.DAY_OF_MONTH) == calDate.get(Calendar.DAY_OF_MONTH);
     }
+
+    public static int getTimeProgress(final Date dateTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateTime);
+        int extra = calendar.get(Calendar.MINUTE) > 28 ? 1 : 0;
+        return Math.min((calendar.get(Calendar.HOUR_OF_DAY) * 2) + extra, 45);
+    }
 }

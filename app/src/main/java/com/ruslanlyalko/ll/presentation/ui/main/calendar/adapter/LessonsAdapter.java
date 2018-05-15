@@ -1,13 +1,16 @@
 package com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter;
 
 import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
@@ -17,6 +20,7 @@ import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -71,6 +75,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
 
         private final Resources mResources;
         @BindView(R.id.button_comment) ImageButton mButtonComment;
+        @BindView(R.id.image_logo) ImageView mImageLogo;
         @BindView(R.id.button_edit) ImageButton mButtonEdit;
         @BindView(R.id.button_remove) ImageButton mButtonRemove;
         @BindView(R.id.swipe_menu) LinearLayout mSwipeMenu;
@@ -84,6 +89,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         @BindView(R.id.card_root) CardView mCardRoot;
         @BindView(R.id.text_users) TextView mTextUsers;
         @BindView(R.id.text_description) TextView mTextDescription;
+        @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
         MyViewHolder(View view) {
             super(view);
@@ -92,6 +98,9 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         }
 
         void bindData(final Lesson lesson) {
+            boolean isFuture = lesson.getDateTime().after(new Date());
+            mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
+                    isFuture ? R.drawable.ic_lesson_future : R.drawable.ic_lesson));
             mSwipeLayout.addDrag(SwipeLayout.DragEdge.Right, R.id.swipe_menu);
             mSwipeLayout.setRightSwipeEnabled(true);
             mSwipeLayout.setBottomSwipeEnabled(false);
@@ -136,6 +145,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
             mTextUserType.setText(lesson.getUserType() == 0 ? R.string.user_type_adult : R.string.user_type_child);
             mTextDescription.setText(lesson.getDescription());
             mTextDescription.setVisibility(lesson.hasDescription() ? View.VISIBLE : View.GONE);
+            mProgressBar.setProgress(DateUtils.getTimeProgress(lesson.getDateTime()));
+            mProgressBar.setSecondaryProgress(DateUtils.getTimeProgress(lesson.getDateTime()) + (lesson.getLessonLengthId() == 0 ? 2 : 3));
             showClients(lesson);
         }
 

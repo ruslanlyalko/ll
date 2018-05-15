@@ -422,6 +422,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 .setMessage(R.string.dialog_logout_message)
                 .setPositiveButton("Вийти", (dialog, which) -> {
                     FirebaseUtils.clearPushToken();
+                    FirebaseUtils.setIsAdmin(false);
                     FirebaseAuth.getInstance().signOut();
                     startActivity(LoginActivity.getLaunchIntent(this));
                     finish();
