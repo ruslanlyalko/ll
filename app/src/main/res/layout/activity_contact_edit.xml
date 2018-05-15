@@ -30,30 +30,42 @@
 
         </android.support.design.widget.TabLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/edit_name"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/transparent"
-                android:hint="@string/hint_first_name"
-                android:inputType="textCapWords" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="8dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorDividers" />
+                <EditText
+                    android:id="@+id/edit_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_first_name"
+                    android:inputType="textCapWords" />
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/image_contacts"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="12dp"
+                android:src="@drawable/ic_contacts"
+                tools:ignore="ContentDescription" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
@@ -65,7 +77,6 @@
                     android:id="@+id/edit_phone1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/transparent"
                     android:hint="@string/hint_phone"
                     android:inputType="phone" />
 
@@ -80,7 +91,6 @@
                     android:id="@+id/edit_phone2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/transparent"
                     android:hint="@string/hint_phone2"
                     android:inputType="phone" />
 
@@ -88,16 +98,10 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorDividers" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -110,7 +114,6 @@
                     android:id="@+id/edit_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/transparent"
                     android:hint="@string/hint_email"
                     android:inputType="textEmailAddress"
                     />
@@ -118,13 +121,6 @@
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorDividers" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,7 +137,6 @@
                     android:id="@+id/edit_birth_day"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/transparent"
                     android:clickable="true"
                     android:focusable="false"
                     android:hint="@string/hint_date_birth"
@@ -152,13 +147,6 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorDividers" />
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -167,7 +155,6 @@
                 android:id="@+id/edit_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/transparent"
                 android:hint="@string/hint_client_description"
                 android:inputType="textMultiLine|textCapSentences" />
         </android.support.design.widget.TextInputLayout>

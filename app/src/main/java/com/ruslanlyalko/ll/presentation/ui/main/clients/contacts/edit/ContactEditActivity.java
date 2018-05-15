@@ -1,23 +1,29 @@
 package com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.common.ContactHolder;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.UserType;
@@ -26,13 +32,17 @@ import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class ContactEditActivity extends BaseActivity {
+public class ContactEditActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
 
+    private static final int RC_READ_CONTACTS = 1001;
     //@BindView(R.id.tab_type_adult) TabItem mTabTypeAdult;
     @BindView(R.id.tabs_user_type) TabLayout mTabsUserType;
     @BindView(R.id.edit_name) EditText mEditName;
@@ -41,9 +51,9 @@ public class ContactEditActivity extends BaseActivity {
     @BindView(R.id.edit_description) EditText mEditDescription;
     @BindView(R.id.edit_email) EditText mEditEmail;
     @BindView(R.id.edit_birth_day) EditText mEditBirthDay;
+    @BindView(R.id.image_contacts) ImageView mImageContacts;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
     private Contact mContact = new Contact();
     private String mClientName;
     private String mClientPhone;
@@ -175,7 +185,9 @@ public class ContactEditActivity extends BaseActivity {
         mContact.setPhone(mEditPhone1.getText().toString().trim());
         mContact.setPhone2(mEditPhone2.getText().toString().trim());
         mContact.setDescription(mEditDescription.getText().toString().trim());
-        mContact.setUserType(mTabsUserType.getTabAt(0).isSelected() ? UserType.ADULT : UserType.CHILD);
+        TabLayout.Tab tab = mTabsUserType.getTabAt(0);
+        if (tab != null)
+            mContact.setUserType(tab.isSelected() ? UserType.ADULT : UserType.CHILD);
     }
 
     private void addClient() {
@@ -232,5 +244,64 @@ public class ContactEditActivity extends BaseActivity {
         );
         dialog.showYearPickerFirst(true);
         dialog.show(getFragmentManager(), "birthday");
+    }
+
+    @OnClick(R.id.image_contacts)
+    public void onContactsClicked() {
+        String[] perms = {Manifest.permission.READ_CONTACTS};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            showContacts();
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.read_contacts_rationale),
+                    RC_READ_CONTACTS, perms);
+        }
+    }
+
+    void showContacts() {
+        if (!ContactHolder.hasContacts()) {
+            ContactHolder.setContacts(getContacts());
+        }
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(ContactEditActivity.this);
+        builderSingle.setIcon(R.drawable.ic_launcher);
+        builderSingle.setTitle(getString(R.string.text_select_one));
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ContactEditActivity.this,
+                android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.addAll(ContactHolder.getContactString());
+        builderSingle.setNegativeButton(getString(R.string.action_cancel), (dialog, which) -> dialog.dismiss());
+        builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
+            mEditName.setText(ContactHolder.getContact().get(which).first);
+            mEditPhone1.setText(ContactHolder.getContact().get(which).second);
+            dialog.dismiss();
+        });
+        builderSingle.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> list) {
+        showContacts();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> list) {
+        Toast.makeText(this, R.string.read_contacts_rationale, Toast.LENGTH_SHORT).show();
+    }
+
+    List<Pair<String, String>> getContacts() {
+        List<Pair<String, String>> list = new ArrayList<>();
+        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, "display_name ASC");
+        while (phones != null && phones.moveToNext()) {
+            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            list.add(new Pair<>(name, phoneNumber));
+        }
+        if (phones != null)
+            phones.close();
+        return list;
     }
 }
