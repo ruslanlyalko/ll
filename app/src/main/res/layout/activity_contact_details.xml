@@ -28,45 +28,52 @@
             android:orientation="vertical">
 
             <!--AVATAR-->
-            <ImageView
-                android:id="@+id/image_avatar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_user_name"
-                android:transitionName="avatar"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/text_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:transitionName="user"
-                tools:text="Name Surname" />
-
-            <!--CHILDREN-->
-            <TextView
-                android:id="@+id/text_sub_title"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:textColor="@color/colorSteelGray"
-                android:textSize="14sp"
-                android:transitionName="kids"
-                tools:text="Child 12.0 (4); Child 12.0 (4); Child 12.0 (4);" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_user_name"
+                    android:transitionName="avatar"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/text_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_toEndOf="@id/image_avatar"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:transitionName="user"
+                    tools:text="Name Surname" />
+
+                <TextView
+                    android:id="@+id/text_sub_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_user_name"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/image_avatar"
+                    android:textColor="@color/colorSteelGray"
+                    android:textSize="14sp"
+                    android:transitionName="kids"
+                    tools:text="email@mail.com  02.12.2018" />
+
+            </RelativeLayout>
 
             <!--PHONES-->
             <LinearLayout
                 android:id="@+id/layout_phones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -74,8 +81,8 @@
                     android:id="@+id/card_phone1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginStart="4dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
@@ -103,8 +110,8 @@
                     android:id="@+id/card_phone2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginStart="4dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
@@ -138,7 +145,7 @@
                 android:id="@+id/card_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="11dp">
 
                 <TextView
                     android:id="@+id/text_description"
@@ -153,7 +160,7 @@
                 android:id="@+id/card_balance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="11dp"
                 >
 
                 <LinearLayout
