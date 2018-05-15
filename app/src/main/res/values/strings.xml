@@ -118,7 +118,7 @@
     <string name="tab_room_1">Зелений</string>
     <string name="tab_room_2">Синій</string>
     <string name="tab_room_3">Оливк.</string>
-    <string name="tab_room_4">Бордовий</string>
+    <string name="tab_room_4">Бордов.</string>
 
     <string name="title_activity_rooms_tab">Кабінети %s</string>
 
@@ -169,7 +169,7 @@
     <string name="expense_upload">Загрузити фото</string>
     <string name="title_activity_clients_tab">Наші Клієнти</string>
     <string name="contacts_filter_by_name">Фільтр: І\'мя</string>
-    <string name="contacts_filter_by_phone">Фільтр: Телефон</string>
+    <string name="contacts_filter_by_phone">Телефон</string>
     <string name="client_added">Контакт створено</string>
     <string name="hint_client_description">Опис</string>
     <string name="add_birthday">Поповнити особистий рахунок</string>
@@ -231,7 +231,7 @@
     <string name="error_empty_error">Помилка. Не всі дані заповнені!</string>
     <string name="lesson_type">Тип</string>
     <string name="client_type">Студент</string>
-    <string name="text_income_list">Баланс</string>
+    <string name="text_income_list">Баланс:</string>
     <string name="action_recharge">Поповнити</string>
     <string name="text_income_placeholder">Поки що немає поповнень</string>
     <string-array name="months">
