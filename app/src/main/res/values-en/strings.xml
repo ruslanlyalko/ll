@@ -111,8 +111,8 @@
     <string name="action_change_ava">Change avatar</string>
     <string name="error_no_name">Name can\'t be empty</string>
     <string name="lesson_length_one_hour">1h</string>
-    <string name="contacts_filter_by_name">Filter by name</string>
-    <string name="contacts_filter_by_phone">FIlter by phone</string>
+    <string name="contacts_filter_by_name">Name</string>
+    <string name="contacts_filter_by_phone">Phone</string>
     <string name="last_online">Last online %s</string>
     <string name="last_online_long_time_ago">Last online long time ago</string>
     <string name="expense_added">Added</string>

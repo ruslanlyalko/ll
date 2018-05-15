@@ -168,7 +168,7 @@
     <string name="expense_added">Витрату добавлено</string>
     <string name="expense_upload">Загрузити фото</string>
     <string name="title_activity_clients_tab">Наші Клієнти</string>
-    <string name="contacts_filter_by_name">Фільтр: І\'мя</string>
+    <string name="contacts_filter_by_name"> І\'мя</string>
     <string name="contacts_filter_by_phone">Телефон</string>
     <string name="client_added">Контакт створено</string>
     <string name="hint_client_description">Опис</string>
