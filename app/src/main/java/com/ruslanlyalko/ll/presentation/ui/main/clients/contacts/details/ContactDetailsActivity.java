@@ -74,6 +74,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private ContactRechargesAdapter mContactRechargesAdapter = new ContactRechargesAdapter(this);
     private ValueEventListener mValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
+    private int mTotalCharge = 0;
 
     public static Intent getLaunchIntent(final Context launchIntent, final Contact contact) {
         Intent intent = new Intent(launchIntent, ContactDetailsActivity.class);
@@ -137,10 +138,12 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 List<ContactRecharge> contactRecharges = new ArrayList<>();
+                mTotalCharge = 0;
                 for (DataSnapshot rechargesSS : dataSnapshot.getChildren()) {
                     ContactRecharge recharge = rechargesSS.getValue(ContactRecharge.class);
                     if (recharge != null) {
                         contactRecharges.add(recharge);
+                        mTotalCharge += recharge.getPrice();
                     }
                 }
                 boolean showPlaceholder = contactRecharges.size() == 0;
@@ -285,8 +288,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void calcBalance() {
-        int balance = 0;
-        //todo
         int totalIncome = 0;
         int privateTotalIncome = 0;
         int pairTotalIncome = 0;
@@ -322,18 +323,22 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                             privateTotalCount += 1;
                             privateTotal += mSettingsSalary.getTeacherPrivate();
                             privateTotalIncome += mSettingsSalary.getStudentPrivate();
+                            break;
                         case 1:
                             pairTotalCount += 1;
                             pairTotal += mSettingsSalary.getTeacherPair();
-                            pairTotalIncome += mSettingsSalary.getStudentPair() * lesson.getClients().size();
+                            pairTotalIncome += mSettingsSalary.getStudentPair();
+                            break;
                         case 2:
                             groupTotalCount += 1;
                             groupTotal += mSettingsSalary.getTeacherGroup();
-                            groupTotalIncome += mSettingsSalary.getStudentGroup() * lesson.getClients().size();
+                            groupTotalIncome += mSettingsSalary.getStudentGroup();
+                            break;
                         case 3:
                             onlineTotalCount += 1;
                             onlineTotal += mSettingsSalary.getTeacherOnLine();
                             onlineTotalIncome += mSettingsSalary.getStudentOnLine();
+                            break;
                     }
                 } else {
                     switch (lesson.getLessonType()) {
@@ -341,18 +346,22 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                             privateTotalCount += 1;
                             privateTotal += mSettingsSalary.getTeacherPrivate15();
                             privateTotalIncome += mSettingsSalary.getStudentPrivate15();
+                            break;
                         case 1:
                             pairTotalCount += 1;
                             pairTotal += mSettingsSalary.getTeacherPair15();
-                            pairTotalIncome += mSettingsSalary.getStudentPair15() * lesson.getClients().size();
+                            pairTotalIncome += mSettingsSalary.getStudentPair15();
+                            break;
                         case 2:
                             groupTotalCount += 1;
                             groupTotal += mSettingsSalary.getTeacherGroup15();
-                            groupTotalIncome += mSettingsSalary.getStudentGroup15() * lesson.getClients().size();
+                            groupTotalIncome += mSettingsSalary.getStudentGroup15();
+                            break;
                         case 3:
                             onlineTotalCount += 1;
                             onlineTotal += mSettingsSalary.getTeacherOnLine15();
                             onlineTotalIncome += mSettingsSalary.getStudentOnLine15();
+                            break;
                     }
                 }
             } else {
@@ -362,18 +371,22 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                             privateTotalChildCount += 1;
                             privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
                             privateTotalChildIncome += mSettingsSalary.getStudentPrivateChild();
+                            break;
                         case 1:
                             pairTotalChildCount += 1;
                             pairTotalChild += mSettingsSalary.getTeacherPairChild();
-                            pairTotalChildIncome += mSettingsSalary.getStudentPairChild() * lesson.getClients().size();
+                            pairTotalChildIncome += mSettingsSalary.getStudentPairChild();
+                            break;
                         case 2:
                             groupTotalChildCount += 1;
                             groupTotalChild += mSettingsSalary.getTeacherGroupChild();
-                            groupTotalChildIncome += mSettingsSalary.getStudentGroupChild() * lesson.getClients().size();
+                            groupTotalChildIncome += mSettingsSalary.getStudentGroupChild();
+                            break;
                         case 3:
                             onlineTotalChildCount += 1;
                             onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
                             onlineTotalChildIncome += mSettingsSalary.getStudentOnLineChild();
+                            break;
                     }
                 } else {
                     switch (lesson.getLessonType()) {
@@ -381,39 +394,37 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                             privateTotalChildCount += 1;
                             privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
                             privateTotalChildIncome += mSettingsSalary.getStudentPrivate15Child();
+                            break;
                         case 1:
                             pairTotalChildCount += 1;
                             pairTotalChild += mSettingsSalary.getTeacherPair15Child();
-                            pairTotalChildIncome += mSettingsSalary.getStudentPair15Child() * lesson.getClients().size();
+                            pairTotalChildIncome += mSettingsSalary.getStudentPair15Child();
+                            break;
                         case 2:
                             groupTotalChildCount += 1;
                             groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
-                            groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child() * lesson.getClients().size();
+                            groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child();
+                            break;
                         case 3:
                             onlineTotalChildCount += 1;
                             onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
                             onlineTotalChildIncome += mSettingsSalary.getStudentOnLine15Child();
+                            break;
                     }
                 }
             }
         }//lessons
-        total = privateTotal + pairTotal + groupTotal + onlineTotal +
-                privateTotalChild + pairTotalChild + groupTotalChild + onlineTotalChild;
+//        total = privateTotal + pairTotal + groupTotal + onlineTotal +
+//                privateTotalChild + pairTotalChild + groupTotalChild + onlineTotalChild;
         totalIncome = privateTotalIncome + pairTotalIncome + groupTotalIncome + onlineTotalIncome +
                 privateTotalChildIncome + pairTotalChildIncome + groupTotalChildIncome + onlineTotalChildIncome;
-        mSalaryTotal += total;
-        mIncomeTotal += totalIncome;
         //
-        iPrivate += privateTotalIncome + privateTotalChildIncome;
-        iPair += pairTotalIncome + pairTotalChildIncome;
-        iGroup += groupTotalIncome + groupTotalChildIncome;
-        iOnLine += onlineTotalIncome + onlineTotalChildIncome;
-        //
-        aPrivate += privateTotal + privateTotalChild;
-        aPair += pairTotal + pairTotalChild;
-        aGroup += groupTotal + groupTotalChild;
-        aOnLine += onlineTotal + onlineTotalChild;
-        mTextBalance.setText(String.valueOf(balance));
+//        iPrivate += privateTotalIncome + privateTotalChildIncome;
+//        iPair += pairTotalIncome + pairTotalChildIncome;
+//        iGroup += groupTotalIncome + groupTotalChildIncome;
+//        iOnLine += onlineTotalIncome + onlineTotalChildIncome;
+        mContact.setSaldo(mTotalCharge - totalIncome);
+        mTextBalance.setText(String.format(getString(R.string.hrn_d), mContact.getSaldo()));
     }
 
     private void loadContacts() {
