@@ -145,8 +145,9 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="@dimen/card_margin">
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -162,8 +163,21 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
                             android:gravity="center"
                             android:text="@string/text_income_list"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/text_balance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:gravity="center"
+                            android:text="@string/text_zero"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 

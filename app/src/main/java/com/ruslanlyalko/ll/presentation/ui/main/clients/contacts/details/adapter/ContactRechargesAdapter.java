@@ -77,7 +77,6 @@ public class ContactRechargesAdapter extends RecyclerView.Adapter<ContactRecharg
         private final Resources mResources;
 
         @BindView(R.id.text_title1) TextView mTextView;
-        @BindView(R.id.text_title2) TextView mTextTitle2;
         @BindView(R.id.text_total) TextView mTextPrice;
         @BindView(R.id.text_date) TextView mTextDate;
         @BindView(R.id.linear_user) LinearLayout mUserLayout;

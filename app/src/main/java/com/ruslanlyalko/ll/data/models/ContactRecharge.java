@@ -16,6 +16,15 @@ public class ContactRecharge implements Serializable {
     private Date createdAt = new Date();
     private String description;
 
+    public ContactRecharge() {
+    }
+
+    public ContactRecharge(final String contactKey, final Date createdAt) {
+        this.contactKey = contactKey;
+        this.createdAt = createdAt;
+    }
+
+
     public String getKey() {
         return key;
     }

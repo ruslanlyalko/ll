@@ -63,6 +63,10 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         notifyDataSetChanged();
     }
 
+    public List<Lesson> getData() {
+        return mLessons;
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         private final Resources mResources;
