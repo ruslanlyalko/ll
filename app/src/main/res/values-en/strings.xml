@@ -210,4 +210,7 @@
     <string name="text_income_list">Balance:</string>
     <string name="action_recharge">Recharge</string>
     <string name="text_income_placeholder">No data yet</string>
+    <string name="read_contacts_rationale">Allow user to get contacts from your phone</string>
+    <string name="text_select_one">Choose contact</string>
+
 </resources>
