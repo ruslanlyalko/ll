@@ -56,7 +56,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @BindView(R.id.card_phone2) CardView mCardPhone2;
     @BindView(R.id.text_description) TextView mTextDescription;
     @BindView(R.id.button_add_birthday) CardView mButtonAddBirthday;
-    @BindView(R.id.list_birthdays) RecyclerView mListBirthdays;
+    @BindView(R.id.list_lessons) RecyclerView mListLessons;
+    @BindView(R.id.list_income) RecyclerView mListIncome;
     @BindView(R.id.text_user_name) TextView mTextUserName;
     private Contact mContact;
     private String mContactKey = "";
@@ -152,8 +153,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
 
     private void setupRecycler() {
-        mListBirthdays.setLayoutManager(new LinearLayoutManager(this));
-        mListBirthdays.setAdapter(mLessonsAdapter);
+        mListLessons.setLayoutManager(new LinearLayoutManager(this));
+        mListLessons.setAdapter(mLessonsAdapter);
     }
 
     private void loadDetails() {
