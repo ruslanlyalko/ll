@@ -54,7 +54,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private Lesson mLesson = new Lesson();
 
-    public static Intent getLaunchIntent(final Activity launchIntent) {
+    public static Intent getLaunchIntent(final Context launchIntent) {
         return new Intent(launchIntent, LessonActivity.class);
     }
 

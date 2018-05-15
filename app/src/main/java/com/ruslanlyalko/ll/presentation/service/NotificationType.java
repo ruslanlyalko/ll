@@ -6,7 +6,7 @@ package com.ruslanlyalko.ll.presentation.service;
  */
 
 public enum NotificationType {
-    EXPENSE, REPORT, COMMENT, MK, DEFAULT;
+    EXPENSE, LESSON, COMMENT,  DEFAULT;
 
 
     public static NotificationType findByKey(String s) {

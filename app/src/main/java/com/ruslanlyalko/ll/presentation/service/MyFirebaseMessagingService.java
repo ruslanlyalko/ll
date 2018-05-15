@@ -18,6 +18,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.details.MessageDetailsActivity;
 import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 
@@ -40,6 +41,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String CHANEL_COMMENT_DESC = "Коментарі";
     private static final String CHANEL_EXPENSE_ID = "chanel_expense_id";
     private static final String CHANEL_EXPENSE_DESC = "Витрати";
+    private static final String CHANEL_LESSON_ID = "chanel_lesson_id";
+    private static final String CHANEL_LESSON_DESC = "Заняття";
     private static final String CHANEL_DEFAULT_ID = "chanel_default_id";
     private static final String CHANEL_DEFAULT_DESC = "Інше";
 
@@ -85,6 +88,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 resultIntent = ExpensesActivity.getLaunchIntent(this);
                 chanelId = CHANEL_EXPENSE_ID;
                 break;
+            case LESSON:
+                resultIntent = SplashActivity.getLaunchIntent(this);
+                chanelId = CHANEL_LESSON_ID;
+                break;
             default:
                 resultIntent = SplashActivity.getLaunchIntent(this);
                 chanelId = CHANEL_DEFAULT_ID;
@@ -119,6 +126,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             //expense
             createNotificationChannel(CHANEL_EXPENSE_ID,
                     CHANEL_EXPENSE_DESC, CHANEL_EXPENSE_DESC, GROUP_NOTIFICATIONS_ID);
+            //lesson
+            createNotificationChannel(CHANEL_LESSON_ID,
+                    CHANEL_LESSON_DESC, CHANEL_LESSON_DESC, GROUP_NOTIFICATIONS_ID);
             //default
             createNotificationChannel(CHANEL_DEFAULT_ID,
                     CHANEL_DEFAULT_DESC, CHANEL_DEFAULT_DESC, GROUP_NOTIFICATIONS_ID);
