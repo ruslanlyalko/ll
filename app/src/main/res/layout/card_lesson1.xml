@@ -80,7 +80,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:orientation="vertical">
@@ -125,15 +124,16 @@
                         android:id="@+id/progress_bar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
-                        android:max="48"
                         android:layout_height="@dimen/progress_height"
                         android:layout_marginBottom="@dimen/progress_margin"
                         android:layout_marginTop="@dimen/progress_margin"
+                        android:max="48"
                         android:progressDrawable="@drawable/progress" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
                         android:baselineAligned="false"
                         android:orientation="horizontal">
 
