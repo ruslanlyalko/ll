@@ -256,30 +256,38 @@ public class SalaryActivity extends BaseActivity {
                         case 0:
                             privateTotalCount += 1;
                             privateTotal += mSettingsSalary.getTeacherPrivate();
+                            break;
                         case 1:
                             pairTotalCount += 1;
                             pairTotal += mSettingsSalary.getTeacherPair();
+                            break;
                         case 2:
                             groupTotalCount += 1;
                             groupTotal += mSettingsSalary.getTeacherGroup();
+                            break;
                         case 3:
                             onlineTotalCount += 1;
                             onlineTotal += mSettingsSalary.getTeacherOnLine();
+                            break;
                     }
                 } else {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalCount += 1;
                             privateTotal += mSettingsSalary.getTeacherPrivate15();
+                            break;
                         case 1:
                             pairTotalCount += 1;
                             pairTotal += mSettingsSalary.getTeacherPair15();
+                            break;
                         case 2:
                             groupTotalCount += 1;
                             groupTotal += mSettingsSalary.getTeacherGroup15();
+                            break;
                         case 3:
                             onlineTotalCount += 1;
                             onlineTotal += mSettingsSalary.getTeacherOnLine15();
+                            break;
                     }
                 }
             } else {
@@ -288,30 +296,38 @@ public class SalaryActivity extends BaseActivity {
                         case 0:
                             privateTotalChildCount += 1;
                             privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
+                            break;
                         case 1:
                             pairTotalChildCount += 1;
                             pairTotalChild += mSettingsSalary.getTeacherPairChild();
+                            break;
                         case 2:
                             groupTotalChildCount += 1;
                             groupTotalChild += mSettingsSalary.getTeacherGroupChild();
+                            break;
                         case 3:
                             onlineTotalChildCount += 1;
                             onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
+                            break;
                     }
                 } else {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalChildCount += 1;
                             privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
+                            break;
                         case 1:
                             pairTotalChildCount += 1;
                             pairTotalChild += mSettingsSalary.getTeacherPair15Child();
+                            break;
                         case 2:
                             groupTotalChildCount += 1;
                             groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
+                            break;
                         case 3:
                             onlineTotalChildCount += 1;
                             onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
+                            break;
                     }
                 }
             }

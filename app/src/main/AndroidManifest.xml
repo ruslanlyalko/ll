@@ -161,6 +161,13 @@
             android:theme="@style/AppTheme.Close"
             android:windowSoftInputMode="stateHidden"
             />
+        <activity
+            android:name="com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.recharge_edit.RechargeEditActivity"
+            android:parentActivityName="com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.ContactDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Close"
+            android:windowSoftInputMode="stateHidden"
+            />
 
         <activity
             android:name="com.ruslanlyalko.ll.presentation.ui.main.clients.ClientsTabActivity"

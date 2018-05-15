@@ -383,18 +383,22 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                                 privateTotalCount += 1;
                                 privateTotal += mSettingsSalary.getTeacherPrivate();
                                 privateTotalIncome += mSettingsSalary.getStudentPrivate();
+                                break;
                             case 1:
                                 pairTotalCount += 1;
                                 pairTotal += mSettingsSalary.getTeacherPair();
                                 pairTotalIncome += mSettingsSalary.getStudentPair() * lesson.getClients().size();
+                                break;
                             case 2:
                                 groupTotalCount += 1;
                                 groupTotal += mSettingsSalary.getTeacherGroup();
                                 groupTotalIncome += mSettingsSalary.getStudentGroup() * lesson.getClients().size();
+                                break;
                             case 3:
                                 onlineTotalCount += 1;
                                 onlineTotal += mSettingsSalary.getTeacherOnLine();
                                 onlineTotalIncome += mSettingsSalary.getStudentOnLine();
+                                break;
                         }
                     } else {
                         switch (lesson.getLessonType()) {
@@ -402,18 +406,22 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                                 privateTotalCount += 1;
                                 privateTotal += mSettingsSalary.getTeacherPrivate15();
                                 privateTotalIncome += mSettingsSalary.getStudentPrivate15();
+                                break;
                             case 1:
                                 pairTotalCount += 1;
                                 pairTotal += mSettingsSalary.getTeacherPair15();
                                 pairTotalIncome += mSettingsSalary.getStudentPair15() * lesson.getClients().size();
+                                break;
                             case 2:
                                 groupTotalCount += 1;
                                 groupTotal += mSettingsSalary.getTeacherGroup15();
                                 groupTotalIncome += mSettingsSalary.getStudentGroup15() * lesson.getClients().size();
+                                break;
                             case 3:
                                 onlineTotalCount += 1;
                                 onlineTotal += mSettingsSalary.getTeacherOnLine15();
                                 onlineTotalIncome += mSettingsSalary.getStudentOnLine15();
+                                break;
                         }
                     }
                 } else {
@@ -423,18 +431,22 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                                 privateTotalChildCount += 1;
                                 privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
                                 privateTotalChildIncome += mSettingsSalary.getStudentPrivateChild();
+                                break;
                             case 1:
                                 pairTotalChildCount += 1;
                                 pairTotalChild += mSettingsSalary.getTeacherPairChild();
                                 pairTotalChildIncome += mSettingsSalary.getStudentPairChild() * lesson.getClients().size();
+                                break;
                             case 2:
                                 groupTotalChildCount += 1;
                                 groupTotalChild += mSettingsSalary.getTeacherGroupChild();
                                 groupTotalChildIncome += mSettingsSalary.getStudentGroupChild() * lesson.getClients().size();
+                                break;
                             case 3:
                                 onlineTotalChildCount += 1;
                                 onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
                                 onlineTotalChildIncome += mSettingsSalary.getStudentOnLineChild();
+                                break;
                         }
                     } else {
                         switch (lesson.getLessonType()) {
@@ -442,18 +454,22 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                                 privateTotalChildCount += 1;
                                 privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
                                 privateTotalChildIncome += mSettingsSalary.getStudentPrivate15Child();
+                                break;
                             case 1:
                                 pairTotalChildCount += 1;
                                 pairTotalChild += mSettingsSalary.getTeacherPair15Child();
                                 pairTotalChildIncome += mSettingsSalary.getStudentPair15Child() * lesson.getClients().size();
+                                break;
                             case 2:
                                 groupTotalChildCount += 1;
                                 groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
                                 groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child() * lesson.getClients().size();
+                                break;
                             case 3:
                                 onlineTotalChildCount += 1;
                                 onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
                                 onlineTotalChildIncome += mSettingsSalary.getStudentOnLine15Child();
+                                break;
                         }
                     }
                 }

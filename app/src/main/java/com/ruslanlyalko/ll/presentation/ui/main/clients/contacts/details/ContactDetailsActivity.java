@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,10 +32,15 @@ import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.data.models.ContactRecharge;
 import com.ruslanlyalko.ll.data.models.Lesson;
+import com.ruslanlyalko.ll.data.models.SettingsSalary;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
+import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.adapter.ContactRechargesAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.adapter.OnContactRechargeClickListener;
+import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.recharge_edit.RechargeEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit.ContactEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 
@@ -45,7 +51,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ContactDetailsActivity extends BaseActivity implements OnLessonClickListener {
+public class ContactDetailsActivity extends BaseActivity implements OnLessonClickListener, OnContactRechargeClickListener {
 
     private static final int RC_LESSON = 1001;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -53,16 +59,22 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @BindView(R.id.text_sub_title) TextView mTextSubTitle;
     @BindView(R.id.text_phone1) TextView mTextPhone1;
     @BindView(R.id.text_phone2) TextView mTextPhone2;
+    @BindView(R.id.text_balance) TextView mTextBalance;
     @BindView(R.id.card_phone2) CardView mCardPhone2;
     @BindView(R.id.text_description) TextView mTextDescription;
-    @BindView(R.id.button_add_birthday) CardView mButtonAddBirthday;
-    @BindView(R.id.list_birthdays) RecyclerView mListBirthdays;
+    @BindView(R.id.list_lessons) RecyclerView mListLessons;
+    @BindView(R.id.list_income) RecyclerView mListIncome;
     @BindView(R.id.text_user_name) TextView mTextUserName;
+    @BindView(R.id.text_income_placeholder) TextView mTextIncomePlaceholder;
+
     private Contact mContact;
+    private SettingsSalary mSettingsSalary = new SettingsSalary();
     private String mContactKey = "";
     private LessonsAdapter mLessonsAdapter = new LessonsAdapter(this);
+    private ContactRechargesAdapter mContactRechargesAdapter = new ContactRechargesAdapter(this);
     private ValueEventListener mValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
+    private int mTotalCharge = 0;
 
     public static Intent getLaunchIntent(final Context launchIntent, final Contact contact) {
         Intent intent = new Intent(launchIntent, ContactDetailsActivity.class);
@@ -99,7 +111,9 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         setupRecycler();
         loadDetails();
         showContactDetails();
+        loadSettingsSalaries();
         loadContacts();
+        loadContactRecharges();
     }
 
     @Override
@@ -116,16 +130,46 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new Handler().postDelayed(this::loadLessons, 300);
+    private void loadContactRecharges() {
+        Query ref = getDatabase()
+                .getReference(DC.DB_CONTACTS_RECHARGE)
+                .child(mContactKey);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                List<ContactRecharge> contactRecharges = new ArrayList<>();
+                mTotalCharge = 0;
+                for (DataSnapshot rechargesSS : dataSnapshot.getChildren()) {
+                    ContactRecharge recharge = rechargesSS.getValue(ContactRecharge.class);
+                    if (recharge != null) {
+                        contactRecharges.add(recharge);
+                        mTotalCharge += recharge.getPrice();
+                    }
+                }
+                boolean showPlaceholder = contactRecharges.size() == 0;
+                if (isDestroyed()) return;
+                mTextIncomePlaceholder.setVisibility(showPlaceholder ? View.VISIBLE : View.GONE);
+                mListIncome.setVisibility(showPlaceholder ? View.GONE : View.VISIBLE);
+                mContactRechargesAdapter.setData(contactRecharges);
+                calcBalance();
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         getDatabase().getReference(DC.DB_LESSONS).removeEventListener(mValueEventListener);
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(this::loadLessons, 300);
     }
 
     private void removeCurrentContact() {
@@ -150,10 +194,11 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                 .show();
     }
 
-
     private void setupRecycler() {
-        mListBirthdays.setLayoutManager(new LinearLayoutManager(this));
-        mListBirthdays.setAdapter(mLessonsAdapter);
+        mListLessons.setLayoutManager(new LinearLayoutManager(this));
+        mListLessons.setAdapter(mLessonsAdapter);
+        mListIncome.setLayoutManager(new LinearLayoutManager(this));
+        mListIncome.setAdapter(mContactRechargesAdapter);
     }
 
     private void loadDetails() {
@@ -170,6 +215,23 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
             public void onCancelled(final DatabaseError databaseError) {
             }
         });
+    }
+
+    private void loadSettingsSalaries() {
+        getDatabase().getReference(DC.DB_SETTINGS_SALARY).child("first_key")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        SettingsSalary settingsSalary = dataSnapshot.getValue(SettingsSalary.class);
+                        if (settingsSalary != null) {
+                            mSettingsSalary = settingsSalary;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
     }
 
     private void showContactDetails() {
@@ -216,12 +278,153 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                         Collections.sort(lessons, (o1, o2) ->
                                 Long.compare(o2.getDateTime().getTime(), o1.getDateTime().getTime()));
                         mLessonsAdapter.setData(lessons);
+                        calcBalance();
                     }
 
                     @Override
                     public void onCancelled(final DatabaseError databaseError) {
                     }
                 });
+    }
+
+    private void calcBalance() {
+        int totalIncome = 0;
+        int privateTotalIncome = 0;
+        int pairTotalIncome = 0;
+        int groupTotalIncome = 0;
+        int onlineTotalIncome = 0;
+        int privateTotalChildIncome = 0;
+        int pairTotalChildIncome = 0;
+        int groupTotalChildIncome = 0;
+        int onlineTotalChildIncome = 0;
+        // local
+        int total;
+        int privateTotal = 0;
+        int pairTotal = 0;
+        int groupTotal = 0;
+        int onlineTotal = 0;
+        int privateTotalChild = 0;
+        int pairTotalChild = 0;
+        int groupTotalChild = 0;
+        int onlineTotalChild = 0;
+        int privateTotalCount = 0;
+        int pairTotalCount = 0;
+        int groupTotalCount = 0;
+        int onlineTotalCount = 0;
+        int privateTotalChildCount = 0;
+        int pairTotalChildCount = 0;
+        int groupTotalChildCount = 0;
+        int onlineTotalChildCount = 0;
+        for (Lesson lesson : mLessonsAdapter.getData()) {
+            if (lesson.getUserType() == 0) {
+                if (lesson.getLessonLengthId() == 0) {
+                    switch (lesson.getLessonType()) {
+                        case 0:
+                            privateTotalCount += 1;
+                            privateTotal += mSettingsSalary.getTeacherPrivate();
+                            privateTotalIncome += mSettingsSalary.getStudentPrivate();
+                            break;
+                        case 1:
+                            pairTotalCount += 1;
+                            pairTotal += mSettingsSalary.getTeacherPair();
+                            pairTotalIncome += mSettingsSalary.getStudentPair();
+                            break;
+                        case 2:
+                            groupTotalCount += 1;
+                            groupTotal += mSettingsSalary.getTeacherGroup();
+                            groupTotalIncome += mSettingsSalary.getStudentGroup();
+                            break;
+                        case 3:
+                            onlineTotalCount += 1;
+                            onlineTotal += mSettingsSalary.getTeacherOnLine();
+                            onlineTotalIncome += mSettingsSalary.getStudentOnLine();
+                            break;
+                    }
+                } else {
+                    switch (lesson.getLessonType()) {
+                        case 0:
+                            privateTotalCount += 1;
+                            privateTotal += mSettingsSalary.getTeacherPrivate15();
+                            privateTotalIncome += mSettingsSalary.getStudentPrivate15();
+                            break;
+                        case 1:
+                            pairTotalCount += 1;
+                            pairTotal += mSettingsSalary.getTeacherPair15();
+                            pairTotalIncome += mSettingsSalary.getStudentPair15();
+                            break;
+                        case 2:
+                            groupTotalCount += 1;
+                            groupTotal += mSettingsSalary.getTeacherGroup15();
+                            groupTotalIncome += mSettingsSalary.getStudentGroup15();
+                            break;
+                        case 3:
+                            onlineTotalCount += 1;
+                            onlineTotal += mSettingsSalary.getTeacherOnLine15();
+                            onlineTotalIncome += mSettingsSalary.getStudentOnLine15();
+                            break;
+                    }
+                }
+            } else {
+                if (lesson.getLessonLengthId() == 0) {
+                    switch (lesson.getLessonType()) {
+                        case 0:
+                            privateTotalChildCount += 1;
+                            privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
+                            privateTotalChildIncome += mSettingsSalary.getStudentPrivateChild();
+                            break;
+                        case 1:
+                            pairTotalChildCount += 1;
+                            pairTotalChild += mSettingsSalary.getTeacherPairChild();
+                            pairTotalChildIncome += mSettingsSalary.getStudentPairChild();
+                            break;
+                        case 2:
+                            groupTotalChildCount += 1;
+                            groupTotalChild += mSettingsSalary.getTeacherGroupChild();
+                            groupTotalChildIncome += mSettingsSalary.getStudentGroupChild();
+                            break;
+                        case 3:
+                            onlineTotalChildCount += 1;
+                            onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
+                            onlineTotalChildIncome += mSettingsSalary.getStudentOnLineChild();
+                            break;
+                    }
+                } else {
+                    switch (lesson.getLessonType()) {
+                        case 0:
+                            privateTotalChildCount += 1;
+                            privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
+                            privateTotalChildIncome += mSettingsSalary.getStudentPrivate15Child();
+                            break;
+                        case 1:
+                            pairTotalChildCount += 1;
+                            pairTotalChild += mSettingsSalary.getTeacherPair15Child();
+                            pairTotalChildIncome += mSettingsSalary.getStudentPair15Child();
+                            break;
+                        case 2:
+                            groupTotalChildCount += 1;
+                            groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
+                            groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child();
+                            break;
+                        case 3:
+                            onlineTotalChildCount += 1;
+                            onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
+                            onlineTotalChildIncome += mSettingsSalary.getStudentOnLine15Child();
+                            break;
+                    }
+                }
+            }
+        }//lessons
+//        total = privateTotal + pairTotal + groupTotal + onlineTotal +
+//                privateTotalChild + pairTotalChild + groupTotalChild + onlineTotalChild;
+        totalIncome = privateTotalIncome + pairTotalIncome + groupTotalIncome + onlineTotalIncome +
+                privateTotalChildIncome + pairTotalChildIncome + groupTotalChildIncome + onlineTotalChildIncome;
+        //
+//        iPrivate += privateTotalIncome + privateTotalChildIncome;
+//        iPair += pairTotalIncome + pairTotalChildIncome;
+//        iGroup += groupTotalIncome + groupTotalChildIncome;
+//        iOnLine += onlineTotalIncome + onlineTotalChildIncome;
+        mContact.setSaldo(mTotalCharge - totalIncome);
+        mTextBalance.setText(String.format(getString(R.string.hrn_d), mContact.getSaldo()));
     }
 
     private void loadContacts() {
@@ -261,9 +464,9 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         return true;
     }
 
-    @OnClick(R.id.button_add_birthday)
+    @OnClick(R.id.button_recharge)
     public void onViewClicked() {
-//        startActivity(BirthdaysEditActivity.getLaunchIntent(this, mContact.getKey(), mContact.getChildName1()));
+        startActivity(RechargeEditActivity.getLaunchIntent(this, mContact.getKey()));
     }
 
     @OnClick({R.id.card_phone1, R.id.card_phone2})
@@ -317,5 +520,18 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
             loadLessons();
             Toast.makeText(this, R.string.toast_lesson_removed, Toast.LENGTH_LONG).show();
         });
+    }
+
+    @Override
+    public void onRemoveClicked(final ContactRecharge contactRecharge) {
+        getDatabase().getReference(DC.DB_CONTACTS_RECHARGE)
+                .child(contactRecharge.getContactKey())
+                .child(contactRecharge.getKey()).removeValue().addOnCompleteListener(task ->
+                Snackbar.make(mListLessons, getString(R.string.snack_deleted), Snackbar.LENGTH_LONG).show());
+    }
+
+    @Override
+    public void onEditClicked(final ContactRecharge contactRecharge) {
+        startActivity(RechargeEditActivity.getLaunchIntent(this, contactRecharge));
     }
 }

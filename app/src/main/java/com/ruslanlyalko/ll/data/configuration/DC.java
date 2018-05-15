@@ -14,18 +14,14 @@ public interface DC {
     String DB_DIALOGS = "DIALOGS";
     String DB_MESSAGES = "DIALOGS_MESSAGES";
     String DB_EXPENSES = "EXPENSES";
-    String DB_COMMENTS = "COMMENTS";
     String DB_RESULTS = "RESULTS";
-    String DB_CREDITS = "CREDITS";
     String DB_INFO = "APP_INFO";
+    String DB_CONTACTS = "CONTACTS";
+    String DB_CONTACTS_RECHARGE = "CONTACTS_RECHARGE";
 
     String STORAGE_USERS = "USERS";
     String STORAGE_EXPENSES = "EXPENSE";
-    String STORAGE_MK = "MK";
-    String STORAGE_REPORT = "REPORT";
     String STORAGE_DIALOGS_MESSAGES = "DIALOGS_MESSAGES";
-    String DB_CONTACTS = "CONTACTS";
-    String DB_BIRTHDAYS = "BIRTHDAYS";
 
 
     String LESSON_CLIENTS = "CLIENTS";

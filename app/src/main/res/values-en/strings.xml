@@ -207,5 +207,7 @@
     <string name="empty_string">" "</string>
     <string name="title_activity_alarm">" "</string>
     <string name="app_title">Live&amp;Learn</string>
-
+    <string name="text_income_list">Balance</string>
+    <string name="action_recharge">Recharge</string>
+    <string name="text_income_placeholder">No data yet</string>
 </resources>
