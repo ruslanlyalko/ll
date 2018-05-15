@@ -231,6 +231,9 @@
     <string name="error_empty_error">Помилка. Не всі дані заповнені!</string>
     <string name="lesson_type">Тип</string>
     <string name="client_type">Студент</string>
+    <string name="text_income_list">Список поповнень</string>
+    <string name="action_recharge">Поповнити</string>
+    <string name="text_income_placeholder">Поки що немає поповнень</string>
     <string-array name="months">
         <item>Січень</item>
         <item>Лютий</item>

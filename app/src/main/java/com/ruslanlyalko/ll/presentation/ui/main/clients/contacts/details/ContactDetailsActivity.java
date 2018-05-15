@@ -31,10 +31,13 @@ import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.data.models.ContactRecharge;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
+import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.adapter.ContactRechargesAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.adapter.OnContactRechargeClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit.ContactEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 
@@ -45,7 +48,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ContactDetailsActivity extends BaseActivity implements OnLessonClickListener {
+public class ContactDetailsActivity extends BaseActivity implements OnLessonClickListener, OnContactRechargeClickListener {
 
     private static final int RC_LESSON = 1001;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -55,13 +58,15 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @BindView(R.id.text_phone2) TextView mTextPhone2;
     @BindView(R.id.card_phone2) CardView mCardPhone2;
     @BindView(R.id.text_description) TextView mTextDescription;
-    @BindView(R.id.button_add_birthday) CardView mButtonAddBirthday;
     @BindView(R.id.list_lessons) RecyclerView mListLessons;
     @BindView(R.id.list_income) RecyclerView mListIncome;
     @BindView(R.id.text_user_name) TextView mTextUserName;
+    @BindView(R.id.text_income_placeholder) TextView mTextIncomePlaceholder;
+
     private Contact mContact;
     private String mContactKey = "";
     private LessonsAdapter mLessonsAdapter = new LessonsAdapter(this);
+    private ContactRechargesAdapter mContactRechargesAdapter = new ContactRechargesAdapter(this);
     private ValueEventListener mValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
 
@@ -101,6 +106,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         loadDetails();
         showContactDetails();
         loadContacts();
+        loadContactRecharges();
     }
 
     @Override
@@ -117,16 +123,43 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new Handler().postDelayed(this::loadLessons, 300);
+    private void loadContactRecharges() {
+        Query ref = getDatabase()
+                .getReference(DC.DB_CONTACTS_RECHARGE)
+                .child(mContactKey);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                List<ContactRecharge> contactRecharges = new ArrayList<>();
+                for (DataSnapshot rechargesSS : dataSnapshot.getChildren()) {
+                    ContactRecharge recharge = rechargesSS.getValue(ContactRecharge.class);
+                    if (recharge != null) {
+                        contactRecharges.add(recharge);
+                    }
+                }
+                boolean showPlaceholder = contactRecharges.size() == 0;
+                if (isDestroyed()) return;
+                mTextIncomePlaceholder.setVisibility(showPlaceholder ? View.VISIBLE : View.GONE);
+                mListIncome.setVisibility(showPlaceholder ? View.GONE : View.VISIBLE);
+                mContactRechargesAdapter.setData(contactRecharges);
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         getDatabase().getReference(DC.DB_LESSONS).removeEventListener(mValueEventListener);
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(this::loadLessons, 300);
     }
 
     private void removeCurrentContact() {
@@ -151,10 +184,11 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                 .show();
     }
 
-
     private void setupRecycler() {
         mListLessons.setLayoutManager(new LinearLayoutManager(this));
         mListLessons.setAdapter(mLessonsAdapter);
+        mListIncome.setLayoutManager(new LinearLayoutManager(this));
+        mListIncome.setAdapter(mContactRechargesAdapter);
     }
 
     private void loadDetails() {
@@ -262,7 +296,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         return true;
     }
 
-    @OnClick(R.id.button_add_birthday)
+    @OnClick(R.id.button_recharge)
     public void onViewClicked() {
 //        startActivity(BirthdaysEditActivity.getLaunchIntent(this, mContact.getKey(), mContact.getChildName1()));
     }
@@ -318,5 +352,15 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
             loadLessons();
             Toast.makeText(this, R.string.toast_lesson_removed, Toast.LENGTH_LONG).show();
         });
+    }
+
+    @Override
+    public void onRemoveClicked(final ContactRecharge contactRecharge) {
+        //
+    }
+
+    @Override
+    public void onEditClicked(final ContactRecharge contactRecharge) {
+        //
     }
 }

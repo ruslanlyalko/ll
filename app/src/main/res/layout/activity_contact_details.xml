@@ -139,46 +139,71 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorComment"
                 android:padding="16dp"
-                android:visibility="visible"
-                tools:text="123156456465665423123 df123df d fd " />
+                android:visibility="gone" />
 
+            <!---->
             <android.support.v7.widget.CardView
-                android:id="@+id/button_add_birthday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="4dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:padding="6dp"
-                        android:text="@string/add_birthday"
-                        android:textAllCaps="true"
-                        android:textColor="@color/colorWhite" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_income"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusableInTouchMode="false"
-                android:nestedScrollingEnabled="false" />
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="@dimen/card_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:gravity="center"
+                            android:text="@string/text_income_list"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/button_recharge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="@string/action_recharge"
+                            android:textColor="@color/colorAccent" />
+
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/list_income"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/text_income_placeholder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:text="@string/text_income_placeholder"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_lessons"
