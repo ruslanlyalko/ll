@@ -3,7 +3,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".presentation.ui.main.rooms.MkEditActivity">
+            tools:context=".presentation.ui.main.clients.contacts.edit.ContactEditActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,8 +32,8 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
 
             <EditText
                 android:id="@+id/edit_name"
@@ -146,7 +146,7 @@
                     android:focusable="false"
                     android:hint="@string/hint_date_birth"
                     android:inputType="date"
-                    />
+                    tools:ignore="KeyboardInaccessibleWidget" />
 
             </android.support.design.widget.TextInputLayout>
 
