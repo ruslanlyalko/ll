@@ -68,8 +68,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:hint="@string/hint_password"
-                android:inputType="textPassword"
-                android:maxLength="19" />
+                android:inputType="textPassword" />
 
         </LinearLayout>
 

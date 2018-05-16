@@ -263,7 +263,6 @@
                             android:layout_marginRight="16dp"
                             android:gravity="center_vertical|start"
                             android:hint="@string/hint_time"
-                            android:maxLength="19"
                             android:textAlignment="textStart"
                             android:textSize="18sp" />
 

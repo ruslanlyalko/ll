@@ -48,7 +48,6 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/hint_title1"
                     android:inputType="textCapSentences"
-                    android:maxLength="20"
                     android:padding="@dimen/text_margin"
                     android:textSize="24sp" />
 
@@ -64,7 +63,6 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/hint_short_description"
                     android:inputType="textCapSentences"
-                    android:maxLength="50"
                     android:padding="@dimen/text_margin" />
 
                 <View

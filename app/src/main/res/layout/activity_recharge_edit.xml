@@ -49,7 +49,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_title1"
                 android:inputType="textCapSentences"
-                android:maxLength="20"
                 />
         </android.support.design.widget.TextInputLayout>
 
