@@ -236,6 +236,8 @@
     <string name="text_income_placeholder">Поки що немає поповнень</string>
     <string name="read_contacts_rationale">Добавте дозвіл на читання контактів</string>
     <string name="text_select_one">Виберіть контакт</string>
+    <string name="not_selected">Не вибрано викладача</string>
+    <string name="hint_my">Тільки мої</string>
     <string-array name="months">
         <item>Січень</item>
         <item>Лютий</item>

@@ -16,9 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,6 +42,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
@@ -52,11 +56,13 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     @BindView(R.id.edit_filter_name) EditText mEditFilterName;
     @BindView(R.id.edit_filter_phone) EditText mEditFilterPhone;
     @BindView(R.id.image_clear) ImageView mImageClear;
+    @BindView(R.id.check_box_my) CheckBox mCheckBoxMy;
     private ContactsAdapter mContactsAdapter;
     private OnFilterListener mOnFilterListener;
     private int mUserType = UserType.ADULT;
     private boolean mIsSelectable;
     private List<String> mSelectedClients;
+    private String mTeacherId = "";
 
     public ContactsFragment() {
     }
@@ -119,6 +125,19 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
         loadContacts();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        try {
+            final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null && getView() != null) {
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void parseArguments() {
         if (getArguments() == null) return;
         mUserType = getArguments().getInt(Keys.Extras.EXTRA_TAB_INDEX, 0);
@@ -158,22 +177,23 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     void onFilterTextChanged() {
         String name = mEditFilterName.getText().toString().trim();
         String phone = mEditFilterPhone.getText().toString().trim();
-        mContactsAdapter.getFilter().filter(name + "/" + phone);
+        if (name.equals(""))
+            name = " ";
+        if (phone.equals(""))
+            phone = " ";
+        mContactsAdapter.getFilter().filter(name + "/" + phone + mTeacherId);
         if (mOnFilterListener != null)
             mOnFilterListener.onFilterChanged(name, phone);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        try {
-            final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null && getView() != null) {
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+    @OnCheckedChanged(R.id.check_box_my)
+    void onMyChanged(boolean isChecked) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && isChecked)
+            mTeacherId = "/" + user.getUid();
+        else
+            mTeacherId = "";
+        onFilterTextChanged();
     }
 
     @Override

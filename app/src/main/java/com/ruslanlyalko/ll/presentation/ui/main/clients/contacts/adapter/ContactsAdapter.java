@@ -120,9 +120,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
             else
                 mTextPhone2.setText("");
             String subtitle = "";
+            if (contact.hasUser())
+                subtitle = "[" + contact.getUserName() + "] ";
             if (contact.getBirthDay().getTime() != contact.getCreatedAt().getTime())
-                subtitle = DateUtils.toString(contact.getBirthDay(), "dd.MM.yyyy");
-            subtitle += "\n" + contact.getEmail();
+                subtitle += DateUtils.toString(contact.getBirthDay(), "dd.MM.yyyy");
+            subtitle += " " + contact.getEmail();
             mTextSubTitle.setText(subtitle);
             mCheckBoxSelected.setVisibility(mIsSelectable ? View.VISIBLE : View.GONE);
             mCheckBoxSelected.setChecked(mCheckedContacts.contains(contact.getKey()));
@@ -169,30 +171,41 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
             return filterResults;
         }
 
-        private boolean isMatchFilter(final CharSequence charSequence, final Contact contact) {
-            if (charSequence.toString().equals("/")) return true;
-            String[] filter = charSequence.toString().split("/", 2);
-            String name = filter[0];
-            String phone = "";
-            if (filter.length > 1)
-                phone = filter[1];
-            boolean isNameGood = true;
-            boolean isPhoneGood = true;
-            if (!name.isEmpty() && !contact.getName().toLowerCase().contains(name.toLowerCase())) {
-                isNameGood = false;
-            }
-            if (!phone.isEmpty() && !(contact.getPhone().toLowerCase().contains(phone.toLowerCase()) ||
-                    (contact.getPhone2() == null || contact.getPhone2().toLowerCase().contains(phone.toLowerCase())))) {
-                isPhoneGood = false;
-            }
-            return isNameGood && isPhoneGood;
-        }
-
         @Override
         protected void publishResults(final CharSequence charSequence, final FilterResults filterResults) {
             mDataSourceFiltered = (ArrayList<Contact>) filterResults.values;
             notifyDataSetChanged();
             notifyDataSetChanged();
+        }
+
+        private boolean isMatchFilter(final CharSequence charSequence, final Contact contact) {
+            if (charSequence.toString().equals(" / ")) return true;
+            String[] filter = charSequence.toString().split("/", 3);
+            String name = filter[0];
+            String phone = "";
+            String teacher = "";
+            if (filter.length > 1)
+                phone = filter[1];
+            if (filter.length > 2)
+                teacher = filter[2];
+            if (name.equals(" "))
+                name = "";
+            if (phone.equals(" "))
+                phone = "";
+            boolean isNameGood = true;
+            boolean isPhoneGood = true;
+            boolean isTeacherGood = true;
+            if (!name.isEmpty() && !(contact.getName().toLowerCase().contains(name.toLowerCase()))) {
+                isNameGood = false;
+            }
+            if (!phone.isEmpty() && !(contact.getPhone().toLowerCase().contains(phone.toLowerCase())
+                    || (contact.getPhone2() == null || contact.getPhone2().toLowerCase().contains(phone.toLowerCase())))) {
+                isPhoneGood = false;
+            }
+            if (!teacher.isEmpty() && !(contact.getUserId() != null && contact.getUserId().toLowerCase().contains(teacher.toLowerCase()))) {
+                isTeacherGood = false;
+            }
+            return isNameGood && isPhoneGood && isTeacherGood;
         }
     }
 }

@@ -14,6 +14,7 @@ public class Contact implements Serializable {
 
     private String key;
     private String userId;
+    private String userName;
     private String name;
     private String email;
     private String password;
@@ -51,6 +52,14 @@ public class Contact implements Serializable {
 
     public void setUserId(final String userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(final String userName) {
+        this.userName = userName;
     }
 
     public String getName() {
@@ -123,5 +132,9 @@ public class Contact implements Serializable {
 
     public void setSaldo(final int saldo) {
         this.saldo = saldo;
+    }
+
+    public boolean hasUser() {
+        return userName != null && !userName.isEmpty();
     }
 }

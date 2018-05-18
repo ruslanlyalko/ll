@@ -27,6 +27,12 @@
                 tools:ignore="ContentDescription"
                 tools:visibility="visible" />
 
+            <CheckBox
+                android:id="@+id/check_box_my"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_my"/>
+
             <EditText
                 android:id="@+id/edit_filter_name"
                 android:layout_width="0dp"

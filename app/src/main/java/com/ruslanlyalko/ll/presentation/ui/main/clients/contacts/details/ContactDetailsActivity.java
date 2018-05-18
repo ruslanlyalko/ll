@@ -119,10 +119,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         loadContactRecharges();
     }
 
-    private void setupBalance() {
-        mCardBalance.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -135,6 +131,10 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setupBalance() {
+        mCardBalance.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
     }
 
     private void loadContactRecharges() {
@@ -250,8 +250,10 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         setTitle("");
         mTextUserName.setText(mContact.getName());
         String subtitle = "";
+        if (mContact.hasUser())
+            subtitle = "[" + mContact.getUserName() + "] \n";
         if (mContact.getBirthDay().getTime() != mContact.getCreatedAt().getTime())
-            subtitle = DateUtils.toString(mContact.getBirthDay(), "dd.MM.yyyy");
+            subtitle += DateUtils.toString(mContact.getBirthDay(), "dd.MM.yyyy");
         subtitle += "\n" + mContact.getEmail();
         mTextSubTitle.setText(subtitle);
         mTextPhone1.setText(mContact.getPhone());

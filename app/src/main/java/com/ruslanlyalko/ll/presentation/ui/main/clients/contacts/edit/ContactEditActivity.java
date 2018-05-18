@@ -18,10 +18,14 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.ContactHolder;
 import com.ruslanlyalko.ll.common.DateUtils;
@@ -29,6 +33,7 @@ import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.UserType;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -52,6 +57,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     @BindView(R.id.edit_email) EditText mEditEmail;
     @BindView(R.id.edit_birth_day) EditText mEditBirthDay;
     @BindView(R.id.image_contacts) ImageView mImageContacts;
+    @BindView(R.id.spinner_teacher) Spinner mSpinnerTeacher;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private Contact mContact = new Contact();
@@ -59,6 +65,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     private String mClientPhone;
     private boolean mNeedToSave = false;
     private boolean mIsNew = false;
+    private List<User> mUsers = new ArrayList<>();
 
     public static Intent getLaunchIntent(final Context launchIntent, final Contact contact) {
         Intent intent = new Intent(launchIntent, ContactEditActivity.class);
@@ -105,8 +112,78 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         mEditEmail.setText(mContact.getEmail());
         mEditDescription.setText(mContact.getDescription());
         TabLayout.Tab tab = mTabsUserType.getTabAt(mContact.getUserType() == UserType.ADULT ? 0 : 1);
+        loadUsers();
         if (tab != null) tab.select();
         mNeedToSave = false;
+    }
+
+    @Override
+    protected boolean isModalView() {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_save) {
+            if (mIsNew)
+                addClient();
+            else
+                updateClient();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mNeedToSave) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ContactEditActivity.this);
+            builder.setTitle(R.string.dialog_discard_changes)
+                    .setPositiveButton(R.string.action_discard, (dialog, which) -> {
+                        mNeedToSave = false;
+                        onBackPressed();
+                    })
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show();
+        } else {
+            hideKeyboard();
+            super.onBackPressed();
+        }
+    }
+
+    private void loadUsers() {
+        getDatabase().getReference(DC.DB_USERS)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        mUsers.clear();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            User user = data.getValue(User.class);
+                            mUsers.add(user);
+                        }
+                        initSpinnerTeacher();
+                    }
+
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    private void initSpinnerTeacher() {
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ContactEditActivity.this,
+                android.R.layout.simple_selectable_list_item);
+        List<String> userNamesList = new ArrayList<>();
+        userNamesList.add(getString(R.string.not_selected));
+        for (int i = 0; i < mUsers.size(); i++) {
+            userNamesList.add(mUsers.get(i).getFullName());
+        }
+        arrayAdapter.addAll(userNamesList);
+        mSpinnerTeacher.setAdapter(arrayAdapter);
+        for (int i = 0; i < mUsers.size(); i++) {
+            if (mSpinnerTeacher.getItemAtPosition(i).equals(mContact.getUserName()))
+                mSpinnerTeacher.setSelection(i);
+        }
     }
 
     private void setupChangeWatcher() {
@@ -145,46 +222,20 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_save) {
-            if (mIsNew)
-                addClient();
-            else
-                updateClient();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mNeedToSave) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(ContactEditActivity.this);
-            builder.setTitle(R.string.dialog_discard_changes)
-                    .setPositiveButton(R.string.action_discard, (dialog, which) -> {
-                        mNeedToSave = false;
-                        onBackPressed();
-                    })
-                    .setNegativeButton(R.string.action_cancel, null)
-                    .show();
-        } else {
-            hideKeyboard();
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    protected boolean isModalView() {
-        return true;
-    }
-
     private void updateModel() {
         mContact.setName(mEditName.getText().toString().trim());
         mContact.setEmail(mEditEmail.getText().toString().trim());
         mContact.setPhone(mEditPhone1.getText().toString().trim());
         mContact.setPhone2(mEditPhone2.getText().toString().trim());
         mContact.setDescription(mEditDescription.getText().toString().trim());
+        long index = mSpinnerTeacher.getSelectedItemId();
+        if (index < 1) {
+            mContact.setUserName("");
+            mContact.setUserId("");
+        } else {
+            mContact.setUserName(mUsers.get((int) index - 1).getFullName());
+            mContact.setUserId(mUsers.get((int) index - 1).getId());
+        }
         TabLayout.Tab tab = mTabsUserType.getTabAt(0);
         if (tab != null)
             mContact.setUserType(tab.isSelected() ? UserType.ADULT : UserType.CHILD);
