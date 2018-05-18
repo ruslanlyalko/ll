@@ -180,7 +180,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         }
         arrayAdapter.addAll(userNamesList);
         mSpinnerTeacher.setAdapter(arrayAdapter);
-        for (int i = 0; i < mUsers.size(); i++) {
+        for (int i = 0; i < mSpinnerTeacher.getAdapter().getCount(); i++) {
             if (mSpinnerTeacher.getItemAtPosition(i).equals(mContact.getUserName()))
                 mSpinnerTeacher.setSelection(i);
         }
