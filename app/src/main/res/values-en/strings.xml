@@ -39,7 +39,6 @@
     <string name="title_activity_events">Messages</string>
     <string name="title_activity_lesson">Lesson %s</string>
     <string name="action_edit">Edit</string>
-    <string name="action_add">Save</string>
     <string name="title_activity_calendar">Calendar</string>
     <string name="title_activity_cost">Expenses</string>
     <string name="title_activity_notification">Messages</string>
@@ -73,7 +72,6 @@
     <string name="mk_updated">Updated</string>
     <string name="not_added">Created</string>
     <string name="dialog_mk_edit_text">Do you want to save changes?</string>
-    <string name="action_delete_mk">Remove</string>
     <string name="photo_uploading">Uploading. Please wait</string>
     <string name="hint_first_date">First working day</string>
     <string name="tab_room_1">Green</string>
@@ -186,7 +184,6 @@
     <string name="client_added">Contact created</string>
     <string name="dialog_remove_contact_title">Remove?</string>
     <string name="text_income_">Income</string>
-    <string name="add_birthday">Recharge account</string>
     <string name="hint_notif">Recive notifications</string>
     <string name="dialog_remove_contact_message">After removing all data will be lost</string>
     <string name="title_activity_birth">Birthdays</string>
@@ -201,7 +198,6 @@
     <string name="dialog_discard_changes">Exit without saving changes</string>
     <string name="title_activity_notification_item">Messages</string>
     <string name="text_about_company">About</string>
-    <string name="action_plan">"Plan "</string>
     <string name="hint_time">Working time</string>
     <string name="dialog_about_message">Live&amp;Learn  \nv </string>
     <string name="empty_string">" "</string>
