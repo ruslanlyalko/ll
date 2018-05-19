@@ -149,7 +149,7 @@ public class RechargeEditActivity extends BaseActivity {
                 .child(mContactRecharge.getKey())
                 .setValue(mContactRecharge)
                 .addOnCompleteListener(task -> {
-                    Toast.makeText(RechargeEditActivity.this, getString(R.string.mk_updated), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RechargeEditActivity.this, getString(R.string.toast_updated), Toast.LENGTH_SHORT).show();
                     mNeedToSave = false;
                     onBackPressed();
                 });

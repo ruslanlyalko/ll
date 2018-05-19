@@ -80,7 +80,7 @@
                 android:layout_alignParentTop="true"
                 android:background="?android:attr/selectableItemBackground"
                 android:focusable="true"
-                android:text="@string/expense_upload"
+                android:text="@string/button_expense_upload"
                 android:textColor="@color/colorWhite" />
 
         </RelativeLayout>

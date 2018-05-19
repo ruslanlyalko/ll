@@ -102,7 +102,7 @@ public class MessageEditActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (progressBar.getVisibility() == View.VISIBLE) {
-            Toast.makeText(this, R.string.photo_uploading, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_photo_uploading, Toast.LENGTH_SHORT).show();
             return;
         }
         if (needToSave) {
@@ -228,7 +228,7 @@ public class MessageEditActivity extends BaseActivity {
         mMessage.setUserName(mUser.getDisplayName());
         database.getReference(DC.DB_DIALOGS)
                 .child(notKey).setValue(mMessage).addOnCompleteListener(task ->
-                Snackbar.make(imageView, getString(R.string.not_added), Snackbar.LENGTH_SHORT).show());
+                Snackbar.make(imageView, getString(R.string.toast_dialog_added), Snackbar.LENGTH_SHORT).show());
         saveMembers();
         needToSave = false;
     }
@@ -237,7 +237,7 @@ public class MessageEditActivity extends BaseActivity {
         updateNotModel();
         database.getReference(DC.DB_DIALOGS)
                 .child(mMessage.getKey()).setValue(mMessage).addOnCompleteListener(task ->
-                Snackbar.make(imageView, getString(R.string.mk_updated), Snackbar.LENGTH_SHORT).show());
+                Snackbar.make(imageView, getString(R.string.toast_updated), Snackbar.LENGTH_SHORT).show());
         saveMembers();
         needToSave = false;
     }

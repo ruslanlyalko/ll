@@ -220,7 +220,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     public void onPermissionsGranted(int requestCode, List<String> list) {
         switch (requestCode) {
             case REQUEST_IMAGE_PERMISSION:
-                EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
+                EasyImage.openChooserWithGallery(this, getString(R.string.text_choose_images), 0);
                 break;
         }
     }
@@ -401,16 +401,16 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         } else {
             mTextAvailable.setVisibility(View.INVISIBLE);
             if (mLastOnline != null)
-                mTextLastOnline.setText(getString(R.string.last_online, DateUtils.getUpdatedAt(mLastOnline)));
+                mTextLastOnline.setText(getString(R.string.text_last_online, DateUtils.getUpdatedAt(mLastOnline)));
             else
-                mTextLastOnline.setText(getString(R.string.last_online_long_time_ago));
+                mTextLastOnline.setText(getString(R.string.text_last_online_long_time_ago));
         }
     }
 
     private void choosePhoto() {
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
-            EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
+            EasyImage.openChooserWithGallery(this, getString(R.string.text_choose_images), 0);
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.image_permissions), REQUEST_IMAGE_PERMISSION, perms);
         }

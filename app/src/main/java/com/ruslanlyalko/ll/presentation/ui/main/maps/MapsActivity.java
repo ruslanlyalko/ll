@@ -59,7 +59,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney and move the camera
-        Marker marker = googleMap.addMarker(new MarkerOptions().position(mLocation).title(getString(R.string.maps_marker_title)));
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(mLocation).title(getString(R.string.text_maps_marker_title)));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
         googleMap.animateCamera(CameraUpdateFactory.zoomIn());
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);

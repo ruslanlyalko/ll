@@ -75,6 +75,6 @@ public class AboutActivity extends BaseActivity {
                     .child("aboutText")
                     .setValue(editAbout.getText().toString().trim())
                     .addOnCompleteListener(task ->
-                            Toast.makeText(AboutActivity.this, R.string.mk_updated, Toast.LENGTH_SHORT).show());
+                            Toast.makeText(AboutActivity.this, R.string.toast_updated, Toast.LENGTH_SHORT).show());
     }
 }

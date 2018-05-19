@@ -356,7 +356,7 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
     }
 
     void chooseFileToUpload() {
-        EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
+        EasyImage.openChooserWithGallery(this, getString(R.string.text_choose_images), 0);
     }
 
     @Override

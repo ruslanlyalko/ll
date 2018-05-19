@@ -116,7 +116,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     @Override
     public void onBackPressed() {
         if (mProgressBarUpload.getVisibility() == View.VISIBLE) {
-            Toast.makeText(this, R.string.photo_uploading, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_photo_uploading, Toast.LENGTH_SHORT).show();
             return;
         }
         super.onBackPressed();
@@ -312,6 +312,6 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         mDatabase.getReference(DC.DB_EXPENSES)
                 .child(DateUtils.toString(expense.getExpenseDate(), "yyyy")).child(DateUtils.toString(expense.getExpenseDate(), "M"))
                 .child(expense.getKey()).removeValue().addOnCompleteListener(task ->
-                Snackbar.make(mExpensesList, getString(R.string.snack_deleted), Snackbar.LENGTH_LONG).show());
+                Snackbar.make(mExpensesList, getString(R.string.toast_deleted), Snackbar.LENGTH_LONG).show());
     }
 }

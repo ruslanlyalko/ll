@@ -174,7 +174,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ContactEditActivity.this,
                 android.R.layout.simple_selectable_list_item);
         List<String> userNamesList = new ArrayList<>();
-        userNamesList.add(getString(R.string.not_selected));
+        userNamesList.add(getString(R.string.spinner_not_selected));
         for (int i = 0; i < mUsers.size(); i++) {
             userNamesList.add(mUsers.get(i).getFullName());
         }
@@ -252,7 +252,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
                 .push();
         mContact.setKey(ref.getKey());
         ref.setValue(mContact).addOnCompleteListener(task -> {
-            Snackbar.make(mEditName, getString(R.string.client_added), Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mEditName, getString(R.string.toast_client_added), Snackbar.LENGTH_SHORT).show();
             mNeedToSave = false;
             onBackPressed();
         });
@@ -268,7 +268,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
                 .child(mContact.getKey())
                 .setValue(mContact)
                 .addOnCompleteListener(task -> {
-                    Toast.makeText(ContactEditActivity.this, getString(R.string.mk_updated), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContactEditActivity.this, getString(R.string.toast_updated), Toast.LENGTH_SHORT).show();
                     mNeedToSave = false;
                     onBackPressed();
                 });
@@ -303,7 +303,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         if (EasyPermissions.hasPermissions(this, perms)) {
             showContacts();
         } else {
-            EasyPermissions.requestPermissions(this, getString(R.string.read_contacts_rationale),
+            EasyPermissions.requestPermissions(this, getString(R.string.text_read_contacts_rationale),
                     RC_READ_CONTACTS, perms);
         }
     }
@@ -340,7 +340,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {
-        Toast.makeText(this, R.string.read_contacts_rationale, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.text_read_contacts_rationale, Toast.LENGTH_SHORT).show();
     }
 
     List<Pair<String, String>> getContacts() {

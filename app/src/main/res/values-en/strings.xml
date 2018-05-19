@@ -11,7 +11,7 @@
     <string name="text_forgot_password1">We need your email to send recover instruction</string>
     <string name="toast_user_created">"User registered: "</string>
     <string name="button_reset_password">Password recover</string>
-    <string name="title_activity_signup">Registration</string>
+    <string name="title_activity_sign_up">Registration</string>
     <string name="button_sign_up">Register</string>
     <string name="hint_first_name">Full name</string>
     <string name="hint_phone">Phone</string>
@@ -64,15 +64,15 @@
     <string name="text_salary_condition_title">Condations</string>
     <string name="action_new_user">New user</string>
     <string name="text_friend_list">Colleagues</string>
-    <string name="snack_deleted">Removed</string>
+    <string name="toast_deleted">Removed</string>
     <string name="action_save">Save</string>
     <string name="title_activity_edit">Edit</string>
     <string name="title_activity_add">Add</string>
     <string name="hint_description">Full description (optional)</string>
-    <string name="mk_updated">Updated</string>
-    <string name="not_added">Created</string>
+    <string name="toast_updated">Updated</string>
+    <string name="toast_dialog_added">Created</string>
     <string name="dialog_mk_edit_text">Do you want to save changes?</string>
-    <string name="photo_uploading">Uploading. Please wait</string>
+    <string name="toast_photo_uploading">Uploading. Please wait</string>
     <string name="hint_first_date">First working day</string>
     <string name="tab_room_1">Green</string>
     <string name="tab_room_2">Blue</string>
@@ -109,12 +109,12 @@
     <string name="action_change_ava">Change avatar</string>
     <string name="error_no_name">Name can\'t be empty</string>
     <string name="lesson_length_one_hour">1h</string>
-    <string name="contacts_filter_by_name">Name</string>
-    <string name="contacts_filter_by_phone">Phone</string>
-    <string name="last_online">Last online %s</string>
-    <string name="last_online_long_time_ago">Last online long time ago</string>
-    <string name="expense_added">Added</string>
-    <string name="expense_upload">Upload photo</string>
+    <string name="hint_filter_by_name">Name</string>
+    <string name="hint_filter_by_phone">Phone</string>
+    <string name="text_last_online">Last online %s</string>
+    <string name="text_last_online_long_time_ago">Last online long time ago</string>
+    <string name="toast_expense_added">Added</string>
+    <string name="button_expense_upload">Upload photo</string>
     <string name="title_activity_clients_tab">Clients</string>
     <string name="hrn">%1$s uah</string>
     <string name="HRN">%1$s UAH</string>
@@ -162,8 +162,8 @@
         <item>November</item>
         <item>December</item>
     </string-array>
-    <string name="lesson_type">Type</string>
-    <string name="client_type">Student</string>
+    <string name="text_lesson_type">Type</string>
+    <string name="text_client_type">Student</string>
     <string name="text_show_details">More</string>
     <string name="hint_client_description">Description</string>
     <string name="text_user_details">Main data</string>
@@ -172,7 +172,7 @@
     <string name="text_comments_list">Allow to comment</string>
     <string name="hint_comment_add">Type message…</string>
     <string name="dialog_remove_title">Remove?</string>
-    <string name="choose_images">Choose picture</string>
+    <string name="text_choose_images">Choose picture</string>
     <string name="text_expenses_type0">Common</string>
     <string name="text_expenses_type1">For office</string>
     <string name="text_charts_income">Income / Profit</string>
@@ -181,7 +181,7 @@
     <string name="hint_password_one_more">Password</string>
     <string name="toast_different_password">Password again</string>
     <string name="action_change_password">CHANGE PASSWORD</string>
-    <string name="client_added">Contact created</string>
+    <string name="toast_client_added">Contact created</string>
     <string name="dialog_remove_contact_title">Remove?</string>
     <string name="text_income_">Income</string>
     <string name="hint_notif">Recive notifications</string>
@@ -190,7 +190,7 @@
     <string name="hint_show_clients">Allow view expenses</string>
     <string name="error_delete_contact_other">Can\'t remove</string>
     <string name="online">Online</string>
-    <string name="maps_marker_title">Location</string>
+    <string name="text_maps_marker_title">Location</string>
     <string name="image_permissions">Please allow use GPS</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_discard">Exit</string>
@@ -204,9 +204,9 @@
     <string name="text_income_list">Balance:</string>
     <string name="action_recharge">Recharge</string>
     <string name="text_income_placeholder">No data yet</string>
-    <string name="read_contacts_rationale">Allow user to get contacts from your phone</string>
+    <string name="text_read_contacts_rationale">Allow user to get contacts from your phone</string>
     <string name="text_select_one">Choose contact</string>
-    <string name="not_selected">Teacher not selected </string>
+    <string name="spinner_not_selected">Teacher not selected </string>
     <string name="hint_my">Only my</string>
     <string name="hint_teacher">Teacher</string>
 

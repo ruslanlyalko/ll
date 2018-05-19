@@ -228,7 +228,7 @@ public class SalaryEditActivity extends BaseActivity {
                 .child(mSettingsSalary.getKey())
                 .setValue(mSettingsSalary)
                 .addOnCompleteListener(task -> {
-                    Toast.makeText(SalaryEditActivity.this, getString(R.string.mk_updated), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SalaryEditActivity.this, getString(R.string.toast_updated), Toast.LENGTH_SHORT).show();
                     mNeedToSave = false;
                     onBackPressed();
                 });

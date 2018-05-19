@@ -159,7 +159,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
     @Override
     public void onBackPressed() {
         if (mProgressBar.getVisibility() == View.VISIBLE) {
-            Toast.makeText(this, R.string.photo_uploading, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_photo_uploading, Toast.LENGTH_SHORT).show();
             return;
         }
         if (mNeedToSave) {
@@ -233,7 +233,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
     public void onPermissionsGranted(int requestCode, List<String> list) {
         switch (requestCode) {
             case REQUEST_IMAGE_PERMISSION:
-                EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
+                EasyImage.openChooserWithGallery(this, getString(R.string.text_choose_images), 0);
                 break;
         }
     }
@@ -258,7 +258,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
                 .push();
         mExpense.setKey(ref.getKey());
         ref.setValue(mExpense).addOnCompleteListener(task -> {
-            Snackbar.make(mImageExpense, getString(R.string.expense_added), Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mImageExpense, getString(R.string.toast_expense_added), Snackbar.LENGTH_SHORT).show();
             mNeedToSave = false;
             onBackPressed();
         });
@@ -272,7 +272,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
                 .child(mExpense.getKey())
                 .setValue(mExpense)
                 .addOnCompleteListener(task -> {
-                    Toast.makeText(ExpenseEditActivity.this, getString(R.string.mk_updated), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExpenseEditActivity.this, getString(R.string.toast_updated), Toast.LENGTH_SHORT).show();
                     mNeedToSave = false;
                     onBackPressed();
                 });
@@ -288,7 +288,7 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
     public void onUploadClicked() {
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
-            EasyImage.openChooserWithGallery(this, getString(R.string.choose_images), 0);
+            EasyImage.openChooserWithGallery(this, getString(R.string.text_choose_images), 0);
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.image_permissions), REQUEST_IMAGE_PERMISSION, perms);
         }

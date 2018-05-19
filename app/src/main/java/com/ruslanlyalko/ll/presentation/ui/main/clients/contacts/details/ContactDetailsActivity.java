@@ -543,7 +543,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         getDatabase().getReference(DC.DB_CONTACTS_RECHARGE)
                 .child(contactRecharge.getContactKey())
                 .child(contactRecharge.getKey()).removeValue().addOnCompleteListener(task ->
-                Snackbar.make(mListLessons, getString(R.string.snack_deleted), Snackbar.LENGTH_LONG).show());
+                Snackbar.make(mListLessons, getString(R.string.toast_deleted), Snackbar.LENGTH_LONG).show());
     }
 
     @Override

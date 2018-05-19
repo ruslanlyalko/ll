@@ -167,7 +167,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="@string/lesson_type"
+                                android:text="@string/text_lesson_type"
                                 android:textColor="@color/colorBlack" />
 
                             <TextView
@@ -187,7 +187,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:text="@string/client_type"
+                                android:text="@string/text_client_type"
                                 android:textColor="@color/colorBlack" />
 
                             <TextView
