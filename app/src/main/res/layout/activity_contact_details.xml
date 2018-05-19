@@ -10,7 +10,8 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="?attr/actionBarSize"
+        tools:visibility="gone" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -49,7 +50,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
                     android:layout_toEndOf="@id/image_avatar"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:transitionName="user"
                     tools:text="Name Surname" />

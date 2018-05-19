@@ -20,11 +20,11 @@ import com.google.firebase.storage.StorageReference;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class PhotoPreviewActivity extends AppCompatActivity {
+public class PhotoPreviewActivity extends BaseActivity {
 
     @BindView(R.id.photo_view) PhotoView mPhotoView;
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
@@ -48,16 +48,12 @@ public class PhotoPreviewActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fadein, R.anim.nothing);
-        setContentView(R.layout.activity_show_image);
-        ButterKnife.bind(this);
-        parseExtras();
-        loadWithGlide(mUri);
+    protected int getLayoutResource() {
+        return R.layout.activity_show_image;
     }
 
-    private void parseExtras() {
+    @Override
+    protected void parseExtras() {
         final Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mUri = bundle.getString(Keys.Extras.EXTRA_URI);
@@ -66,7 +62,31 @@ public class PhotoPreviewActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void setupView() {
+        loadWithGlide(mUri);
+    }
 
+    @Override
+    protected boolean isModalView() {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.nothing, R.anim.fadeout);
+    }
 
     private void loadWithGlide(String uri) {
         if (uri == null || uri.isEmpty()) return;
@@ -107,21 +127,5 @@ public class PhotoPreviewActivity extends AppCompatActivity {
                 }
             }).into(mPhotoView));
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.nothing, R.anim.fadeout);
     }
 }

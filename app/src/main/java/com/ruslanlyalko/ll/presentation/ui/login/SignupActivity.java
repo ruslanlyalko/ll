@@ -1,10 +1,7 @@
 package com.ruslanlyalko.ll.presentation.ui.login;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -19,13 +16,13 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
 
     @BindView(R.id.text_email) EditText inputEmail;
     @BindView(R.id.text_password) EditText inputPassword;
@@ -37,10 +34,12 @@ public class SignupActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
-        ButterKnife.bind(this);
+    protected int getLayoutResource() {
+        return R.layout.activity_signup;
+    }
+
+    @Override
+    protected void setupView() {
     }
 
     @OnClick(R.id.sign_up_button)
@@ -109,15 +108,5 @@ public class SignupActivity extends AppCompatActivity {
     @OnClick(R.id.button_reset_password)
     void onResetClicked() {
         startActivity(new Intent(SignupActivity.this, ResetPasswordActivity.class));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

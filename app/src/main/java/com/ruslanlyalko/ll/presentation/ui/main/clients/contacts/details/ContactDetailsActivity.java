@@ -75,6 +75,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private LessonsAdapter mLessonsAdapter = new LessonsAdapter(this);
     private ContactRechargesAdapter mContactRechargesAdapter = new ContactRechargesAdapter(this);
     private ValueEventListener mValueEventListener;
+    private ValueEventListener mContactValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
     private int mTotalCharge = 0;
 
@@ -116,7 +117,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         showContactDetails();
         loadSettingsSalaries();
         loadContacts();
-        loadContactRecharges();
     }
 
     @Override
@@ -138,45 +138,48 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void loadContactRecharges() {
-        Query ref = getDatabase()
+        mContactValueEventListener = getDatabase()
                 .getReference(DC.DB_CONTACTS_RECHARGE)
-                .child(mContactKey);
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                List<ContactRecharge> contactRecharges = new ArrayList<>();
-                mTotalCharge = 0;
-                for (DataSnapshot rechargesSS : dataSnapshot.getChildren()) {
-                    ContactRecharge recharge = rechargesSS.getValue(ContactRecharge.class);
-                    if (recharge != null) {
-                        contactRecharges.add(recharge);
-                        mTotalCharge += recharge.getPrice();
+                .child(mContactKey).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        List<ContactRecharge> contactRecharges = new ArrayList<>();
+                        mTotalCharge = 0;
+                        for (DataSnapshot rechargesSS : dataSnapshot.getChildren()) {
+                            ContactRecharge recharge = rechargesSS.getValue(ContactRecharge.class);
+                            if (recharge != null) {
+                                contactRecharges.add(recharge);
+                                mTotalCharge += recharge.getPrice();
+                            }
+                        }
+                        boolean showPlaceholder = contactRecharges.size() == 0;
+                        if (isDestroyed()) return;
+                        mTextIncomePlaceholder.setVisibility(showPlaceholder ? View.VISIBLE : View.GONE);
+                        mListIncome.setVisibility(showPlaceholder ? View.GONE : View.VISIBLE);
+                        mContactRechargesAdapter.setData(contactRecharges);
+                        calcBalance();
                     }
-                }
-                boolean showPlaceholder = contactRecharges.size() == 0;
-                if (isDestroyed()) return;
-                mTextIncomePlaceholder.setVisibility(showPlaceholder ? View.VISIBLE : View.GONE);
-                mListIncome.setVisibility(showPlaceholder ? View.GONE : View.VISIBLE);
-                mContactRechargesAdapter.setData(contactRecharges);
-                calcBalance();
-            }
 
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-            }
-        });
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
     }
 
     @Override
     protected void onPause() {
         getDatabase().getReference(DC.DB_LESSONS).removeEventListener(mValueEventListener);
+        getDatabase().getReference(DC.DB_CONTACTS_RECHARGE).child(mContactKey).removeEventListener(mContactValueEventListener);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        new Handler().postDelayed(this::loadLessons, 300);
+        new Handler().postDelayed(() -> {
+            loadLessons();
+            loadContactRecharges();
+        }, 300);
     }
 
     private void removeCurrentContact() {

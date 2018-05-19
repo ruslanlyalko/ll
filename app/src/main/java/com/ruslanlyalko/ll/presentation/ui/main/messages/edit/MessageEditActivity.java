@@ -1,10 +1,8 @@
 package com.ruslanlyalko.ll.presentation.ui.main.messages.edit;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -31,6 +29,7 @@ import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.User;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.messages.edit.adapter.MembersAdapter;
 
 import java.text.SimpleDateFormat;
@@ -40,9 +39,8 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class MessageEditActivity extends AppCompatActivity {
+public class MessageEditActivity extends BaseActivity {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.edit_title1) EditText textTitle1;
@@ -62,12 +60,20 @@ public class MessageEditActivity extends AppCompatActivity {
     private String notKey;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fadein, R.anim.nothing);
-        setContentView(R.layout.activity_message_edit);
-        ButterKnife.bind(this);
-        parseExtras();
+    protected int getLayoutResource() {
+        return R.layout.activity_message_edit;
+    }
+
+    @Override
+    protected void parseExtras() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            notKey = bundle.getString(Keys.Extras.EXTRA_ITEM_ID);
+        }
+    }
+
+    @Override
+    protected void setupView() {
         setupRecycler();
         isNew = notKey == null;
         initTextWatchers();
@@ -76,10 +82,47 @@ public class MessageEditActivity extends AppCompatActivity {
         updateUI();
     }
 
-    private void parseExtras() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            notKey = bundle.getString(Keys.Extras.EXTRA_ITEM_ID);
+    @Override
+    protected boolean isModalView() {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_save) {
+            if (isNew)
+                addNotification();
+            else
+                updateNotification();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            Toast.makeText(this, R.string.photo_uploading, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (needToSave) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MessageEditActivity.this);
+            builder.setTitle(R.string.dialog_report_save_before_close_title)
+                    .setMessage(R.string.dialog_mk_edit_text)
+                    .setPositiveButton(R.string.action_save, (dialog, which) -> {
+                        if (isNew)
+                            addNotification();
+                        else
+                            updateNotification();
+                        onBackPressed();
+                    })
+                    .setNegativeButton(R.string.action_cancel, (dialog, which) -> {
+                        needToSave = false;
+                        onBackPressed();
+                    })
+                    .show();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -184,9 +227,8 @@ public class MessageEditActivity extends AppCompatActivity {
         mMessage.setUserId(mUser.getUid());
         mMessage.setUserName(mUser.getDisplayName());
         database.getReference(DC.DB_DIALOGS)
-                .child(notKey).setValue(mMessage).addOnCompleteListener(task -> {
-            Snackbar.make(imageView, getString(R.string.not_added), Snackbar.LENGTH_SHORT).show();
-        });
+                .child(notKey).setValue(mMessage).addOnCompleteListener(task ->
+                Snackbar.make(imageView, getString(R.string.not_added), Snackbar.LENGTH_SHORT).show());
         saveMembers();
         needToSave = false;
     }
@@ -194,9 +236,8 @@ public class MessageEditActivity extends AppCompatActivity {
     private void updateNotification() {
         updateNotModel();
         database.getReference(DC.DB_DIALOGS)
-                .child(mMessage.getKey()).setValue(mMessage).addOnCompleteListener(task -> {
-            Snackbar.make(imageView, getString(R.string.mk_updated), Snackbar.LENGTH_SHORT).show();
-        });
+                .child(mMessage.getKey()).setValue(mMessage).addOnCompleteListener(task ->
+                Snackbar.make(imageView, getString(R.string.mk_updated), Snackbar.LENGTH_SHORT).show());
         saveMembers();
         needToSave = false;
     }
@@ -222,53 +263,5 @@ public class MessageEditActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_edit, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        if (id == R.id.action_save) {
-            if (isNew)
-                addNotification();
-            else
-                updateNotification();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (progressBar.getVisibility() == View.VISIBLE) {
-            Toast.makeText(this, R.string.photo_uploading, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (needToSave) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MessageEditActivity.this);
-            builder.setTitle(R.string.dialog_report_save_before_close_title)
-                    .setMessage(R.string.dialog_mk_edit_text)
-                    .setPositiveButton("ЗБЕРЕГТИ ЗМІНИ", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (isNew)
-                                addNotification();
-                            else
-                                updateNotification();
-                            onBackPressed();
-                        }
-                    })
-                    .setNegativeButton("НЕ ЗБЕРІГАТИ", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            needToSave = false;
-                            onBackPressed();
-                        }
-                    })
-                    .show();
-        } else {
-            super.onBackPressed();
-            overridePendingTransition(R.anim.nothing, R.anim.fadeout);
-        }
     }
 }

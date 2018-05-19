@@ -1,11 +1,9 @@
 package com.ruslanlyalko.ll.presentation.ui.login;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -15,12 +13,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ResetPasswordActivity extends AppCompatActivity {
+public class ResetPasswordActivity extends BaseActivity {
 
     @BindView(R.id.text_email) EditText inputEmail;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
@@ -30,10 +28,17 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_password);
-        ButterKnife.bind(this);
+    protected int getLayoutResource() {
+        return R.layout.activity_reset_password;
+    }
+
+    @Override
+    protected void setupView() {
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @OnClick(R.id.button_reset_password)
@@ -56,20 +61,5 @@ public class ResetPasswordActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                     }
                 });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }

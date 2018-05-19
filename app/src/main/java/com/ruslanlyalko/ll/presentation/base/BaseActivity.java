@@ -87,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void copyToClipboard(String label, String text) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(text, text);
+        ClipData clip = ClipData.newPlainText(label, text);
         if (clipboard != null) {
             clipboard.setPrimaryClip(clip);
         }
@@ -111,7 +111,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
         }
     }
 

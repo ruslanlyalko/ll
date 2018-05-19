@@ -6,35 +6,35 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 
 import java.io.IOException;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AlarmReceiverActivity extends AppCompatActivity {
+public class AlarmReceiverActivity extends BaseActivity {
 
     private MediaPlayer mMediaPlayer;
     private Vibrator mVibrator;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm_receiver);
-        ButterKnife.bind(this);
+    protected int getLayoutResource() {
+        return R.layout.activity_alarm_receiver;
+    }
+
+    @Override
+    protected void setupView() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = null;
+        PowerManager.WakeLock wl;
         if (pm != null) {
             wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK
                     | PowerManager.ON_AFTER_RELEASE, "wakeup");

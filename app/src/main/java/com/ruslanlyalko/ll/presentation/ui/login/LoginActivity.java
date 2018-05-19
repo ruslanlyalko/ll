@@ -1,10 +1,8 @@
 package com.ruslanlyalko.ll.presentation.ui.login;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -13,13 +11,13 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.MainActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.text_email) AutoCompleteTextView inputEmail;
     @BindView(R.id.text_password) EditText inputPassword;
@@ -30,10 +28,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+    protected int getLayoutResource() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    protected void setupView() {
     }
 
     @OnClick(R.id.button_login)
@@ -69,16 +69,6 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.button_reset_password)
     void onResetClicked() {
         startActivity(ResetPasswordActivity.getLaunchIntent(this));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
 

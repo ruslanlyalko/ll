@@ -3,7 +3,6 @@ package com.ruslanlyalko.ll.presentation.ui.main.maps;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,12 +14,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
-import butterknife.ButterKnife;
+public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-    private GoogleMap mMap;
     private LatLng mLocation;
 
     public static Intent getLaunchIntent(final Activity launchIntent, final LatLng location) {
@@ -30,22 +27,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        ButterKnife.bind(this);
-        parseExtras();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+    protected int getLayoutResource() {
+        return R.layout.activity_maps;
     }
 
-    private void parseExtras() {
+    @Override
+    protected void parseExtras() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mLocation = bundle.getParcelable(Keys.Extras.EXTRA_LOCATION);
         }
+    }
+
+    @Override
+    protected void setupView() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -60,11 +58,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
         // Add a marker in Sydney and move the camera
-        Marker marker = mMap.addMarker(new MarkerOptions().position(mLocation).title(getString(R.string.maps_marker_title)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
-        mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(mLocation).title(getString(R.string.maps_marker_title)));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+        googleMap.animateCamera(CameraUpdateFactory.zoomIn());
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
     }
 }
