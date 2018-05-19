@@ -3,7 +3,6 @@
 
     <!-- ACTIONS -->
     <string name="action_edit">Редагувати</string>
-    <string name="action_add">Зберегти</string>
     <string name="action_save">Зберегти</string>
     <string name="action_settings">Налаштування</string>
     <string name="action_logout">Вийти</string>
@@ -20,6 +19,50 @@
     <string name="action_recharge">Поповнити</string>
     <string name="action_settings_salary">Тарифи</string>
     <string name="action_dashboard">Адмін панель</string>
+
+    <!-- DIALOGS-->
+    <string name="dialog_logout_title">Вийти з аккаунта</string>
+    <string name="dialog_logout_message"> Ви впевнені що бажаєте вийти з аккаунта?</string>
+    <string name="dialog_cost_delete_title">Видалити витрату</string>
+    <string name="dialog_cost_delete_message">Після видалення відновити витрату буде неможливо</string>
+    <string name="dialog_cost_delete_all_title">Видалити всі витрати</string>
+    <string name="dialog_cost_delete_all_message">Після видалення відновити витрати буде неможливо</string>
+    <string name="dialog_delete_notification_title">Видалити діалог</string>
+    <string name="dialog_delete_notification_message">Після видаленння відновити діалог буде неможливо</string>
+    <string name="dialog_about_message">Live&amp;Learn  \nv </string>
+    <string name="dialog_report_save_before_close_title">Зберегти зміни</string>
+    <string name="dialog_report_save_before_close_text">Ви хочете зберегти зміни?</string>
+    <string name="dialog_mk_edit_text">В тексті є зміни, зберегти їх?</string>
+    <string name="dialog_discard_changes">Вийти без збереження?</string>
+    <string name="dialog_remove_title">Видалити повідомлення?</string>
+    <string name="dialog_calendar_remove_title">Видалити заняття?</string>
+    <string name="dialog_remove_contact_title">Видалити контакт?</string>
+    <string name="dialog_remove_contact_message">Якщо ви видалите контакт всі дані будуть втрачені</string>  <!-- Strings related to LESSON -->
+
+    <!-- HINTS-->
+    <string name="hint_first_name">ПІБ</string>
+    <string name="hint_phone">Телефон</string>
+    <string name="hint_phone2">Телефон 2</string>
+    <string name="hint_email">Електронна скринька</string>
+    <string name="hint_date_birth">Дата народження</string>
+    <string name="hint_card">Номер картки</string>
+    <string name="hint_time">Час роботи</string>
+    <string name="hint_first_date">Перший робочий день</string>
+    <string name="hint_password">Пароль</string>
+    <string name="hint_password_one_more">Пароль (ще раз)</string>
+    <string name="hint_notif">Отримувати сповіщення</string>
+    <string name="hint_show_clients">Доступ до витрат</string>
+    <string name="hint_price">Ціна</string>
+    <string name="hint_title1">Назва</string>
+    <string name="hint_link">Посилання (http://)</string>
+    <string name="hint_short_description">Короткий опис</string>
+    <string name="hint_description">Детальний опис (не обовязково)</string>
+    <string name="hint_client_description">Опис</string>
+    <string name="hint_comment">Коментар</string>
+    <string name="hint_my">Тільки мої</string>
+    <string name="hint_teacher">Викладач</string>
+    <string name="hint_comment_add">Введіть повідомлення…</string>
+    <string name="hint_double_press">Натисніть ще раз аби вийти з додатку</string>
 
     <!-- LOGIN -->
     <string name="title_activity_login">Вхід в Live&amp;Learn</string>
@@ -39,15 +82,6 @@
     <string name="title_activity_signup">Реєстрація</string>
     <string name="button_sign_up">Зареєструвати</string>
 
-    <!-- HINTS-->
-    <string name="hint_first_name">ПІБ</string>
-    <string name="hint_phone">Телефон</string>
-    <string name="hint_phone2">Телефон 2</string>
-    <string name="hint_email">Електронна скринька</string>
-    <string name="hint_date_birth">Дата народження</string>
-    <string name="hint_card">Номер картки</string>
-    <string name="hint_password">Пароль</string>
-
     <!-- MAIN -->
     <string name="app_title">Live&amp;Learn</string>
     <string name="app_motto">Курси іноземних мов</string>
@@ -57,7 +91,6 @@
     <string name="button_calendar1">Календар</string>
     <string name="button_requisites">Кабінети</string>
 
-    <string name="hint_double_press">Натисніть ще раз аби вийти з додатку</string>
     <string name="button_about">Про проект</string>
     <string name="button_fb">Ми в Facebook</string>
     <string name="button_site">Наш сайт</string>
@@ -68,8 +101,6 @@
     <!-- USER SETTINGS-->
     <string name="toast_data_updated">Зміни збережено</string>
     <string name="toast_data_started_updated">Аватар загружається</string>
-    <string name="dialog_logout_title">Вийти з аккаунта</string>
-    <string name="dialog_logout_message"> Ви впевнені що бажаєте вийти з аккаунта?</string>
 
     <!-- EVENTS -->
     <string name="title_activity_events">Повідомлення</string>
@@ -88,43 +119,28 @@
 
     <string name="title_activity_dashboard">"Адмін панель (%1$s ГРН)"</string>
     <string name="toast_saved">Збережено</string>
-    <string name="hint_price">Ціна</string>
-    <string name="hint_title1">Назва</string>
     <string name="text_expenses_type0">Загальні</string>
     <string name="text_expenses_type1">На офіс</string>
     <string name="text_cost_list">Список витрат</string>
-    <string name="dialog_cost_delete_title">Видалити витрату</string>
-    <string name="dialog_cost_delete_message">Після видалення відновити витрату буде неможливо</string>
-    <string name="dialog_cost_delete_all_title">Видалити всі витрати</string>
-    <string name="dialog_cost_delete_all_message">Після видалення відновити витрати буде неможливо</string>
     <string name="text_room">Кабінет</string>
     <string name="text_all">Всього</string>
     <string name="text_birthdays">Дні Народження</string>
     <string name="text_charts_income">Виручка / Прибуток</string>
     <string name="text_charts">Чистий прибуток</string>
-    <string name="dialog_delete_notification_title">Видалити діалог</string>
-    <string name="dialog_delete_notification_message">Після видаленння відновити діалог буде неможливо</string>
-    <string name="dialog_about_message">Live&amp;Learn  \nv </string>
     <string name="text_copied">Скопійовано в буфер обміну</string>
-    <string name="dialog_report_save_before_close_title">Зберегти зміни</string>
-    <string name="dialog_report_save_before_close_text">Ви хочете зберегти зміни?</string>
     <string name="title_activity_salary">Заробітна плата</string>
     <string name="text_income_">Оборот</string>
     <string name="text_cost_total1">Витрати</string>
     <string name="text_salary">Заробітна плата</string>
     <string name="text_salary_condition_title">Умови</string>
 
-    <string name="hint_time">Час роботи</string>
     <string name="text_friend_list">Колеги</string>
     <string name="snack_deleted">Видалено</string>
     <string name="title_activity_edit">Редагування</string>
     <string name="title_activity_add">Добавлення</string>
-    <string name="hint_description">Детальний опис (не обовязково)</string>
     <string name="mk_updated">Дані обновлено успішно</string>
     <string name="not_added">Діалог створено успішно</string>
-    <string name="dialog_mk_edit_text">В тексті є зміни, зберегти їх?</string>
     <string name="photo_uploading">"Фото загружається. Зачекайте хвильку.."</string>
-    <string name="hint_first_date">Перший робочий день</string>
 
     <string name="tab_room_1">Зелений</string>
     <string name="tab_room_2">Синій</string>
@@ -134,7 +150,6 @@
     <string name="title_activity_rooms_tab">Кабінети %s</string>
 
     <string name="toast_lesson_remove_unavailable">Видалення не дсступно</string>
-    <string name="hint_link">Посилання (http://)</string>
     <string name="title_activity_about">Про проект</string>
     <string name="text_about_company">
         "Live&amp;Learn була створена 01,06,2016р.\n"
@@ -142,29 +157,21 @@
         "Наша місія:\n"
     </string>
     <string name="title_activity_notification_item">Повідомлення</string>
-    <string name="hint_short_description">Короткий опис</string>
-    <string name="hint_password_one_more">Пароль (ще раз)</string>
     <string name="toast_different_password">Паролі не співпадають</string>
     <string name="text_password_change">Зміна паролю</string>
     <string name="text_user_details">Основні дані</string>
     <string name="toast_nothing_to_change">Немає змін в даних</string>
     <string name="button_link">Поділитись</string>
-
     <string name="just_hrn">"грн"</string>
     <string name="hrn">"%1$s грн"</string>
     <string name="HRN">"%1$s ГРН"</string>
     <string name="text_show_details">Показати детальніше</string>
-    <string name="dialog_discard_changes">Вийти без збереження?</string>
-
-    <!-- Strings related to REPORT -->
     <string name="image_permissions">Будь ласка, добавте дозвіл на використання камери</string>
     <string name="title_activity_maps">Карта</string>
     <string name="maps_marker_title">Розташування</string>
     <string name="title_activity_alarm">Live&amp;Learn    Чек-Лист</string>
     <string name="stop_alarm">Пройти Чек-Лист</string>
     <string name="text_comments_list">Дозволити коментувати</string>
-    <string name="hint_comment_add">Введіть повідомлення…</string>
-    <string name="dialog_remove_title">Видалити повідомлення?</string>
     <string name="choose_images">Виберіть картинку</string>
     <string name="empty_string" />
     <string name="online">Online</string>
@@ -176,13 +183,8 @@
     <string name="contacts_filter_by_name"> І\'мя</string>
     <string name="contacts_filter_by_phone">Телефон</string>
     <string name="client_added">Контакт створено</string>
-    <string name="hint_client_description">Опис</string>
-    <string name="add_birthday">Поповнити особистий рахунок</string>
-    <string name="hint_notif">Отримувати сповіщення</string>
-    <string name="dialog_remove_contact_title">Видалити контакт?</string>
-    <string name="dialog_remove_contact_message">Якщо ви видалите контакт всі дані будуть втрачені</string>
+
     <string name="title_activity_birth">Дні Народження Клієнтів</string>
-    <string name="hint_show_clients">Доступ до витрат</string>
     <string name="text_members">Учасники</string>
     <string name="shortcut_calendar_short_label">Календар</string>
     <string name="shortcut_calendar_long_label">Перейти в Календар</string>
@@ -199,9 +201,7 @@
     <string name="lesson_type_4">OnLine</string>
     <string name="user_type_adult">Дорослі</string>
     <string name="user_type_child">Діти</string>
-    <string name="dialog_calendar_remove_title">Видалити заняття?</string>
     <string name="toast_lesson_removed">Заняття видалено</string>
-    <string name="hint_comment">Коментар</string>
     <string name="error_delete_contact">Неможливо видалити контакт! Спочатку видаліть всі заняття</string>
     <string name="error_delete_contact_other">Неможливо видалити контакт! В конакта є заняття з іншими викладачами</string>
     <string name="text_zero">0</string>
@@ -223,8 +223,6 @@
     <string name="read_contacts_rationale">Добавте дозвіл на читання контактів</string>
     <string name="text_select_one">Виберіть контакт</string>
     <string name="not_selected">Не вибрано викладача</string>
-    <string name="hint_my">Тільки мої</string>
-    <string name="hint_teacher">Викладач</string>
     <string name="text_salary_description_d">
         "Всього проведено %1$d занять.\n\n"
         ""
