@@ -1,6 +1,26 @@
 <resources>
     <string name="app_name">Live&amp;Learn</string>
 
+    <!-- ACTIONS -->
+    <string name="action_edit">Редагувати</string>
+    <string name="action_add">Зберегти</string>
+    <string name="action_save">Зберегти</string>
+    <string name="action_settings">Налаштування</string>
+    <string name="action_logout">Вийти</string>
+    <string name="action_remove">Видалити</string>
+    <string name="action_delete_all">  ВИДАЛИТИ ВСЕ  </string>
+    <string name="action_new_user">Новий користувач</string>
+    <string name="action_choose_date">Вибрати дату</string>
+    <string name="action_change_password">ЗМІНИТИ ПАРОЛЬ</string>
+    <string name="action_discard">ВИЙТИ</string>
+    <string name="action_cancel">СКАСУВАТИ</string>
+    <string name="action_save_changes">ЗБЕРЕГТИ ЗМІНИ</string>
+    <string name="action_no">НІ</string>
+    <string name="action_change_ava">Змінити аватар</string>
+    <string name="action_recharge">Поповнити</string>
+    <string name="action_settings_salary">Тарифи</string>
+    <string name="action_dashboard">Адмін панель</string>
+
     <!-- LOGIN -->
     <string name="title_activity_login">Вхід в Live&amp;Learn</string>
     <string name="toast_minimum_password">Пароль за короткий. Мінімальна довжина 6 символів!</string>
@@ -44,12 +64,10 @@
 
     <!-- USER -->
     <string name="title_activity_user">Особистий кабінет</string>
-    <string name="action_settings">Налаштування</string>
 
     <!-- USER SETTINGS-->
     <string name="toast_data_updated">Зміни збережено</string>
     <string name="toast_data_started_updated">Аватар загружається</string>
-    <string name="action_logout">Вийти</string>
     <string name="dialog_logout_title">Вийти з аккаунта</string>
     <string name="dialog_logout_message"> Ви впевнені що бажаєте вийти з аккаунта?</string>
 
@@ -58,8 +76,6 @@
 
     <!-- REPORT -->
     <string name="title_activity_lesson">Заняття %s</string>
-    <string name="action_edit">Редагувати</string>
-    <string name="action_add">Зберегти</string>
 
     <!-- CALENDAR -->
     <string name="title_activity_calendar">Календар</string>
@@ -77,7 +93,6 @@
     <string name="text_expenses_type0">Загальні</string>
     <string name="text_expenses_type1">На офіс</string>
     <string name="text_cost_list">Список витрат</string>
-    <string name="action_delete_all">  ВИДАЛИТИ ВСЕ  </string>
     <string name="dialog_cost_delete_title">Видалити витрату</string>
     <string name="dialog_cost_delete_message">Після видалення відновити витрату буде неможливо</string>
     <string name="dialog_cost_delete_all_title">Видалити всі витрати</string>
@@ -100,18 +115,14 @@
     <string name="text_salary_condition_title">Умови</string>
 
     <string name="hint_time">Час роботи</string>
-    <string name="action_new_user">Новий користувач</string>
     <string name="text_friend_list">Колеги</string>
     <string name="snack_deleted">Видалено</string>
-    <string name="action_plan">План МК</string>
-    <string name="action_save">Зберегти</string>
     <string name="title_activity_edit">Редагування</string>
     <string name="title_activity_add">Добавлення</string>
     <string name="hint_description">Детальний опис (не обовязково)</string>
     <string name="mk_updated">Дані обновлено успішно</string>
     <string name="not_added">Діалог створено успішно</string>
     <string name="dialog_mk_edit_text">В тексті є зміни, зберегти їх?</string>
-    <string name="action_delete_mk">Видалити</string>
     <string name="photo_uploading">"Фото загружається. Зачекайте хвильку.."</string>
     <string name="hint_first_date">Перший робочий день</string>
 
@@ -135,7 +146,6 @@
     <string name="hint_password_one_more">Пароль (ще раз)</string>
     <string name="toast_different_password">Паролі не співпадають</string>
     <string name="text_password_change">Зміна паролю</string>
-    <string name="action_change_password">ЗМІНИТИ ПАРОЛЬ</string>
     <string name="text_user_details">Основні дані</string>
     <string name="toast_nothing_to_change">Немає змін в даних</string>
     <string name="button_link">Поділитись</string>
@@ -145,11 +155,6 @@
     <string name="HRN">"%1$s ГРН"</string>
     <string name="text_show_details">Показати детальніше</string>
     <string name="dialog_discard_changes">Вийти без збереження?</string>
-
-    <string name="action_discard">ВИЙТИ</string>
-    <string name="action_cancel">СКАСУВАТИ</string>
-    <string name="action_save_changes">ЗБЕРЕГТИ ЗМІНИ</string>
-    <string name="action_no">НІ</string>
 
     <!-- Strings related to REPORT -->
     <string name="image_permissions">Будь ласка, добавте дозвіл на використання камери</string>
@@ -184,7 +189,6 @@
     <string name="shortcut_report_short_label">Заняття</string>
     <string name="shortcut_report_long_label">Створити Заняття</string>
     <string name="button_expenses">Витрати</string>
-    <string name="action_change_ava">Змінити аватар</string>
     <string name="error_no_name">Імя не може бути порожнім!</string>
     <string name="lesson_length_one_hour">1 год</string>
     <string name="lesson_length_one_half_hour">1.5 год</string>
@@ -196,7 +200,6 @@
     <string name="user_type_adult">Дорослі</string>
     <string name="user_type_child">Діти</string>
     <string name="dialog_calendar_remove_title">Видалити заняття?</string>
-    <string name="action_remove">Видалити</string>
     <string name="toast_lesson_removed">Заняття видалено</string>
     <string name="hint_comment">Коментар</string>
     <string name="error_delete_contact">Неможливо видалити контакт! Спочатку видаліть всі заняття</string>
@@ -208,8 +211,20 @@
     <string name="text_salary_pair">Парні</string>
     <string name="text_salary_group">Групові</string>
     <string name="text_salary_online">OnLine</string>
-    <string name="action_settings_salary">Тарифи</string>
     <string name="hrn_d">%d грн</string>
+
+    <string name="text_salary_adult_1h">1 год</string>
+    <string name="text_salary_adult_15h">1.5 год</string>
+    <string name="error_empty_error">Помилка. Не всі дані заповнені!</string>
+    <string name="lesson_type">Тип</string>
+    <string name="client_type">Студент</string>
+    <string name="text_income_list">Баланс:</string>
+    <string name="text_income_placeholder">Поки що немає поповнень</string>
+    <string name="read_contacts_rationale">Добавте дозвіл на читання контактів</string>
+    <string name="text_select_one">Виберіть контакт</string>
+    <string name="not_selected">Не вибрано викладача</string>
+    <string name="hint_my">Тільки мої</string>
+    <string name="hint_teacher">Викладач</string>
     <string name="text_salary_description_d">
         "Всього проведено %1$d занять.\n\n"
         ""
@@ -225,20 +240,6 @@
         "%14$d Групових. Зароблено: %15$d\n"
         "%16$d OnLine. Зароблено: %17$d"
     </string>
-    <string name="action_dashboard">Адмін панель</string>
-    <string name="text_salary_adult_1h">1 год</string>
-    <string name="text_salary_adult_15h">1.5 год</string>
-    <string name="error_empty_error">Помилка. Не всі дані заповнені!</string>
-    <string name="lesson_type">Тип</string>
-    <string name="client_type">Студент</string>
-    <string name="text_income_list">Баланс:</string>
-    <string name="action_recharge">Поповнити</string>
-    <string name="text_income_placeholder">Поки що немає поповнень</string>
-    <string name="read_contacts_rationale">Добавте дозвіл на читання контактів</string>
-    <string name="text_select_one">Виберіть контакт</string>
-    <string name="not_selected">Не вибрано викладача</string>
-    <string name="hint_my">Тільки мої</string>
-    <string name="hint_teacher">Викладач</string>
     <string-array name="months">
         <item>Січень</item>
         <item>Лютий</item>

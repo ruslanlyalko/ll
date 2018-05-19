@@ -56,7 +56,7 @@ public class ClientsTabActivity extends BaseActivity implements OnFilterListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_plan) {
+        if (id == R.id.action_choose_date) {
             startActivity(BirthActivity.getLaunchIntent(this));
             return true;
         }
