@@ -11,13 +11,6 @@
         android:orientation="vertical"
         android:padding="@dimen/text_margin">
 
-        <Spinner
-            android:id="@+id/spinner_teacher"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp" />
-
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs_user_type"
             android:layout_width="match_parent"
@@ -132,6 +125,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -166,8 +160,19 @@
                 android:inputType="textMultiLine|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
-        <!-- TODO history -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:hint="@string/hint_teacher" />
 
+        <Spinner
+            android:id="@+id/spinner_teacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="0dp" />
     </LinearLayout>
 
 </ScrollView>

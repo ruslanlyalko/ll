@@ -238,6 +238,7 @@
     <string name="text_select_one">Виберіть контакт</string>
     <string name="not_selected">Не вибрано викладача</string>
     <string name="hint_my">Тільки мої</string>
+    <string name="hint_teacher">Викладач</string>
     <string-array name="months">
         <item>Січень</item>
         <item>Лютий</item>

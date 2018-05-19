@@ -214,5 +214,6 @@
     <string name="text_select_one">Choose contact</string>
     <string name="not_selected">Teacher not selected </string>
     <string name="hint_my">Only my</string>
+    <string name="hint_teacher">Teacher</string>
 
 </resources>

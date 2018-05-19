@@ -172,7 +172,8 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
     public void onClearClick() {
         mEditFilterName.setText("");
         mEditFilterPhone.setText("");
-        //todo hide keyboard
+        mCheckBoxMy.requestFocus();
+        getBaseActivity().hideKeyboard();
     }
 
     public void updateSelected(final List<String> clients) {
