@@ -133,6 +133,22 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onPause() {
+        getDatabase().getReference(DC.DB_LESSONS).removeEventListener(mValueEventListener);
+        getDatabase().getReference(DC.DB_CONTACTS_RECHARGE).child(mContactKey).removeEventListener(mContactValueEventListener);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(() -> {
+            loadLessons();
+            loadContactRecharges();
+        }, 400);
+    }
+
     private void setupBalance() {
         mCardBalance.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
     }
@@ -164,22 +180,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                     public void onCancelled(final DatabaseError databaseError) {
                     }
                 });
-    }
-
-    @Override
-    protected void onPause() {
-        getDatabase().getReference(DC.DB_LESSONS).removeEventListener(mValueEventListener);
-        getDatabase().getReference(DC.DB_CONTACTS_RECHARGE).child(mContactKey).removeEventListener(mContactValueEventListener);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new Handler().postDelayed(() -> {
-            loadLessons();
-            loadContactRecharges();
-        }, 300);
     }
 
     private void removeCurrentContact() {

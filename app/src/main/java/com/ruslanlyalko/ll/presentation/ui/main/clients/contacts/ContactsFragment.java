@@ -1,21 +1,12 @@
 package com.ruslanlyalko.ll.presentation.ui.main.clients.contacts;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,6 +23,7 @@ import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.UserType;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.presentation.base.BaseFragment;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.OnFilterListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.ContactsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.OnContactClickListener;
@@ -41,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
@@ -50,7 +41,7 @@ import butterknife.OnTextChanged;
  * Created by Ruslan Lyalko
  * on 29.01.2018.
  */
-public class ContactsFragment extends Fragment implements OnContactClickListener {
+public class ContactsFragment extends BaseFragment implements OnContactClickListener {
 
     @BindView(R.id.list_contacts) RecyclerView mListContacts;
     @BindView(R.id.edit_filter_name) EditText mEditFilterName;
@@ -67,39 +58,17 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     public ContactsFragment() {
     }
 
-    public static ContactsFragment newInstance(final int tabIndex, final boolean isSelcetable) {
+    public static ContactsFragment newInstance(final int tabIndex, final boolean isSelectable) {
         ContactsFragment fragment = new ContactsFragment();
         Bundle args = new Bundle();
         args.putInt(Keys.Extras.EXTRA_TAB_INDEX, tabIndex);
-        args.putBoolean(Keys.Extras.EXTRA_IS_SELCTABLE, isSelcetable);
+        args.putBoolean(Keys.Extras.EXTRA_IS_SELCTABLE, isSelectable);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mOnFilterListener = (OnFilterListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
-        ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
-        getActivity().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        parseArguments();
+    protected void onViewReady(final Bundle savedInstanceState) {
         mContactsAdapter = new ContactsAdapter(this, getActivity(), mIsSelectable);
         if (mSelectedClients != null)
             mContactsAdapter.setSelectedCotacts(mSelectedClients);
@@ -126,19 +95,12 @@ public class ContactsFragment extends Fragment implements OnContactClickListener
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        try {
-            final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null && getView() != null) {
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+    protected int getLayoutResource() {
+        return R.layout.fragment_contacts;
     }
 
-    private void parseArguments() {
+    @Override
+    protected void parseArguments() {
         if (getArguments() == null) return;
         mUserType = getArguments().getInt(Keys.Extras.EXTRA_TAB_INDEX, 0);
         mIsSelectable = getArguments().getBoolean(Keys.Extras.EXTRA_IS_SELCTABLE, false);

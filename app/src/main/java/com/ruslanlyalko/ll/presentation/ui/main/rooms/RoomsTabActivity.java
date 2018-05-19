@@ -2,51 +2,24 @@ package com.ruslanlyalko.ll.presentation.ui.main.rooms;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
-import com.ruslanlyalko.ll.data.configuration.DC;
-import com.ruslanlyalko.ll.data.models.Contact;
-import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
-import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
-import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.rooms.frag.RoomFragment;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class RoomsTabActivity extends BaseActivity {
 
@@ -72,13 +45,6 @@ public class RoomsTabActivity extends BaseActivity {
         setTitle(getString(R.string.title_activity_rooms_tab, DateUtils.toString(mCurrentDate, "dd.MM  EEEE")));
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_rooms_tab, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_plan) {
@@ -100,189 +66,44 @@ public class RoomsTabActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class PlaceholderFragment extends Fragment implements OnLessonClickListener {
-
-        private static final String ARG_SECTION_NUMBER = "section_number";
-        private static final int RC_LESSON = 1001;
-        @BindView(R.id.recycler_view) RecyclerView mReportsList;
-        private int mCurrentRoomType;
-        private Date mCurrentDate = new Date();
-        private String mUserId;
-        private LessonsAdapter mLessonsAdapter = new LessonsAdapter(this);
-
-        public PlaceholderFragment() {
-        }
-
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_room, container, false);
-            ButterKnife.bind(this, rootView);
-            parseArgs();
-            return rootView;
-        }
-
-        private void parseArgs() {
-            if (getArguments() != null)
-                mCurrentRoomType = getArguments().getInt(ARG_SECTION_NUMBER, 0);
-        }
-
-        public void setDate(Date date) {
-            mCurrentDate = date;
-            loadLessons();
-        }
-
-        @Override
-        public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            mUserId = FirebaseAuth.getInstance().getUid();
-            initRecycler();
-            loadLessons();
-            loadContacts();
-        }
-
-        private void initRecycler() {
-            mReportsList.setLayoutManager(new LinearLayoutManager(getContext()));
-            mReportsList.setAdapter(mLessonsAdapter);
-        }
-
-        @Override
-        public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-            reloadLessons();
-        }
-
-        private void loadLessons() {
-            if (getActivity() != null && getActivity().isDestroyed()) return;
-            String aDate = DateFormat.format("yyyy/MM/dd", mCurrentDate).toString();
-            FirebaseDatabase.getInstance().getReference(DC.DB_LESSONS)
-                    .child(aDate)
-                    .orderByChild("dateTime/time")
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(final DataSnapshot dataSnapshot) {
-                            List<Lesson> lessons = new ArrayList<>();
-                            for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                Lesson lesson = data.getValue(Lesson.class);
-                                if (lesson != null) {
-                                    if ((FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId))
-                                            && lesson.getRoomType() == mCurrentRoomType) {
-                                        lessons.add(lesson);
-                                    }
-                                }
-                            }
-                            mLessonsAdapter.setData(lessons);
-                        }
-
-                        @Override
-                        public void onCancelled(final DatabaseError databaseError) {
-                        }
-                    });
-        }
-
-        private void loadContacts() {
-            Query ref = FirebaseDatabase.getInstance()
-                    .getReference(DC.DB_CONTACTS)
-                    .orderByChild("name");
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(final DataSnapshot dataSnapshot) {
-                    List<Contact> contacts = new ArrayList<>();
-                    for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
-                        Contact contact = clientSS.getValue(Contact.class);
-                        if (contact != null) {
-                            contacts.add(contact);
-                        }
-                    }
-                    mLessonsAdapter.setContacts(contacts);
-                }
-
-                @Override
-                public void onCancelled(final DatabaseError databaseError) {
-                }
-            });
-        }
-
-        @Override
-        public void onCommentClicked(final Lesson lesson) {
-            if (lesson.hasDescription())
-                Toast.makeText(getContext(), lesson.getDescription(), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onEditClicked(final Lesson lesson) {
-            startActivityForResult(LessonActivity.getLaunchIntent(getContext(), lesson), RC_LESSON);
-        }
-
-        @Override
-        public void onRemoveClicked(final Lesson lesson) {
-            if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle(R.string.dialog_calendar_remove_title)
-                        .setPositiveButton(R.string.action_remove, (dialog, which) -> {
-                            removeLesson(lesson);
-                        })
-                        .setNegativeButton(R.string.action_cancel, null)
-                        .show();
-            } else {
-                Toast.makeText(getContext(), R.string.toast_lesson_remove_unavailable, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        private void removeLesson(final Lesson lesson) {
-            FirebaseDatabase.getInstance()
-                    .getReference(DC.DB_LESSONS)
-                    .child(DateUtils.toString(lesson.getDateTime(), "yyyy/MM/dd"))
-                    .child(lesson.getKey()).removeValue().addOnSuccessListener(aVoid -> {
-                reloadLessons();
-                Toast.makeText(getContext(), R.string.toast_lesson_removed, Toast.LENGTH_LONG).show();
-            });
-        }
-
-        private void reloadLessons() {
-            loadLessons();
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_rooms_tab, menu);
+        return true;
     }
 
     private class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        RoomFragment room0;
+        RoomFragment room1;
+        RoomFragment room2;
+        RoomFragment room3;
 
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        PlaceholderFragment room0;
-        PlaceholderFragment room1;
-        PlaceholderFragment room2;
-        PlaceholderFragment room3;
-
-        public PlaceholderFragment getRoom0() {
+        RoomFragment getRoom0() {
             if (room0 == null)
-                room0 = PlaceholderFragment.newInstance(0);
+                room0 = RoomFragment.newInstance(0);
             return room0;
         }
 
-        public PlaceholderFragment getRoom1() {
+        RoomFragment getRoom1() {
             if (room1 == null)
-                room1 = PlaceholderFragment.newInstance(1);
+                room1 = RoomFragment.newInstance(1);
             return room1;
         }
 
-        public PlaceholderFragment getRoom2() {
+        RoomFragment getRoom2() {
             if (room2 == null)
-                room2 = PlaceholderFragment.newInstance(2);
+                room2 = RoomFragment.newInstance(2);
             return room2;
         }
 
-        public PlaceholderFragment getRoom3() {
+        RoomFragment getRoom3() {
             if (room3 == null)
-                room3 = PlaceholderFragment.newInstance(3);
+                room3 = RoomFragment.newInstance(3);
             return room3;
         }
 
