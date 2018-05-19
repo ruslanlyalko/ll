@@ -64,29 +64,48 @@
     <string name="hint_comment_add">Введіть повідомлення…</string>
     <string name="hint_double_press">Натисніть ще раз аби вийти з додатку</string>
 
-    <!-- LOGIN -->
+
+    <string name="app_title">Live&amp;Learn</string>
+    <string name="title_activity_user">Особистий кабінет</string>
+    <string name="title_activity_events">Повідомлення</string>
+    <string name="title_activity_lesson">Заняття %s</string>
+    <string name="title_activity_calendar">Календар</string>
+    <string name="title_activity_cost">Витрати</string>
+    <string name="title_activity_notification">Повідомлення</string>
+    <string name="title_activity_dashboard">"Адмін панель (%1$s ГРН)"</string>
+    <string name="title_activity_salary">Заробітна плата</string>
+    <string name="title_activity_edit">Редагування</string>
+    <string name="title_activity_about">Про проект</string>
+    <string name="title_activity_rooms_tab">Кабінети %s</string>
+    <string name="title_activity_add">Добавлення</string>
+    <string name="title_activity_notification_item">Повідомлення</string>
+    <string name="title_activity_maps">Карта</string>
     <string name="title_activity_login">Вхід в Live&amp;Learn</string>
+    <string name="title_activity_reset_password">Відновлення паролю</string>
+    <string name="title_activity_signup">Реєстрація</string>
+    <string name="title_activity_clients_tab">Наші Клієнти</string>
+    <string name="title_activity_birth">Дні Народження Клієнтів</string>
+
+
+    <!-- LOGIN -->
     <string name="toast_minimum_password">Пароль за короткий. Мінімальна довжина 6 символів!</string>
     <string name="toast_auth_failed">Не вдається ввійти! Перевірте, будь ласка, правильність введених даних</string>
     <string name="button_login">ВВІЙТИ</string>
     <string name="button_forgot_password">Забули пароль?</string>
 
     <!-- RESET PASS -->
-    <string name="title_activity_reset_password">Відновлення паролю</string>
     <string name="text_forgot_password">Забули пароль?</string>
     <string name="text_forgot_password1">Нам необхідно Ваша електронна скринька щоб відправити інструкцію по відновленню.</string>
     <string name="toast_user_created">"Користувача зареєстровано: "</string>
     <string name="button_reset_password">Відновити пароль</string>
 
     <!-- SIGN UP-->
-    <string name="title_activity_signup">Реєстрація</string>
     <string name="button_sign_up">Зареєструвати</string>
 
     <!-- MAIN -->
-    <string name="app_title">Live&amp;Learn</string>
     <string name="app_motto">Курси іноземних мов</string>
 
-    <string name="button_zvit">Створити Заняття</string>
+    <string name="button_lesson">Створити Заняття</string>
     <string name="button_programs">Клієнти</string>
     <string name="button_calendar1">Календар</string>
     <string name="button_requisites">Кабінети</string>
@@ -96,28 +115,13 @@
     <string name="button_site">Наш сайт</string>
 
     <!-- USER -->
-    <string name="title_activity_user">Особистий кабінет</string>
 
     <!-- USER SETTINGS-->
     <string name="toast_data_updated">Зміни збережено</string>
     <string name="toast_data_started_updated">Аватар загружається</string>
 
-    <!-- EVENTS -->
-    <string name="title_activity_events">Повідомлення</string>
-
-    <!-- REPORT -->
-    <string name="title_activity_lesson">Заняття %s</string>
-
-    <!-- CALENDAR -->
-    <string name="title_activity_calendar">Календар</string>
-
-    <!-- Expense-->
-    <string name="title_activity_cost">Витрати</string>
 
     <!-- NOTIFICATION-->
-    <string name="title_activity_notification">Повідомлення</string>
-
-    <string name="title_activity_dashboard">"Адмін панель (%1$s ГРН)"</string>
     <string name="toast_saved">Збережено</string>
     <string name="text_expenses_type0">Загальні</string>
     <string name="text_expenses_type1">На офіс</string>
@@ -128,7 +132,6 @@
     <string name="text_charts_income">Виручка / Прибуток</string>
     <string name="text_charts">Чистий прибуток</string>
     <string name="text_copied">Скопійовано в буфер обміну</string>
-    <string name="title_activity_salary">Заробітна плата</string>
     <string name="text_income_">Оборот</string>
     <string name="text_cost_total1">Витрати</string>
     <string name="text_salary">Заробітна плата</string>
@@ -136,8 +139,6 @@
 
     <string name="text_friend_list">Колеги</string>
     <string name="snack_deleted">Видалено</string>
-    <string name="title_activity_edit">Редагування</string>
-    <string name="title_activity_add">Добавлення</string>
     <string name="mk_updated">Дані обновлено успішно</string>
     <string name="not_added">Діалог створено успішно</string>
     <string name="photo_uploading">"Фото загружається. Зачекайте хвильку.."</string>
@@ -147,16 +148,12 @@
     <string name="tab_room_3">Оливк.</string>
     <string name="tab_room_4">Бордов.</string>
 
-    <string name="title_activity_rooms_tab">Кабінети %s</string>
-
     <string name="toast_lesson_remove_unavailable">Видалення не дсступно</string>
-    <string name="title_activity_about">Про проект</string>
     <string name="text_about_company">
         "Live&amp;Learn була створена 01,06,2016р.\n"
         "Наша мета:\n"
         "Наша місія:\n"
     </string>
-    <string name="title_activity_notification_item">Повідомлення</string>
     <string name="toast_different_password">Паролі не співпадають</string>
     <string name="text_password_change">Зміна паролю</string>
     <string name="text_user_details">Основні дані</string>
@@ -167,10 +164,7 @@
     <string name="HRN">"%1$s ГРН"</string>
     <string name="text_show_details">Показати детальніше</string>
     <string name="image_permissions">Будь ласка, добавте дозвіл на використання камери</string>
-    <string name="title_activity_maps">Карта</string>
     <string name="maps_marker_title">Розташування</string>
-    <string name="title_activity_alarm">Live&amp;Learn    Чек-Лист</string>
-    <string name="stop_alarm">Пройти Чек-Лист</string>
     <string name="text_comments_list">Дозволити коментувати</string>
     <string name="choose_images">Виберіть картинку</string>
     <string name="empty_string" />
@@ -179,12 +173,10 @@
     <string name="last_online_long_time_ago">Востаннє в мережі давно</string>
     <string name="expense_added">Витрату добавлено</string>
     <string name="expense_upload">Загрузити фото</string>
-    <string name="title_activity_clients_tab">Наші Клієнти</string>
     <string name="contacts_filter_by_name"> І\'мя</string>
     <string name="contacts_filter_by_phone">Телефон</string>
     <string name="client_added">Контакт створено</string>
 
-    <string name="title_activity_birth">Дні Народження Клієнтів</string>
     <string name="text_members">Учасники</string>
     <string name="shortcut_calendar_short_label">Календар</string>
     <string name="shortcut_calendar_long_label">Перейти в Календар</string>

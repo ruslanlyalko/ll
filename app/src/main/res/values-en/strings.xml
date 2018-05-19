@@ -21,7 +21,7 @@
     <string name="hint_card">Card number</string>
     <string name="hint_password">Password</string>
     <string name="app_motto">Foreign language courses</string>
-    <string name="button_zvit">Create Lesson</string>
+    <string name="button_lesson">Create Lesson</string>
     <string name="button_programs">Clients</string>
     <string name="button_calendar1">Calendar</string>
     <string name="button_requisites">Rooms</string>
@@ -190,7 +190,6 @@
     <string name="hint_show_clients">Allow view expenses</string>
     <string name="error_delete_contact_other">Can\'t remove</string>
     <string name="online">Online</string>
-    <string name="stop_alarm">Stop alarm</string>
     <string name="maps_marker_title">Location</string>
     <string name="image_permissions">Please allow use GPS</string>
     <string name="action_cancel">Cancel</string>
@@ -201,7 +200,6 @@
     <string name="hint_time">Working time</string>
     <string name="dialog_about_message">Live&amp;Learn  \nv </string>
     <string name="empty_string">" "</string>
-    <string name="title_activity_alarm">" "</string>
     <string name="app_title">Live&amp;Learn</string>
     <string name="text_income_list">Balance:</string>
     <string name="action_recharge">Recharge</string>

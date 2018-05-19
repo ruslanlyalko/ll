@@ -224,7 +224,7 @@
                     android:drawableTop="@drawable/ic_button_report"
                     android:paddingBottom="16dp"
                     android:paddingTop="32dp"
-                    android:text="@string/button_zvit" />
+                    android:text="@string/button_lesson" />
 
                 <View
                     android:layout_width="1dp"
