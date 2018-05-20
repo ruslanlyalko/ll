@@ -115,6 +115,29 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_edit:
+                if (FirebaseUtils.isAdmin()
+                        || mMessage.getUserId().equals(mUser.getUid())) {
+                    editMk();
+                }
+                break;
+            case R.id.action_delete:
+                if (FirebaseUtils.isAdmin()
+                        || mMessage.getUserId().equals(mUser.getUid())) {
+                    deleteMk();
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setupRecycler() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setStackFromEnd(true);//true
@@ -226,29 +249,6 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.action_edit:
-                if (FirebaseUtils.isAdmin()
-                        || mMessage.getUserId().equals(mUser.getUid())) {
-                    editMk();
-                }
-                break;
-            case R.id.action_delete:
-                if (FirebaseUtils.isAdmin()
-                        || mMessage.getUserId().equals(mUser.getUid())) {
-                    deleteMk();
-                }
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void editMk() {
         Intent intent = new Intent(DialogActivity.this, DialogEditActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, mMessageKey);
@@ -354,15 +354,9 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
             chooseFileToUpload();
-        }else{
+        } else {
             EasyPermissions.requestPermissions(this, getString(R.string.image_permissions), REQUEST_IMAGE_PERMISSION, perms);
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     void chooseFileToUpload() {
@@ -415,6 +409,12 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
     private void onPhotosReturned(final File imageFile) {
         try {
             showProgress(true);
@@ -459,7 +459,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         DatabaseReference ref = database.getReference(DC.DB_MESSAGES)
                 .child(mMessageKey)
                 .push();
-        ref.setValue(new MessageComment(ref.getKey(), "фото", file, thumbnail, mUser));
+        ref.setValue(new MessageComment(ref.getKey(), "фото", file, thumbnail, FirebaseUtils.getUser()));
     }
 
     @Override

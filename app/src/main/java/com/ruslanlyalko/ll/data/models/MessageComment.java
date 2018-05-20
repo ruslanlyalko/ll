@@ -33,13 +33,14 @@ public class MessageComment {
         this.date = new Date();
     }
 
-    public MessageComment(final String key, final String message, final String file, final String thumbnail, FirebaseUser user) {
+    public MessageComment(final String key, final String message, final String file, final String thumbnail, User user) {
         this.key = key;
         this.file = file;
         this.thumbnail = thumbnail;
         this.message = message;
-        this.userId = user.getUid();
-        this.userName = user.getDisplayName();
+        this.userId = user.getId();
+        this.userAvatar = user.getAvatar();
+        this.userName = user.getFullName();
         this.date = new Date();
     }
 
