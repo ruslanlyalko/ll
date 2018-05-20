@@ -182,7 +182,7 @@
     <string name="toast_client_added">Contact created</string>
     <string name="dialog_remove_contact_title">Remove?</string>
     <string name="text_income_">Income</string>
-    <string name="hint_notif">Recive notifications</string>
+    <string name="hint_notif">Receive notifications</string>
     <string name="dialog_remove_contact_message">After removing all data will be lost</string>
     <string name="title_activity_birth">Birthdays</string>
     <string name="hint_show_clients">Allow view expenses</string>
