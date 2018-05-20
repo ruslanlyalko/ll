@@ -72,7 +72,7 @@ public class AboutActivity extends BaseActivity {
     void onFabClicked() {
         if (FirebaseUtils.isAdmin())
             FirebaseDatabase.getInstance().getReference(DC.DB_INFO)
-                    .child("aboutText")
+                    .child(DC.ABOUT_TEXT)
                     .setValue(editAbout.getText().toString().trim())
                     .addOnCompleteListener(task ->
                             Toast.makeText(AboutActivity.this, R.string.toast_updated, Toast.LENGTH_SHORT).show());

@@ -309,7 +309,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         } else {
             mDatabase.getReference(DC.DB_USERS)
                     .child(mUID)
-                    .child("isOnline")
+                    .child(DC.USER_IS_ONLINE)
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -323,7 +323,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                     });
             mDatabase.getReference(DC.DB_USERS)
                     .child(mUID)
-                    .child("lastOnline")
+                    .child(DC.USER_LAST_ONLINE)
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {

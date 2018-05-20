@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.messages.details.adapter;
+package com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;

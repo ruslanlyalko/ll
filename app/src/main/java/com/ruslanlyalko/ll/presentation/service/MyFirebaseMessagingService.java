@@ -18,8 +18,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.details.MessageDetailsActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.DialogActivity;
 import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 
 import java.util.Map;
@@ -81,7 +80,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String chanelId;
         switch (notificationType) {
             case COMMENT:
-                resultIntent = MessageDetailsActivity.getLaunchIntent(this, payload.get("messageKey"));
+                resultIntent = DialogActivity.getLaunchIntent(this, payload.get("messageKey"));
                 chanelId = CHANEL_COMMENT_ID;
                 break;
             case EXPENSE:

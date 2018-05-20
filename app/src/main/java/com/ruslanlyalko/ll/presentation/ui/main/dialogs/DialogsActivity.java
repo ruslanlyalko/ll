@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.messages;
+package com.ruslanlyalko.ll.presentation.ui.main.dialogs;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,8 +21,8 @@ import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.Notification;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.adapter.MessagesAdapter;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.edit.MessageEditActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.adapter.MessagesAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.DialogEditActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MessagesActivity extends BaseActivity {
+public class DialogsActivity extends BaseActivity {
 
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.recycler_view) RecyclerView mMessagesList;
@@ -40,7 +40,7 @@ public class MessagesActivity extends BaseActivity {
     private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public static Intent getLaunchIntent(final Activity launchIntent) {
-        return new Intent(launchIntent, MessagesActivity.class);
+        return new Intent(launchIntent, DialogsActivity.class);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class MessagesActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_message;
+        return R.layout.activity_dialogs;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MessagesActivity extends BaseActivity {
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         List<Message> list = new ArrayList<>();
                         for (DataSnapshot messageSS : dataSnapshot.getChildren()) {
-                            if (FirebaseUtils.isAdmin() || messageSS.child("Members").child(mUser.getUid()).exists()) {
+                            if (FirebaseUtils.isAdmin() || messageSS.child(DC.MESSAGE_MEMBERS).child(mUser.getUid()).exists()) {
                                 Message message = messageSS.getValue(Message.class);
                                 if (message != null) {
                                     list.add(0, message);
@@ -135,7 +135,7 @@ public class MessagesActivity extends BaseActivity {
     }
 
     private void addNotification() {
-        Intent intent = new Intent(MessagesActivity.this, MessageEditActivity.class);
+        Intent intent = new Intent(DialogsActivity.this, DialogEditActivity.class);
         startActivity(intent);
     }
 }

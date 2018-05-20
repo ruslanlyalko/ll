@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.messages.edit;
+package com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -30,7 +29,7 @@ import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.edit.adapter.MembersAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.adapter.MembersAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 
-public class MessageEditActivity extends BaseActivity {
+public class DialogEditActivity extends BaseActivity {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.edit_title1) EditText textTitle1;
@@ -61,7 +60,7 @@ public class MessageEditActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_message_edit;
+        return R.layout.activity_dialog_edit;
     }
 
     @Override
@@ -106,7 +105,7 @@ public class MessageEditActivity extends BaseActivity {
             return;
         }
         if (needToSave) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MessageEditActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(DialogEditActivity.this);
             builder.setTitle(R.string.dialog_report_save_before_close_title)
                     .setMessage(R.string.dialog_mk_edit_text)
                     .setPositiveButton(R.string.action_save, (dialog, which) -> {
@@ -160,7 +159,7 @@ public class MessageEditActivity extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mMessage = dataSnapshot.getValue(Message.class);
                 mMembersIds.clear();
-                for (DataSnapshot member : dataSnapshot.child("Members").getChildren()) {
+                for (DataSnapshot member : dataSnapshot.child(DC.MESSAGE_MEMBERS).getChildren()) {
                     String id = member.getKey();
                     mMembersIds.add(id);
                 }
@@ -248,7 +247,7 @@ public class MessageEditActivity extends BaseActivity {
         for (int i = 0; i < users.size(); i++) {
             DatabaseReference ref = database.getReference(DC.DB_DIALOGS)
                     .child(mMessage.getKey())
-                    .child("Members")
+                    .child(DC.MESSAGE_MEMBERS)
                     .child(users.get(i).getId());
             if (checkedList.get(i))
                 ref.setValue(true);
@@ -259,9 +258,7 @@ public class MessageEditActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_edit, menu);
+        getMenuInflater().inflate(R.menu.menu_edit, menu);
         return true;
     }
 }

@@ -35,17 +35,17 @@ public class FirebaseUtils {
             FirebaseDatabase.getInstance()
                     .getReference(DC.DB_USERS)
                     .child(user.getUid())
-                    .child("isOnline")
+                    .child(DC.USER_IS_ONLINE)
                     .removeValue();
             FirebaseDatabase.getInstance()
                     .getReference(DC.DB_USERS)
                     .child(user.getUid())
-                    .child("lastOnline")
+                    .child(DC.USER_LAST_ONLINE)
                     .setValue(new Date());
             FirebaseDatabase.getInstance()
                     .getReference(DC.DB_USERS)
                     .child(user.getUid())
-                    .child("token")
+                    .child(DC.USER_TOKEN)
                     .removeValue();
         }
     }

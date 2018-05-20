@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".presentation.ui.main.messages.edit.MessageEditActivity">
+    tools:context=".presentation.ui.main.dialogs.edit.DialogEditActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

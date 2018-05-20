@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.messages.adapter;
+package com.ruslanlyalko.ll.presentation.ui.main.dialogs.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,7 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.Notification;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.details.MessageDetailsActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.DialogActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
                     ? message.getLastComment() : message.getTitle2());
             date.setText(DateUtils.getUpdatedAt(message.getUpdatedAt()));
             mLinearLayout.setOnClickListener(v ->
-                    mContext.startActivity(MessageDetailsActivity.getLaunchIntent(mContext, message.getKey())));
+                    mContext.startActivity(DialogActivity.getLaunchIntent(mContext, message.getKey())));
         }
     }
 }

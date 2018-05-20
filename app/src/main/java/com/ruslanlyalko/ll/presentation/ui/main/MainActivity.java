@@ -41,9 +41,9 @@ import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.about.AboutActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.CalendarActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.ClientsTabActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.DialogsActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.MessagesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
@@ -203,11 +203,11 @@ public class MainActivity extends BaseActivity {
         if (user != null) {
             DatabaseReference ref = mDatabase.getReference(DC.DB_USERS)
                     .child(user.getUid());
-            ref.child("token").setValue(refreshedToken);
-            ref.child("appVersion").setValue(version);
-            ref.child("lastOnline").onDisconnect().setValue(new Date());
-            ref.child("isOnline").setValue(Boolean.TRUE);
-            ref.child("isOnline").onDisconnect().removeValue();
+            ref.child(DC.USER_TOKEN).setValue(refreshedToken);
+            ref.child(DC.USER_APP_VERSION).setValue(version);
+            ref.child(DC.USER_LAST_ONLINE).onDisconnect().setValue(new Date());
+            ref.child(DC.USER_IS_ONLINE).setValue(Boolean.TRUE);
+            ref.child(DC.USER_IS_ONLINE).onDisconnect().removeValue();
         }
     }
 
@@ -226,7 +226,7 @@ public class MainActivity extends BaseActivity {
             showVersionLink(false);
             if (myVersion > mAppInfo.getLatestVersion() && !DEBUG) {
                 mDatabase.getReference(DC.DB_INFO)
-                        .child("latestVersion").setValue(myVersion);
+                        .child(DC.LATEST_VERSION).setValue(myVersion);
             }
         }
     }
@@ -313,7 +313,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.button_events)
     void onEventsClicked() {
-        startActivity(MessagesActivity.getLaunchIntent(this));
+        startActivity(DialogsActivity.getLaunchIntent(this));
     }
 
     @OnClick(R.id.button_report)
@@ -383,7 +383,7 @@ public class MainActivity extends BaseActivity {
                     break;
                 } else if (deltaX < (0 - MIN_DISTANCE)) {
                     // right2left
-                    Intent intent = new Intent(MainActivity.this, MessagesActivity.class);
+                    Intent intent = new Intent(MainActivity.this, DialogsActivity.class);
                     startActivity(intent);
                     break;
                 }

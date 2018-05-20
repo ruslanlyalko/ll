@@ -34,7 +34,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         if (user != null) {
             FirebaseDatabase.getInstance().getReference(DC.DB_USERS)
                     .child(user.getUid())
-                    .child("token")
+                    .child(DC.USER_TOKEN)
                     .setValue(refreshedToken);
         }
     }

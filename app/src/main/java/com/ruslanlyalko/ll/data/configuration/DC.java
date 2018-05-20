@@ -23,6 +23,12 @@ public interface DC {
     String STORAGE_EXPENSES = "EXPENSE";
     String STORAGE_DIALOGS_MESSAGES = "DIALOGS_MESSAGES";
 
-
-    String LESSON_CLIENTS = "CLIENTS";
+    String MESSAGE_MEMBERS = "Members";
+    String USER_IS_ONLINE = "isOnline";
+    String USER_LAST_ONLINE = "lastOnline";
+    String USER_APP_VERSION = "appVersion";
+    String USER_TOKEN = "token";
+    String LATEST_VERSION = "latestVersion";
+    String DIALOG_MESSAGE_REMOVED = "removed";
+    String ABOUT_TEXT = "aboutText";
 }

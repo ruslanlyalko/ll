@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.messages.details;
+package com.ruslanlyalko.ll.presentation.ui.main.dialogs.details;
 
 import android.Manifest;
 import android.content.Context;
@@ -40,9 +40,9 @@ import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.MessageComment;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.details.adapter.CommentsAdapter;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.details.adapter.OnCommentClickListener;
-import com.ruslanlyalko.ll.presentation.ui.main.messages.edit.MessageEditActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter.CommentsAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter.OnCommentClickListener;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.DialogEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
 import com.ruslanlyalko.ll.presentation.widget.PhotoPreviewActivity;
 
@@ -57,7 +57,7 @@ import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MessageDetailsActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks, OnCommentClickListener {
+public class DialogActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks, OnCommentClickListener {
 
     @BindView(R.id.text_description) TextView textDescription;
     @BindView(R.id.list_comments) RecyclerView mListComments;
@@ -75,14 +75,14 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
     private Message mMessage;
 
     public static Intent getLaunchIntent(final Context launchIntent, final String messageId) {
-        Intent intent = new Intent(launchIntent, MessageDetailsActivity.class);
+        Intent intent = new Intent(launchIntent, DialogActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_NOT_ID, messageId);
         return intent;
     }
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_message_details;
+        return R.layout.activity_dialog;
     }
 
     @Override
@@ -248,13 +248,13 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
     }
 
     private void editMk() {
-        Intent intent = new Intent(MessageDetailsActivity.this, MessageEditActivity.class);
+        Intent intent = new Intent(DialogActivity.this, DialogEditActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, mMessageKey);
         startActivityForResult(intent, Constants.REQUEST_CODE_EDIT);
     }
 
     private void deleteMk() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MessageDetailsActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(DialogActivity.this);
         AlertDialog dialog = builder.setTitle(R.string.dialog_delete_notification_title)
                 .setMessage(R.string.dialog_delete_notification_message)
                 .setPositiveButton("Видалити", (dialog1, which) -> {
@@ -321,7 +321,7 @@ public class MessageDetailsActivity extends BaseActivity implements EasyPermissi
         database.getReference(DC.DB_MESSAGES)
                 .child(mMessageKey)
                 .child(item.getKey())
-                .child("removed")
+                .child(DC.DIALOG_MESSAGE_REMOVED)
                 .setValue(true);
     }
 

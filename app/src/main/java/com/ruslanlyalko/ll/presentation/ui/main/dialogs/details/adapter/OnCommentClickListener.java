@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.messages.details.adapter;
+package com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter;
 
 import android.view.View;
 

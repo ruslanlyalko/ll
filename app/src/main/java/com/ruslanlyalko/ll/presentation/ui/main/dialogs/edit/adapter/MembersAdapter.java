@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.presentation.ui.main.messages.edit.adapter;
+package com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
