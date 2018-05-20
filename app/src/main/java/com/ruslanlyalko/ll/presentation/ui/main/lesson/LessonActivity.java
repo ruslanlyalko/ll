@@ -163,7 +163,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
                         saveLesson();
                         onBackPressed();
                     })
-                    .setNegativeButton(R.string.action_no, (dialog, which) ->
+                    .setNegativeButton(R.string.action_cancel, (dialog, which) ->
                             super.onBackPressed())
                     .show();
         } else {

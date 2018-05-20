@@ -121,12 +121,11 @@
     <string name="just_hrn">uah</string>
     <string name="button_link">Share</string>
     <string name="toast_nothing_to_change">No changes</string>
-    <string name="action_no">No</string>
     <string name="title_activity_maps">Map</string>
     <string name="hint_comment">Comments</string>
     <string name="toast_lesson_removed">Removed</string>
     <string name="dialog_calendar_remove_title">Remove?</string>
-    <string name="action_remove">Remove?</string>
+    <string name="action_remove">Remove</string>
     <string name="text_salary_student">From Client (1h / 1.5h); To Teacher (1h / 1.5h)</string>
     <string name="text_salary_student_child">From Child (1h / 1.5h); To Teacher (1h / 1.5h)</string>
     <string name="text_zero">0</string>
@@ -209,5 +208,6 @@
     <string name="hint_my">Only my</string>
     <string name="hint_teacher">Teacher</string>
     <string name="text_expense_placeholder">No expenses yet</string>
+    <string name="action_choose_date">Choose date</string>
 
 </resources>
