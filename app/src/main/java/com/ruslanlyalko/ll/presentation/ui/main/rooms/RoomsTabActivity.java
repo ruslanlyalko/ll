@@ -47,7 +47,7 @@ public class RoomsTabActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_plan) {
+        if (item.getItemId() == R.id.action_choose_date) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(mCurrentDate);
             DatePickerDialog dialog = DatePickerDialog.newInstance((datePicker, year, month, day)

@@ -90,11 +90,11 @@ public class SalaryEditActivity extends BaseActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(SalaryEditActivity.this);
             builder.setTitle(R.string.dialog_report_save_before_close_title)
                     .setMessage(R.string.dialog_mk_edit_text)
-                    .setPositiveButton(R.string.action_save_changes, (dialog, which) -> {
+                    .setPositiveButton(R.string.action_save, (dialog, which) -> {
                         saveToDb();
                         onBackPressed();
                     })
-                    .setNegativeButton(R.string.action_no, (dialog, which) -> {
+                    .setNegativeButton(R.string.action_cancel, (dialog, which) -> {
                         mNeedToSave = false;
                         onBackPressed();
                     })

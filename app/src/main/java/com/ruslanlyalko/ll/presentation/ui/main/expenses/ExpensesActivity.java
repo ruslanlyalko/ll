@@ -17,12 +17,10 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
@@ -48,7 +46,6 @@ import butterknife.OnClick;
 public class ExpensesActivity extends BaseActivity implements OnExpenseClickListener {
 
     @BindView(R.id.text_cost_total) TextSwitcher mTotalSwitcher;
-    @BindView(R.id.calendar_view) CompactCalendarView mCalendarView;
     @BindView(R.id.text_month) TextView mTextMonth;
     @BindView(R.id.text_user_name) TextView mTextUserName;
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
@@ -63,12 +60,13 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     @BindView(R.id.textFab1) TextView mTextFab1;
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.progress_bar_upload) ProgressBar mProgressBarUpload;
+    @BindView(R.id.text_expense_placeholder) TextView mPlaceholder;
 
-    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private Animation fab_open, fab_close, rotate_forward, rotate_backward, fade, fade_back_quick;
     private ExpensesAdapter mExpensesAdapter = new ExpensesAdapter(this);
     private Boolean mIsFabOpen = false;
+    private Calendar mCurrentMonth = Calendar.getInstance();
 
     public static Intent getLaunchIntent(final Context launchIntent) {
         return new Intent(launchIntent, ExpensesActivity.class);
@@ -86,31 +84,8 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         initFAB();
         mButtonCostDeleteAll.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
         mTextUserName.setText(mCurrentUser.getDisplayName());
-        Calendar month = Calendar.getInstance();
-        mTextMonth.setText(DateUtils.getMonth(getResources(), month));
-        // define a listener to receive callbacks when certain events happen.
-        mCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
-            @Override
-            public void onDayClick(Date dateClicked) {
-            }
-
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                Calendar month = Calendar.getInstance();
-                month.setTime(firstDayOfNewMonth);
-                String yearSimple = new SimpleDateFormat("yy", Locale.US).format(firstDayOfNewMonth);
-                String str = DateUtils.getMonth(getResources(), month);
-                if (!DateUtils.isCurrentYear(firstDayOfNewMonth))
-                    str = str + "'" + yearSimple;
-                mTextMonth.setText(str);
-                String yearStr = new SimpleDateFormat("yyyy", Locale.US).format(firstDayOfNewMonth);
-                String monthStr = new SimpleDateFormat("M", Locale.US).format(firstDayOfNewMonth);
-                loadExpenses(yearStr, monthStr);
-            }
-        });
-        String yearStr = new SimpleDateFormat("yyyy", Locale.US).format(new Date());
-        String monthStr = new SimpleDateFormat("M", Locale.US).format(new Date());
-        loadExpenses(yearStr, monthStr);
+        updateMonth();
+        loadExpenses();
     }
 
     @Override
@@ -120,6 +95,26 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
             return;
         }
         super.onBackPressed();
+    }
+
+    private void updateMonth() {
+        mTextMonth.setText(DateUtils.getMonthWithYear(getResources(), mCurrentMonth));
+    }
+
+    @OnClick(R.id.button_prev)
+    void onPrevClicked() {
+        setSwitcherAnim(true);
+        mCurrentMonth.add(Calendar.MONTH, -1);
+        updateMonth();
+        loadExpenses();
+    }
+
+    @OnClick(R.id.button_next)
+    void onNextClicked() {
+        setSwitcherAnim(false);
+        mCurrentMonth.add(Calendar.MONTH, 1);
+        updateMonth();
+        loadExpenses();
     }
 
     private void initSwitcher() {
@@ -145,10 +140,9 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         fade_back_quick = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_back_quick);
     }
 
-    private void loadExpenses(String yearStr, String monthStr) {
-        mDatabase.getReference(DC.DB_EXPENSES)
-                .child(yearStr)
-                .child(monthStr)
+    private void loadExpenses() {
+        getDatabase().getReference(DC.DB_EXPENSES)
+                .child(DateUtils.toString(mCurrentMonth.getTime(), "yyyy/M"))
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -159,7 +153,9 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
                                 expenseList.add(0, expense);
                             }
                         }
+                        if (isDestroyed()) return;
                         mExpensesAdapter.setData(expenseList);
+                        togglePlaceholder(expenseList.size());
                         calcTotal();
                     }
 
@@ -167,6 +163,11 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
                     public void onCancelled(final DatabaseError databaseError) {
                     }
                 });
+    }
+
+    private void togglePlaceholder(final int size) {
+        mPlaceholder.setVisibility(size == 0 ? View.VISIBLE : View.GONE);
+        mExpensesList.setVisibility(size != 0 ? View.VISIBLE : View.GONE);
     }
 
     private void calcTotal() {
@@ -242,28 +243,19 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
             AlertDialog.Builder builder = new AlertDialog.Builder(ExpensesActivity.this);
             builder.setTitle(R.string.dialog_cost_delete_all_title)
                     .setMessage(R.string.dialog_cost_delete_all_message)
-                    .setPositiveButton("Видалити", (dialog, which) -> {
-                        removeAllExpenses();
-                    })
-                    .setNegativeButton("Повернутись", null)
+                    .setPositiveButton(R.string.action_remove, (dialog, which) -> removeAllExpenses())
+                    .setNegativeButton(R.string.action_cancel, null)
                     .show();
         }
     }
 
     private void removeAllExpenses() {
         mExpensesAdapter.clearData();
-        String yearStr = new SimpleDateFormat("yyyy", Locale.US).format(new Date());
-        String monthStr = new SimpleDateFormat("M", Locale.US).format(new Date());
-        mDatabase.getReference(DC.DB_EXPENSES)
-                .child(yearStr)
-                .child(monthStr).removeValue();
+        String dateStr = new SimpleDateFormat("yyyy/M", Locale.US).format(new Date());
+        getDatabase().getReference(DC.DB_EXPENSES)
+                .child(dateStr)
+                .removeValue();
         calcTotal();
-    }
-
-    @OnClick(R.id.button_prev)
-    void onPrevClicked() {
-        setSwitcherAnim(true);
-        mCalendarView.showPreviousMonth();
     }
 
     private void setSwitcherAnim(final boolean right) {
@@ -280,19 +272,13 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         mTotalSwitcher.setOutAnimation(out);
     }
 
-    @OnClick(R.id.button_next)
-    void onNextClicked() {
-        setSwitcherAnim(false);
-        mCalendarView.showNextMonth();
-    }
-
     @Override
     public void onRemoveClicked(final Expense expense) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_cost_delete_title)
                 .setMessage(R.string.dialog_cost_delete_message)
-                .setPositiveButton("Видалити", (dialog, which) -> removeExpense(expense))
-                .setNegativeButton("Повернутись", null)
+                .setPositiveButton(R.string.action_remove, (dialog, which) -> removeExpense(expense))
+                .setNegativeButton(R.string.action_cancel, null)
                 .show();
     }
 
@@ -309,8 +295,8 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     }
 
     private void removeExpense(Expense expense) {
-        mDatabase.getReference(DC.DB_EXPENSES)
-                .child(DateUtils.toString(expense.getExpenseDate(), "yyyy")).child(DateUtils.toString(expense.getExpenseDate(), "M"))
+        getDatabase().getReference(DC.DB_EXPENSES)
+                .child(DateUtils.toString(expense.getExpenseDate(), "yyyy/M"))
                 .child(expense.getKey()).removeValue().addOnCompleteListener(task ->
                 Snackbar.make(mExpensesList, getString(R.string.toast_deleted), Snackbar.LENGTH_LONG).show());
     }

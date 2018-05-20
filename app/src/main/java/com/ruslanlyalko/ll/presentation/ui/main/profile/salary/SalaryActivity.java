@@ -138,14 +138,14 @@ public class SalaryActivity extends BaseActivity {
     void onCardClicked() {
         String text = mTextCard.getText().toString().replaceAll("[^\\.0123456789]", "");
         copyToClipboard(text, text);
-        Toast.makeText(SalaryActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
+        Toast.makeText(SalaryActivity.this, getString(R.string.toast_text_copied), Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.text_total)
     void onTotalClicked() {
         String text = mTotalSwitcher.getText().toString().replaceAll("[^\\.0123456789]", "");
         copyToClipboard(text, text);
-        Toast.makeText(SalaryActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
+        Toast.makeText(SalaryActivity.this, getString(R.string.toast_text_copied), Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.panel_action)

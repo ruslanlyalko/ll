@@ -6,12 +6,6 @@
                                                  android:layout_height="match_parent"
                                                  tools:context=".presentation.ui.main.expenses.ExpensesActivity">
 
-    <com.github.sundeepk.compactcalendarview.CompactCalendarView
-        android:id="@+id/calendar_view"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:visibility="gone" />
-
     <include layout="@layout/content_expense" />
 
     <View

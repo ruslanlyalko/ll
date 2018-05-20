@@ -46,7 +46,7 @@
     <string name="toast_saved">Saved</string>
     <string name="hint_price">Price</string>
     <string name="hint_title1">Title</string>
-    <string name="text_cost_list">List of expenses</string>
+    <string name="text_expenses_list">List of expenses</string>
     <string name="action_delete_all">REMOVE ALL</string>
     <string name="dialog_cost_delete_title">Remove</string>
     <string name="dialog_cost_delete_message">After removing can\'t restore</string>
@@ -55,11 +55,11 @@
     <string name="text_room">Room</string>
     <string name="text_all">Total</string>
     <string name="text_birthdays">Birthdays</string>
-    <string name="text_copied">Copied</string>
+    <string name="toast_text_copied">Copied</string>
     <string name="dialog_report_save_before_close_title">Save changes</string>
     <string name="dialog_report_save_before_close_text">Do you want to save changes?</string>
     <string name="title_activity_salary">Salary</string>
-    <string name="text_cost_total1">Expenses</string>
+    <string name="text_expense_total">Expenses</string>
     <string name="text_salary">Salary</string>
     <string name="text_salary_condition_title">Condations</string>
     <string name="action_new_user">New user</string>
@@ -209,5 +209,6 @@
     <string name="spinner_not_selected">Teacher not selected </string>
     <string name="hint_my">Only my</string>
     <string name="hint_teacher">Teacher</string>
+    <string name="text_expense_placeholder">No expenses yet</string>
 
 </resources>

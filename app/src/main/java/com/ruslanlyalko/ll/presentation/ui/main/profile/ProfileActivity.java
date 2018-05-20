@@ -367,7 +367,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
             ClipData clip = ClipData.newPlainText(email, email);
             if (clipboard != null)
                 clipboard.setPrimaryClip(clip);
-            Toast.makeText(ProfileActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, getString(R.string.toast_text_copied), Toast.LENGTH_SHORT).show();
         });
         final String card = mUser.getCard();
         mCardLayout.setOnClickListener(v -> {
@@ -375,7 +375,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
             ClipData clip = ClipData.newPlainText(card, card);
             if (clipboard != null)
                 clipboard.setPrimaryClip(clip);
-            Toast.makeText(ProfileActivity.this, getString(R.string.text_copied), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, getString(R.string.toast_text_copied), Toast.LENGTH_SHORT).show();
         });
         if (FirebaseUtils.isAdmin() && !mIsCurrentUserPage) {
             mFirsDateLayout.setVisibility(View.VISIBLE);
