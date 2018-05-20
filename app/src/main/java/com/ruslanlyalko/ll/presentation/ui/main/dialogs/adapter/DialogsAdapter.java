@@ -21,13 +21,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyViewHolder> {
+public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.MyViewHolder> {
 
     private Context mContext;
     private List<Message> mDataSource = new ArrayList<>();
     private List<Notification> mNotifications = new ArrayList<>();
 
-    public MessagesAdapter(Context mContext) {
+    public DialogsAdapter(Context mContext) {
         this.mContext = mContext;
     }
 

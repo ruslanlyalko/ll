@@ -16,7 +16,7 @@ public interface Keys {
         String EXTRA_ITEM_ID = "extra_mk_id";
         String EXTRA_TITLE2 = "extra_title_2";
         String EXTRA_FOLDER = "extra_folder";
-        String EXTRA_NOT_ID = "extra_not_id";
+        String EXTRA_DIALOG_ID = "extra_not_id";
         String EXTRA_ABOUT = "extra_about";
         String EXTRA_USER = "EXTRA_USER";
         String EXTRA_LOCATION = "EXTRA_LOCATION";

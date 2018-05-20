@@ -189,7 +189,7 @@
     <string name="error_delete_contact_other">Can\'t remove</string>
     <string name="online">Online</string>
     <string name="text_maps_marker_title">Location</string>
-    <string name="image_permissions">Please allow use GPS</string>
+    <string name="image_permissions">Please allow use Camera and Read Photo from Memory</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_discard">Exit</string>
     <string name="dialog_discard_changes">Exit without saving changes</string>

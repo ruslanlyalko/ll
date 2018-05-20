@@ -21,7 +21,7 @@ import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.Notification;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.dialogs.adapter.MessagesAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.adapter.DialogsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.DialogEditActivity;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class DialogsActivity extends BaseActivity {
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.recycler_view) RecyclerView mMessagesList;
 
-    private MessagesAdapter mMessagesAdapter;
+    private DialogsAdapter mDialogsAdapter;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -62,11 +62,11 @@ public class DialogsActivity extends BaseActivity {
     }
 
     private void initRecycler() {
-        mMessagesAdapter = new MessagesAdapter(this);
+        mDialogsAdapter = new DialogsAdapter(this);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         mMessagesList.setLayoutManager(mLayoutManager);
         mMessagesList.setItemAnimator(new DefaultItemAnimator());
-        mMessagesList.setAdapter(mMessagesAdapter);
+        mMessagesList.setAdapter(mDialogsAdapter);
     }
 
     private void loadMessages() {
@@ -84,7 +84,7 @@ public class DialogsActivity extends BaseActivity {
                                 }
                             }
                         }
-                        mMessagesAdapter.setData(list);
+                        mDialogsAdapter.setData(list);
                     }
 
                     @Override
@@ -104,7 +104,7 @@ public class DialogsActivity extends BaseActivity {
                             Notification notification = notifSS.getValue(Notification.class);
                             notifications.add(notification);
                         }
-                        mMessagesAdapter.updateNotifications(notifications);
+                        mDialogsAdapter.updateNotifications(notifications);
                     }
 
                     @Override

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -59,6 +60,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class DialogActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks, OnCommentClickListener {
 
+    private static final int REQUEST_IMAGE_PERMISSION = 1001;
     @BindView(R.id.text_description) TextView textDescription;
     @BindView(R.id.list_comments) RecyclerView mListComments;
     @BindView(R.id.card_comments_send) CardView mCardCommentsSend;
@@ -76,7 +78,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
 
     public static Intent getLaunchIntent(final Context launchIntent, final String messageId) {
         Intent intent = new Intent(launchIntent, DialogActivity.class);
-        intent.putExtra(Keys.Extras.EXTRA_NOT_ID, messageId);
+        intent.putExtra(Keys.Extras.EXTRA_DIALOG_ID, messageId);
         return intent;
     }
 
@@ -89,7 +91,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     protected void parseExtras() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            mMessageKey = bundle.getString(Keys.Extras.EXTRA_NOT_ID);
+            mMessageKey = bundle.getString(Keys.Extras.EXTRA_DIALOG_ID);
         }
     }
 
@@ -352,7 +354,15 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
             chooseFileToUpload();
+        }else{
+            EasyPermissions.requestPermissions(this, getString(R.string.image_permissions), REQUEST_IMAGE_PERMISSION, perms);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     void chooseFileToUpload() {
