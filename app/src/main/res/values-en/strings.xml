@@ -121,7 +121,6 @@
     <string name="just_hrn">uah</string>
     <string name="button_link">Share</string>
     <string name="toast_nothing_to_change">No changes</string>
-    <string name="action_save_changes">SAVE CHANGES</string>
     <string name="action_no">No</string>
     <string name="title_activity_maps">Map</string>
     <string name="hint_comment">Comments</string>
