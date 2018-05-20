@@ -21,7 +21,6 @@ public class DateUtils {
         return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
     }
 
-
     public static String getIntWithSpace(int data) {
         String resultStr = data + "";
         if (resultStr.length() > 3)
@@ -85,11 +84,6 @@ public class DateUtils {
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, day);
         return calendar.getTime();
-    }
-
-    public static String getMonth(Resources resources, Calendar date) {
-        String[] months = resources.getStringArray(R.array.months);
-        return months[date.get(Calendar.MONTH)];
     }
 
     public static String getMonthWithYear(Resources resources, Calendar date) {

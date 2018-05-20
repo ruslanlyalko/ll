@@ -103,11 +103,7 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
         mLastDate = date;
         Calendar month = Calendar.getInstance();
         month.setTime(date);
-        String str = DateUtils.getMonth(getResources(), month);
-        String yearSimple = new SimpleDateFormat("yy", Locale.US).format(date);
-        if (!DateUtils.isCurrentYear(date))
-            str = str + "'" + yearSimple;
-        mTextMonth.setText(str);
+        mTextMonth.setText(DateUtils.getMonthWithYear(getResources(), month));
         mBirthContactsAdapter.getFilter().filter(DateUtils.toString(date, "MM"));
     }
 

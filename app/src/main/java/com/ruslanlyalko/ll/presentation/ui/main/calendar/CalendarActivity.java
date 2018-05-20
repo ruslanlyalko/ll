@@ -33,12 +33,10 @@ import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -56,7 +54,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     private LessonsAdapter mLessonsAdapter;
     private ArrayList<String> mUsersList = new ArrayList<>();
-    private Date mCurrentDate;
+    private Calendar mCurrentDate = Calendar.getInstance();
     private String mUserId;
 
     public static Intent getLaunchIntent(final Activity launchIntent) {
@@ -74,8 +72,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
         initRecycle();
         initCalendarView();
         showLessonsOnCalendar();
-        Date today = Calendar.getInstance().getTime();
-        showLessonsForDate(today);
+        showLessonsForDate();
         loadContacts();
     }
 
@@ -90,29 +87,25 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
         mCompactCalendarView.shouldDrawIndicatorsBelowSelectedDays(true);
         mCompactCalendarView.shouldScrollMonth(false);
         mCompactCalendarView.displayOtherMonthDays(true);
-        mTextMonth.setText(DateUtils.getMonth(getResources(), Calendar.getInstance()));
+        mTextMonth.setText(DateUtils.getMonthWithYear(getResources(), Calendar.getInstance()));
         // define a listener to receive callbacks when certain events happen.
         mCompactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                showLessonsForDate(dateClicked);
+                mCurrentDate.setTime(dateClicked);
+                showLessonsForDate();
             }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                Calendar month = Calendar.getInstance();
-                month.setTime(firstDayOfNewMonth);
-                String yearSimple = new SimpleDateFormat("yy", Locale.US).format(firstDayOfNewMonth);
-                String str = DateUtils.getMonth(getResources(), month);
-                if (!DateUtils.isCurrentYear(firstDayOfNewMonth))
-                    str = str + "'" + yearSimple;
-                mTextMonth.setText(str);
-                showLessonsForDate(firstDayOfNewMonth);
+                mCurrentDate.setTime(firstDayOfNewMonth);
+                mTextMonth.setText(DateUtils.getMonthWithYear(getResources(), mCurrentDate));
+                showLessonsForDate();
             }
         });
         mSwipeRefresh.setOnRefreshListener(() -> {
             showLessonsOnCalendar();
-            reloadLessons();
+            showLessonsForDate();
         });
     }
 
@@ -129,19 +122,14 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        reloadLessons();
+        showLessonsForDate();
     }
 
-    private void reloadLessons() {
-        showLessonsForDate(mCurrentDate);
-    }
-
-    private void showLessonsForDate(Date date) {
+    private void showLessonsForDate() {
         if (isDestroyed()) return;
-        mCurrentDate = date;
-        mFab.setVisibility((FirebaseUtils.isAdmin() || DateUtils.isTodayOrFuture(date))
+        mFab.setVisibility((FirebaseUtils.isAdmin() || DateUtils.isTodayOrFuture(mCurrentDate.getTime()))
                 ? View.VISIBLE : View.GONE);
-        String aDate = DateFormat.format("yyyy/MM/dd", date).toString();
+        String aDate = DateFormat.format("yyyy/MM/dd", mCurrentDate.getTime()).toString();
         getDatabase().getReference(DC.DB_LESSONS)
                 .child(aDate)
                 .orderByChild("dateTime/time")
@@ -251,9 +239,8 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
         if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
             builder.setTitle(R.string.dialog_calendar_remove_title)
-                    .setPositiveButton(R.string.action_remove, (dialog, which) -> {
-                        removeLesson(lesson);
-                    })
+                    .setPositiveButton(R.string.action_remove, (dialog, which) ->
+                            removeLesson(lesson))
                     .setNegativeButton(R.string.action_cancel, null)
                     .show();
         } else {
@@ -266,13 +253,13 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
                 .getReference(DC.DB_LESSONS)
                 .child(DateUtils.toString(lesson.getDateTime(), "yyyy/MM/dd"))
                 .child(lesson.getKey()).removeValue().addOnSuccessListener(aVoid -> {
-            reloadLessons();
+            showLessonsForDate();
             Toast.makeText(this, R.string.toast_lesson_removed, Toast.LENGTH_LONG).show();
         });
     }
 
     @OnClick(R.id.fab)
     void onAddReportClicked() {
-        startActivityForResult(LessonActivity.getLaunchIntent(this, mCurrentDate), RC_LESSON);
+        startActivityForResult(LessonActivity.getLaunchIntent(this, mCurrentDate.getTime()), RC_LESSON);
     }
 }
