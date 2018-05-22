@@ -34,7 +34,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="4dp"
                 android:hint="@string/hint_my"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/edit_filter_name"
@@ -74,6 +75,28 @@
                 android:visibility="invisible"
                 tools:ignore="ContentDescription"
                 tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_filter_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/text_count"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:padding="4dp"
+                tools:text="[0]" />
+
+            <Spinner
+                android:id="@+id/spinner_teacher"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" />
 
         </LinearLayout>
 

@@ -1,15 +1,21 @@
 package com.ruslanlyalko.ll.presentation.ui.main.clients.contacts;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,8 +27,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.Keys;
 import com.ruslanlyalko.ll.common.UserType;
+import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseFragment;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.OnFilterListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.ContactsAdapter;
@@ -45,15 +53,20 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
 
     @BindView(R.id.list_contacts) RecyclerView mListContacts;
     @BindView(R.id.edit_filter_name) EditText mEditFilterName;
+    @BindView(R.id.text_count) TextView mTextCount;
     @BindView(R.id.edit_filter_phone) EditText mEditFilterPhone;
     @BindView(R.id.image_clear) ImageView mImageClear;
     @BindView(R.id.check_box_my) CheckBox mCheckBoxMy;
+    @BindView(R.id.spinner_teacher) Spinner mSpinnerTeacher;
+    @BindView(R.id.layout_filter_spinner) LinearLayout mLayoutFilterSpinner;
+
     private ContactsAdapter mContactsAdapter;
     private OnFilterListener mOnFilterListener;
     private int mUserType = UserType.ADULT;
     private boolean mIsSelectable;
     private List<String> mSelectedClients;
     private String mTeacherId = "";
+    private List<User> mUsers = new ArrayList<>();
 
     public ContactsFragment() {
     }
@@ -68,7 +81,14 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
     }
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.fragment_contacts;
+    }
+
+    @Override
     protected void onViewReady(final Bundle savedInstanceState) {
+        mLayoutFilterSpinner.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
+        mCheckBoxMy.setVisibility(FirebaseUtils.isAdmin() ? View.GONE : View.VISIBLE);
         mContactsAdapter = new ContactsAdapter(this, getActivity(), mIsSelectable);
         if (mSelectedClients != null)
             mContactsAdapter.setSelectedCotacts(mSelectedClients);
@@ -92,11 +112,58 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
         mEditFilterPhone.addTextChangedListener(watcher);
         setupRecycler();
         loadContacts();
+        if (FirebaseUtils.isAdmin())
+            loadUsers();
     }
 
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_contacts;
+    private void loadUsers() {
+        getDatabase().getReference(DC.DB_USERS)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        mUsers.clear();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            User user = data.getValue(User.class);
+                            mUsers.add(user);
+                        }
+                        initSpinnerTeacher();
+                    }
+
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    private void initSpinnerTeacher() {
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_selectable_list_item);
+        List<String> userNamesList = new ArrayList<>();
+        userNamesList.add(getString(R.string.spinner_not_selected));
+        for (int i = 0; i < mUsers.size(); i++) {
+            userNamesList.add(mUsers.get(i).getFullName());
+        }
+        arrayAdapter.addAll(userNamesList);
+        mSpinnerTeacher.setAdapter(arrayAdapter);
+        mSpinnerTeacher.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+                long index = mSpinnerTeacher.getSelectedItemId();
+                if (index < 1) {
+                    if (!mTeacherId.equals("")) {
+                        mTeacherId = "";
+                        onFilterTextChanged();
+                    }
+                } else {
+                    mTeacherId = "/" + mUsers.get((int) index - 1).getId();
+                    onFilterTextChanged();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(final AdapterView<?> parent) {
+            }
+        });
     }
 
     @Override
@@ -143,7 +210,14 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
             name = " ";
         if (phone.equals(""))
             phone = " ";
-        mContactsAdapter.getFilter().filter(name + "/" + phone + mTeacherId);
+        String filter = name + "/" + phone + mTeacherId;
+        mContactsAdapter.getFilter().filter(filter);
+        if (FirebaseUtils.isAdmin()) {
+            new Handler().postDelayed(() -> {
+                String title = "[" + mContactsAdapter.getItemCount() + "]";
+                mTextCount.setText(title);
+            }, 300);
+        }
         if (mOnFilterListener != null)
             mOnFilterListener.onFilterChanged(name, phone);
     }

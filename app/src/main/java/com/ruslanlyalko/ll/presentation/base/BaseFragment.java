@@ -12,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
 import butterknife.ButterKnife;
 
 /**
@@ -49,6 +53,14 @@ public abstract class BaseFragment extends Fragment {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+    }
+
+    protected FirebaseUser getUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    protected FirebaseDatabase getDatabase() {
+        return FirebaseDatabase.getInstance();
     }
 
     protected BaseActivity getBaseActivity() {
