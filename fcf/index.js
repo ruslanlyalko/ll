@@ -5,7 +5,7 @@
 // exports.helloWorld = functions.https.onRequest((request, response) => {
 //  response.send("Hello from Firebase!");
 // });
-
+const moment = require('moment');
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
@@ -25,68 +25,58 @@ exports.tokenUpdatedAt = functions.database.ref("USERS/{userId}/token")
 });
 */
 
-exports.commentsWatcher = functions.database.ref("/DIALOGS_MESSAGES/{messageId}/{commentId}")
+exports.commentsWatcher = functions.database.ref("/DIALOGS_MESSAGES/{dialogId}/{commentId}")
 .onCreate((event, context) => {
 	const commentObj = event.val();
 	const root = event.ref.root;	
-	const messageId = context.params.messageId;
+	const dialogId = context.params.dialogId;
 	const userAvaRef = event.ref.child('userAvatar');
-	const messageRef = root.child(`/DIALOGS/${messageId}`); 
-
-
-	return messageRef.once('value').then( dialogSnap => {
-		var messageObj = dialogSnap.val();
-		// update last Comment
-		dialogSnap.ref.child('lastComment').set(commentObj.userName + ": " + commentObj.message);
-		// update updaetedAt
-		dialogSnap.ref.child('updatedAt').set(commentObj.date);
-		const usersRef = root.child(`USERS`);
-		return usersRef.once('value').then(snapshot => {	
-			var tokens = [];
-			
-			snapshot.forEach(child1 => {	
-				childObj = child1.val();	
-			
-				if(childObj.id !== commentObj.userId && childObj.isReceiveNotifications )
-				{
-					if (childObj.isAdmin){
-						console.log("Update notifications for ", childObj.fullName);						
-						root.child(`/USERS_NOTIFICATIONS`).child(`/${childObj.id}/${messageId}/key`).set(`${messageId}`);
-						if(childObj.token ){
-							console.info("Token Added for User: " + childObj.fullName +", Token: ", childObj.token);
-							tokens.push(childObj.token);		
-						}			
-					} else {
-						dialogSnap.child('Members').forEach(member =>{
-							if(childObj.id === member.key){				
-								// update Notifications
-								console.log("Update notifications for ", childObj.fullName);						
-								root.child(`/USERS_NOTIFICATIONS`).child(`/${childObj.id}/${messageId}/key`).set(`${messageId}`);
-								if(childObj.token ){
-									console.info("Token Added for User: " + childObj.fullName +", Token: ", childObj.token);
-									tokens.push(childObj.token);		
-								}							
-							} 	
-
-						})
-					}
-				}	
-			});
-		
-			// send Push
-			var payload = {
-				data:{						
-					title: messageObj.title1,
-					message: commentObj.userName + ": " + commentObj.message,			
-					messageKey: messageId,
-					senderId: commentObj.userId,
-					senderName: commentObj.userName,
-					receiverName: childObj.fullName,
-					type: "COMMENT"
+	const dialogPromise = root.child(`/DIALOGS/${dialogId}`).once('value'); 
+	const usersPromise = root.child(`USERS`).once('value'); 
+	return Promise.all([dialogPromise, usersPromise]).then((results)=>{		
+		const dialogSnap = results[0];
+		const snapshotU = results[1];
+		var dialogObj = dialogSnap.val();
+		// update last Comment// update updaetedAt
+		dialogSnap.ref.child('lastComment').set(commentObj.userName + ": " + commentObj.message);		
+		dialogSnap.ref.child('updatedAt').set(commentObj.date);				
+		var tokens = [];			
+		snapshotU.forEach(userSnap => {	
+			const userObj = userSnap.val();				
+			if(userObj.id !== commentObj.userId && userObj.isReceiveNotifications) {
+				if (userObj.isAdmin) {
+					console.log("Update notifications for ", userObj.fullName);						
+					root.child(`/USERS_NOTIFICATIONS`).child(`/${userObj.id}/${dialogId}/key`).set(`${dialogId}`);
+					if(userObj.token){
+						console.info("Token Added for User: " + userObj.fullName +", Token: ", userObj.token);
+						tokens.push(userObj.token);		
+					}			
+				} else {
+					dialogSnap.child('Members').forEach(member =>{
+						if(userObj.id === member.key){				
+							// update Notifications
+							console.log("Update notifications for ", userObj.fullName);						
+							root.child(`/USERS_NOTIFICATIONS`).child(`/${userObj.id}/${dialogId}/key`).set(`${dialogId}`);
+							if(userObj.token ){
+								console.info("Token Added for User: " + userObj.fullName +", Token: ", userObj.token);
+								tokens.push(userObj.token);		
+							}							
+						} 	
+					})
 				}
-			};
-			return sendNessagesViaFCM(tokens, payload);			
-		});
+			}	
+		});					
+		var payload = {
+			data:{						
+				title: dialogObj.title1,
+				message: commentObj.userName + ": " + commentObj.message,			
+				messageKey: dialogId,
+				senderId: commentObj.userId,
+				senderName: commentObj.userName,				
+				type: "COMMENT"
+			}
+		};
+		return sendNessagesViaFCM(tokens, payload);					
 	});
 });
 
@@ -257,3 +247,77 @@ function sendNessagesViaFCM(tokens, payload){
 		return console.log("Push No Tokens");
 }
 
+
+// HTTP
+
+
+exports.before10 = functions.https.onRequest((req, res)=>{	
+	const key = req.query.key;
+	//firebase functions:config:set cron.key="somecoolkey"
+	// Exit if the keys don't match.
+	if (key !== functions.config().cron.key) {
+		console.log('The key provided in the request does not match the key set in the environment. Check that', key,
+			'matches the cron.key attribute in `firebase env:get`');
+		res.status(403).send('Security key does not match. Make sure your "key" URL query parameter matches the ' +
+			'cron.key environment variable.');
+		return null;
+	}
+	const date = moment().format("YYYY/MM/DD");	
+	var hrsUTC = parseInt(moment().format("H"));	
+	var mnt = parseInt(moment().format("m"));	
+	const refString = '/LESSONS/' + date;
+	console.log(refString + " UTC "+ hrsUTC + ":" + mnt);
+	const contactsPromise = admin.database().ref("/CONTACTS").once('value');	
+	const lessonsPromise = admin.database().ref(refString).once('value');	
+	return Promise.all([contactsPromise, lessonsPromise]).then((result)=> {		
+		const contactsSnap =result[0];
+		const lessonsSnap =result[1];
+			var count = 0;			
+			var messages = 0;			
+			lessonsSnap.forEach(lesson => {	
+				var lessonObj = lesson.val();				
+				count = count + 1;		
+				var offset = lessonObj.dateTime.timezoneOffset / 60;	
+				var hrs = hrsUTC - offset;
+				if((lessonObj.dateTime.hours === hrs && lessonObj.dateTime.minutes > mnt && lessonObj.dateTime.minutes < (mnt+11))
+					|| (lessonObj.dateTime.hours === (hrs+1) && mnt > 49 && lessonObj.dateTime.minutes === 0)) {					
+						const membersRef = admin.database().ref(refString+"/"+lessonObj.key+"/clients/");
+						sendLessonRemainder(lessonObj.userId, contactsSnap, membersRef);
+						messages = messages + 1;
+				}
+			});	
+			const logStr = "Today found " + count + " lessons. Messages sent to " + messages + " users"; 
+			console.log(logStr);
+			res.status(200).send(logStr);
+			return 0;		
+	});
+});
+
+function sendLessonRemainder(userId, contactsSnap, membersRef) {	
+	return membersRef.once('value').then(membersSnap => {
+		var membersString="";		
+		var usersIds = [];		
+		contactsSnap.forEach(contact=>{
+			var contactObj = contact.val();
+			membersSnap.forEach(member=>{
+				var membrObj = member.val();
+				if(contactObj.key === membrObj) {
+					if(membersString!==""){
+						membersString = membersString +", ";
+					}
+					membersString = membersString + contactObj.name;
+					console.log("Contact Name "+ contactObj.name);
+				}				
+			});
+		})							
+		usersIds.push(userId);
+		var payload1 = {
+			data:{
+				title: "Нагадування про заняття",
+				message: "(" + membersString + ")",
+				type: "OTHER"
+			}
+		};
+		return sendMessagesToUsers(payload1, usersIds);							
+	});	
+}
