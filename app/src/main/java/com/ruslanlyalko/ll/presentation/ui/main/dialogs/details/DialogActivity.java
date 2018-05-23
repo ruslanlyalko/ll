@@ -167,7 +167,6 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         if (mMessageKey == null || mMessageKey.isEmpty()) return;
         database.getReference(DC.DB_MESSAGES)
                 .child(mMessageKey)
-                .orderByChild("date/time")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -213,8 +212,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
 
     private void loadMoreCommentsFromDB() {
         database.getReference(DC.DB_MESSAGES)
-                .child(mMessageKey)
-                .orderByChild("date/time").addChildEventListener(new ChildEventListener() {
+                .child(mMessageKey).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, final String s) {
                 MessageComment messageComment = dataSnapshot.getValue(MessageComment.class);
