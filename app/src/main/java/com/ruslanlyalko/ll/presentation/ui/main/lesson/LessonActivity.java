@@ -1,6 +1,5 @@
 package com.ruslanlyalko.ll.presentation.ui.main.lesson;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
 import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -46,6 +47,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     @BindView(R.id.text_time) TextView mTextTime;
     @BindView(R.id.edit_comment) EditText mEditDescription;
     @BindView(R.id.text_lesson_length) TextView mTextLessonLength;
+    @BindView(R.id.switch_unsuccessful) Switch mSwitchUnsuccessful;
     @BindView(R.id.tabs_room) TabLayout mTabsRoom;
     @BindView(R.id.tabs_lesson) TabLayout mTabsLesson;
     @BindView(R.id.tabs_user) TabLayout mTabsUser;
@@ -98,8 +100,38 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add: {
+                saveLesson();
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mIsChanged) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LessonActivity.this);
+            builder.setTitle(R.string.dialog_report_save_before_close_title)
+                    .setMessage(R.string.dialog_report_save_before_close_text)
+                    .setPositiveButton(R.string.action_save, (dialog, which) -> {
+                        saveLesson();
+                        onBackPressed();
+                    })
+                    .setNegativeButton(R.string.action_cancel, (dialog, which) ->
+                            super.onBackPressed())
+                    .show();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void updateUI() {
         if (isDestroyed()) return;
+        mSwitchUnsuccessful.setChecked(mLesson.getUnsuccessful());
         mTextDate.setText(DateUtils.toString(mLesson.getDateTime(), "dd.MM  EEEE"));
         mTextTime.setText(DateUtils.toString(mLesson.getDateTime(), "HH:mm"));
         mTextLessonLength.setText(mLesson.getLessonLengthId() == 0
@@ -142,35 +174,6 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add: {
-                saveLesson();
-                break;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mIsChanged) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(LessonActivity.this);
-            builder.setTitle(R.string.dialog_report_save_before_close_title)
-                    .setMessage(R.string.dialog_report_save_before_close_text)
-                    .setPositiveButton(R.string.action_save, (dialog, which) -> {
-                        saveLesson();
-                        onBackPressed();
-                    })
-                    .setNegativeButton(R.string.action_cancel, (dialog, which) ->
-                            super.onBackPressed())
-                    .show();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     private void saveLesson() {
         DatabaseReference ref = getDatabase()
                 .getReference(DC.DB_LESSONS)
@@ -178,6 +181,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         if (isNew()) {
             mLesson.setKey(ref.push().getKey());
         }
+        mLesson.setUnsuccessful(mSwitchUnsuccessful.isChecked());
         mLesson.setDescription(mEditDescription.getText().toString().trim());
         mLesson.setRoomType(mTabsRoom.getSelectedTabPosition());
         mLesson.setLessonType(mTabsLesson.getSelectedTabPosition());
@@ -223,6 +227,8 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)
                 );
+                if (!FirebaseUtils.isAdmin())
+                    dialog.setMinDate(DateUtils.getYesterday());
                 dialog.show(getFragmentManager(), "date");
                 break;
             case R.id.text_time:

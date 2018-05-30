@@ -44,6 +44,7 @@ import butterknife.OnClick;
 public class ProfileSettingsActivity extends BaseActivity {
 
     @BindView(R.id.text_email) EditText inputEmail;
+    @BindView(R.id.text_position) EditText inputPosition;
     @BindView(R.id.text_phone) EditText inputPhone;
     @BindView(R.id.text_bday) EditText inputBDay;
     @BindView(R.id.text_card) EditText inputCard;
@@ -145,11 +146,13 @@ public class ProfileSettingsActivity extends BaseActivity {
     }
 
     private void saveChanges() {
+        final String position = inputPosition.getText().toString().trim();
         final String phone = inputPhone.getText().toString().trim();
         final String email = inputEmail.getText().toString().trim();
         final String birthday = inputBDay.getText().toString().trim();
         final String card = inputCard.getText().toString().trim();
         final String firstDate = inputFirstDate.getText().toString().trim();
+        final String tPosition = inputPosition.getTag().toString().trim();
         final String tPhone = inputPhone.getTag().toString().trim();
         final String tEmail = inputEmail.getTag().toString().trim();
         final String tBirthday = inputBDay.getTag().toString().trim();
@@ -163,6 +166,10 @@ public class ProfileSettingsActivity extends BaseActivity {
         boolean needUpdate = false;
         if (!phone.equals(tPhone)) {
             childUpdates.put("phone", phone);
+            needUpdate = true;
+        }
+        if (!position.equals(tPosition)) {
+            childUpdates.put("positionTitle", position);
             needUpdate = true;
         }
         if (!birthday.equals(tBirthday)) {
@@ -214,6 +221,8 @@ public class ProfileSettingsActivity extends BaseActivity {
                 User user = dataSnapshot.getValue(User.class);
                 if (user == null) return;
                 textName.setText(user.getFullName());
+                inputPosition.setText(user.getPositionTitle());
+                inputPosition.setTag(user.getPositionTitle());
                 inputPhone.setText(user.getPhone());
                 inputPhone.setTag(user.getPhone());
                 inputEmail.setText(user.getEmail());

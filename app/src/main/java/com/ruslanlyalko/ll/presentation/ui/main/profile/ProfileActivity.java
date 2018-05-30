@@ -441,7 +441,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     private void onPhotosReturned(final File imageFile) {
         CropImage.activity(Uri.fromFile(imageFile))
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
-                .setAspectRatio(4, 3)
+                .setAspectRatio(5, 4)
                 .setFixAspectRatio(true)
                 .start(this);
     }

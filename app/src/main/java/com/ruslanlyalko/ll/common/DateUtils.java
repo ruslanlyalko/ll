@@ -160,4 +160,10 @@ public class DateUtils {
         int extra = calendar.get(Calendar.MINUTE) > 28 ? 1 : 0;
         return Math.min((calendar.get(Calendar.HOUR_OF_DAY) * 2) + extra, 45);
     }
+
+    public static Calendar getYesterday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        return calendar;
+    }
 }

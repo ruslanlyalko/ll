@@ -55,12 +55,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         return mLessons.size();
     }
 
-    public void setData(final List<Lesson> lessons) {
-        mLessons.clear();
-        mLessons.addAll(lessons);
-        notifyDataSetChanged();
-    }
-
     public void setContacts(final List<Contact> contacts) {
         mContacts.clear();
         mContacts.addAll(contacts);
@@ -69,6 +63,12 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
 
     public List<Lesson> getData() {
         return mLessons;
+    }
+
+    public void setData(final List<Lesson> lessons) {
+        mLessons.clear();
+        mLessons.addAll(lessons);
+        notifyDataSetChanged();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -99,8 +99,13 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
 
         void bindData(final Lesson lesson) {
             boolean isFuture = lesson.getDateTime().after(new Date());
-            mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
-                    isFuture ? R.drawable.ic_lesson_future : R.drawable.ic_lesson));
+            if (lesson.getUnsuccessful()) {
+                mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
+                        R.drawable.ic_lesson_unsuccessful));
+            } else {
+                mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
+                        isFuture ? R.drawable.ic_lesson_future : R.drawable.ic_lesson));
+            }
             mSwipeLayout.addDrag(SwipeLayout.DragEdge.Right, R.id.swipe_menu);
             mSwipeLayout.setRightSwipeEnabled(true);
             mSwipeLayout.setBottomSwipeEnabled(false);

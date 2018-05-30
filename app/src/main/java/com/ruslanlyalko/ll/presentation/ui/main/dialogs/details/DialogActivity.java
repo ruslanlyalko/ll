@@ -184,7 +184,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                                 loadMoreCommentsFromDB();
                                 mListComments.smoothScrollToPosition(list.size());
                             }
-                        }, 300);
+                        }, 120);
                     }
 
                     @Override

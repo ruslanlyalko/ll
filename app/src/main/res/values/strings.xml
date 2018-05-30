@@ -151,7 +151,7 @@
     <string name="text_last_online_long_time_ago">Востаннє в мережі давно</string>
 
     <!-- PROFILE SETTINGS-->
-    <string name="text_user_details">Основні дані</string>
+    <string name="text_user_details">Інформація</string>
     <string name="text_password_change">Зміна паролю</string>
     <string name="text_comments_list">Дозволити коментувати</string>
 
@@ -241,6 +241,8 @@
     <string name="user_type_child">Діти</string>
     <string name="text_expenses_type0">Загальні</string>
     <string name="text_expenses_type1">На офіс</string>
+    <string name="hint_position">Посада</string>
+    <string name="text_lesson_unsuccessful">Клієнт не явився на заняття</string>
 
     <string-array name="months">
         <item>Січень</item>

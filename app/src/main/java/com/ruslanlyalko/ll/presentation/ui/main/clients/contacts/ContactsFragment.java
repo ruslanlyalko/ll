@@ -216,7 +216,7 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
             new Handler().postDelayed(() -> {
                 String title = "[" + mContactsAdapter.getItemCount() + "]";
                 mTextCount.setText(title);
-            }, 300);
+            }, 100);
         }
         if (mOnFilterListener != null)
             mOnFilterListener.onFilterChanged(name, phone);

@@ -14,6 +14,7 @@ public class Lesson implements Serializable {
     private int lessonType;
     private int userType;
     private int lessonLengthId;
+    private boolean unsuccessful;
     private String userId;
     private String userName;
     private Date dateTime = new Date();
@@ -48,6 +49,14 @@ public class Lesson implements Serializable {
     public Lesson(final Date date, final String key) {
         this.key = key;
         this.dateTime = date;
+    }
+
+    public boolean getUnsuccessful() {
+        return unsuccessful;
+    }
+
+    public void setUnsuccessful(final boolean unsuccessful) {
+        this.unsuccessful = unsuccessful;
     }
 
     public String getUserId() {

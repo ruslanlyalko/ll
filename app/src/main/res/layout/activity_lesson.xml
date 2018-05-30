@@ -41,9 +41,9 @@
                 android:gravity="center_vertical"
                 android:paddingEnd="8dp"
                 android:paddingStart="8dp"
-                android:text="12.02  ВІВТОРОК"
                 android:textAllCaps="true"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:text="12.02  ВІВТОРОК" />
 
             <TextView
                 android:id="@+id/text_time"
@@ -55,19 +55,17 @@
                 android:gravity="center_vertical"
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
-                android:text="12:00"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:text="12:00" />
 
             <TextView
                 android:id="@+id/text_lesson_length"
-                android:layout_width="100dp"
+                android:layout_width="90dp"
                 android:layout_height="match_parent"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
                 android:text="@string/lesson_length_one_hour"
                 android:textSize="18sp" />
 
@@ -118,6 +116,45 @@
                 android:text="@string/tab_room_4" />
 
         </android.support.design.widget.TabLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <!-- tile  UNSUCCESSFUL-->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/card_margin"
+        android:layout_marginTop="@dimen/card_margin"
+        android:elevation="3dp"
+        card_view:cardCornerRadius="@dimen/card_radius">
+
+        <LinearLayout
+            android:id="@+id/panel_unsuccessful"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_lesson_unsuccessful"
+                tools:ignore="ContentDescription" />
+
+            <Switch
+                android:id="@+id/switch_unsuccessful"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                android:text="@string/text_lesson_unsuccessful"
+                android:textSize="18sp" />
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
