@@ -243,6 +243,9 @@
     <string name="text_expenses_type1">На офіс</string>
     <string name="hint_position">Посада</string>
     <string name="text_lesson_unsuccessful">Клієнт не явився на заняття</string>
+    <string name="tab_status_1">Заплановано</string>
+    <string name="tab_status_2">Перенесено</string>
+    <string name="tab_status_3">Не прийшов</string>
 
     <string-array name="months">
         <item>Січень</item>

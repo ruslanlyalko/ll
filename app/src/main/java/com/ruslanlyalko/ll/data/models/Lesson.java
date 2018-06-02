@@ -10,15 +10,24 @@ public class Lesson implements Serializable {
 
     private String key;
     private String description;
+    private int statusType;
     private int roomType;
     private int lessonType;
     private int userType;
     private int lessonLengthId;
-    private boolean unsuccessful;
     private String userId;
     private String userName;
     private Date dateTime = new Date();
     private List<String> clients = new ArrayList<>();
+
+    public Lesson() {
+        key = "";
+    }
+
+    public Lesson(final Date date, final String key) {
+        this.key = key;
+        this.dateTime = date;
+    }
 
     public Lesson(final String userId, final String userName) {
         this.key = "";
@@ -42,21 +51,12 @@ public class Lesson implements Serializable {
         dateTime = cal.getTime();
     }
 
-    public Lesson() {
-        key = "";
+    public int getStatusType() {
+        return statusType;
     }
 
-    public Lesson(final Date date, final String key) {
-        this.key = key;
-        this.dateTime = date;
-    }
-
-    public boolean getUnsuccessful() {
-        return unsuccessful;
-    }
-
-    public void setUnsuccessful(final boolean unsuccessful) {
-        this.unsuccessful = unsuccessful;
+    public void setStatusType(final int statusType) {
+        this.statusType = statusType;
     }
 
     public String getUserId() {

@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +46,8 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     @BindView(R.id.text_time) TextView mTextTime;
     @BindView(R.id.edit_comment) EditText mEditDescription;
     @BindView(R.id.text_lesson_length) TextView mTextLessonLength;
-    @BindView(R.id.switch_unsuccessful) Switch mSwitchUnsuccessful;
     @BindView(R.id.tabs_room) TabLayout mTabsRoom;
+    @BindView(R.id.tabs_status) TabLayout mTabsStatus;
     @BindView(R.id.tabs_lesson) TabLayout mTabsLesson;
     @BindView(R.id.tabs_user) TabLayout mTabsUser;
     @BindView(R.id.container) ViewPager mContainer;
@@ -131,11 +130,12 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
 
     private void updateUI() {
         if (isDestroyed()) return;
-        mSwitchUnsuccessful.setChecked(mLesson.getUnsuccessful());
         mTextDate.setText(DateUtils.toString(mLesson.getDateTime(), "dd.MM  EEEE"));
         mTextTime.setText(DateUtils.toString(mLesson.getDateTime(), "HH:mm"));
         mTextLessonLength.setText(mLesson.getLessonLengthId() == 0
                 ? R.string.lesson_length_one_hour : R.string.lesson_length_one_half_hour);
+        TabLayout.Tab tabStatus = mTabsStatus.getTabAt(mLesson.getStatusType());
+        if (tabStatus != null) tabStatus.select();
         TabLayout.Tab tabLesson = mTabsLesson.getTabAt(mLesson.getLessonType());
         if (tabLesson != null) tabLesson.select();
         TabLayout.Tab tabRoom = mTabsRoom.getTabAt(mLesson.getRoomType());
@@ -181,8 +181,8 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         if (isNew()) {
             mLesson.setKey(ref.push().getKey());
         }
-        mLesson.setUnsuccessful(mSwitchUnsuccessful.isChecked());
         mLesson.setDescription(mEditDescription.getText().toString().trim());
+        mLesson.setStatusType(mTabsStatus.getSelectedTabPosition());
         mLesson.setRoomType(mTabsRoom.getSelectedTabPosition());
         mLesson.setLessonType(mTabsLesson.getSelectedTabPosition());
         mLesson.setUserType(mTabsUser.getSelectedTabPosition());
@@ -191,9 +191,8 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         else
             mLesson.setClients(mSectionsPagerAdapter.getChildFragment().getSelected());
         ref.child(mLesson.getKey()).setValue(mLesson)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, R.string.toast_saved, Toast.LENGTH_LONG).show();
-                })
+                .addOnSuccessListener(aVoid ->
+                        Toast.makeText(this, R.string.toast_saved, Toast.LENGTH_LONG).show())
                 .addOnFailureListener(Throwable::printStackTrace);
     }
 

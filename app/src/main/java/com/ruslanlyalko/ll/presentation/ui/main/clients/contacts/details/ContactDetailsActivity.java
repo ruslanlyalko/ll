@@ -331,6 +331,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         int groupTotalChildCount = 0;
         int onlineTotalChildCount = 0;
         for (Lesson lesson : mLessonsAdapter.getData()) {
+            if (lesson.getStatusType() == 1) continue;
             if (lesson.getUserType() == 0) {
                 if (lesson.getLessonLengthId() == 0) {
                     switch (lesson.getLessonType()) {

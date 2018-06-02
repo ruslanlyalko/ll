@@ -211,5 +211,8 @@
     <string name="action_choose_date">Choose date</string>
     <string name="hint_position">Position Title</string>
     <string name="text_lesson_unsuccessful">Client was absent</string>
+    <string name="tab_status_1">Scheduled</string>
+    <string name="tab_status_2">Moved</string>
+    <string name="tab_status_3">Absent</string>
 
 </resources>
