@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,14 +26,20 @@ public class LlApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
+        initDb();
+    }
+
+    private void initDb() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().getReference(DC.DB_LESSONS).keepSynced(true);
         loadUserData();
     }
 
     private void loadUserData() {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
         FirebaseDatabase.getInstance().getReference(DC.DB_USERS)
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(user.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {

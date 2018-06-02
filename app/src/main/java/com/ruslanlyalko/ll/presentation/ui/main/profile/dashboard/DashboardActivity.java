@@ -376,6 +376,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             int onlineTotalChildCount = 0;
             for (Lesson lesson : mLessonList) {
                 if (!lesson.getUserId().equals(user.getId())) continue;
+                if (lesson.getStatusType() == 1) continue;
                 if (lesson.getUserType() == 0) {
                     if (lesson.getLessonLengthId() == 0) {
                         switch (lesson.getLessonType()) {

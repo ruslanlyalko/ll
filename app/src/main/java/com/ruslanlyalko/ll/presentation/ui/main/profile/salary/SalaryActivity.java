@@ -250,6 +250,7 @@ public class SalaryActivity extends BaseActivity {
             return;
         }
         for (Lesson lesson : mLessons) {
+            if (lesson.getStatusType() == 1) continue;
             if (lesson.getUserType() == 0) {
                 if (lesson.getLessonLengthId() == 0) {
                     switch (lesson.getLessonType()) {

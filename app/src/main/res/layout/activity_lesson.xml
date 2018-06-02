@@ -73,91 +73,6 @@
 
     </android.support.v7.widget.CardView>
 
-    <!-- TILE  Room -->
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/card_margin"
-        android:layout_marginTop="@dimen/card_margin"
-        android:clickable="true"
-        android:elevation="3dp"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardCornerRadius="0dp">
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs_room"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/tab_room_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_room_1" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/tab_room_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_room_2" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/tab_room_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_room_3" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/tab_room_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_room_4" />
-
-        </android.support.design.widget.TabLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <!-- tile  UNSUCCESSFUL-->
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/card_margin"
-        android:layout_marginTop="@dimen/card_margin"
-        android:elevation="3dp"
-        card_view:cardCornerRadius="@dimen/card_radius">
-
-        <LinearLayout
-            android:id="@+id/panel_unsuccessful"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="16dp"
-                android:src="@drawable/ic_lesson_unsuccessful"
-                tools:ignore="ContentDescription" />
-
-            <Switch
-                android:id="@+id/switch_unsuccessful"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
-                android:orientation="vertical"
-                android:text="@string/text_lesson_unsuccessful"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
     <!-- tile  COMMENT-->
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -205,6 +120,92 @@
             </LinearLayout>
 
         </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <!-- TILE  Status -->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/card_margin"
+        android:layout_marginTop="@dimen/card_margin"
+        android:clickable="true"
+        android:elevation="3dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        card_view:cardCornerRadius="0dp">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_status_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_status_1" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_status_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_status_2" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_status_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_status_3" />
+
+        </android.support.design.widget.TabLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <!-- TILE  Room -->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/card_margin"
+        android:layout_marginTop="@dimen/card_margin"
+        android:clickable="true"
+        android:elevation="3dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        card_view:cardCornerRadius="0dp">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs_room"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_room_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_room_1" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_room_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_room_2" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_room_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_room_3" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_room_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_room_4" />
+
+        </android.support.design.widget.TabLayout>
 
     </android.support.v7.widget.CardView>
 
@@ -300,5 +301,6 @@
     </android.support.v7.widget.CardView>
 
 </LinearLayout>
+
 
 

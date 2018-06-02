@@ -99,12 +99,18 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
 
         void bindData(final Lesson lesson) {
             boolean isFuture = lesson.getDateTime().after(new Date());
-            if (lesson.getUnsuccessful()) {
-                mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
-                        R.drawable.ic_lesson_unsuccessful));
-            } else {
-                mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
-                        isFuture ? R.drawable.ic_lesson_future : R.drawable.ic_lesson));
+            switch (lesson.getStatusType()) {
+                case 0:
+                    mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
+                            isFuture ? R.drawable.ic_lesson_future : R.drawable.ic_lesson));
+                    break;
+                case 1:
+                    mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
+                            R.drawable.ic_lesson_moved));
+                    break;
+                case 2:
+                    mImageLogo.setImageDrawable(ContextCompat.getDrawable(mImageLogo.getContext(),
+                            R.drawable.ic_lesson_unsuccessful));
             }
             mSwipeLayout.addDrag(SwipeLayout.DragEdge.Right, R.id.swipe_menu);
             mSwipeLayout.setRightSwipeEnabled(true);
