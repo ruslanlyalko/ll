@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,13 +22,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
@@ -49,7 +46,6 @@ import com.ruslanlyalko.ll.presentation.widget.PhotoPreviewActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -70,11 +66,8 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     @BindView(R.id.button_attachments) ImageView mButtonAttachments;
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
     private CommentsAdapter mCommentsAdapter = new CommentsAdapter(this);
-    private String mMessageKey;
-    private Message mMessage;
+    private Message mMessage = new Message();
 
     public static Intent getLaunchIntent(final Context launchIntent, final String messageId) {
         Intent intent = new Intent(launchIntent, DialogActivity.class);
@@ -91,26 +84,27 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     protected void parseExtras() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            mMessageKey = bundle.getString(Keys.Extras.EXTRA_DIALOG_ID);
+            mMessage.setKey(bundle.getString(Keys.Extras.EXTRA_DIALOG_ID));
         }
     }
 
     @Override
     protected void setupView() {
         setupRecycler();
-        FirebaseUtils.markNotificationsAsRead(mMessageKey);
+        FirebaseUtils.markNotificationsAsRead(mMessage.getKey());
         loadDetailsFromDB();
-        loadCommentsFromDB();
         mListComments.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
-                mListComments.postDelayed(() -> mListComments.smoothScrollToPosition(mCommentsAdapter.getItemCount()), 500);
+                mListComments.smoothScrollToPosition(0);
+                mListComments.postDelayed(() -> mListComments.smoothScrollToPosition(0), 5);
+                mListComments.postDelayed(() -> mListComments.smoothScrollToPosition(0), 50);
             }
         });
         mCommentsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 if (isDestroyed()) return;
-                mListComments.smoothScrollToPosition(mCommentsAdapter.getItemCount());
+                //mListComments.smoothScrollToPosition(0);
             }
         });
     }
@@ -124,14 +118,14 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                 return true;
             case R.id.action_edit:
                 if (FirebaseUtils.isAdmin()
-                        || mMessage.getUserId().equals(mUser.getUid())) {
-                    editMk();
+                        || mMessage.getUserId().equals(getUser().getUid())) {
+                    editItem();
                 }
                 break;
             case R.id.action_delete:
                 if (FirebaseUtils.isAdmin()
-                        || mMessage.getUserId().equals(mUser.getUid())) {
-                    deleteMk();
+                        || mMessage.getUserId().equals(getUser().getUid())) {
+                    deleteItem();
                 }
                 break;
         }
@@ -141,50 +135,20 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     private void setupRecycler() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setStackFromEnd(true);//true
-        mLayoutManager.setReverseLayout(false);//false
+        mLayoutManager.setReverseLayout(true);//false
         mListComments.setLayoutManager(mLayoutManager);
         mListComments.setAdapter(mCommentsAdapter);
     }
 
     private void loadDetailsFromDB() {
-        if (mMessageKey == null || mMessageKey.isEmpty()) return;
-        database.getReference(DC.DB_DIALOGS)
-                .child(mMessageKey)
+        getDatabase().getReference(DC.DB_DIALOGS)
+                .child(mMessage.getKey())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         mMessage = dataSnapshot.getValue(Message.class);
+                        loadMoreCommentsFromDB();
                         updateUI();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-    }
-
-    private void loadCommentsFromDB() {
-        if (mMessageKey == null || mMessageKey.isEmpty()) return;
-        database.getReference(DC.DB_MESSAGES)
-                .child(mMessageKey)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        List<MessageComment> list = new ArrayList<>();
-                        for (DataSnapshot commentSS : dataSnapshot.getChildren()) {
-                            MessageComment messageComment = commentSS.getValue(MessageComment.class);
-                            if (messageComment != null) {
-                                list.add(messageComment);
-                            }
-                        }
-                        mCommentsAdapter.setData(list);
-                        new Handler().postDelayed(() -> {
-                            if (isDestroyed() || mMessage == null) return;
-                            if (mMessage.getCommentsEnabled()) {
-                                loadMoreCommentsFromDB();
-                                mListComments.smoothScrollToPosition(list.size());
-                            }
-                        }, 120);
                     }
 
                     @Override
@@ -211,16 +175,17 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void loadMoreCommentsFromDB() {
-        database.getReference(DC.DB_MESSAGES)
-                .child(mMessageKey).addChildEventListener(new ChildEventListener() {
+        if (!mMessage.getCommentsEnabled()) return;
+        getDatabase().getReference(DC.DB_MESSAGES)
+                .child(mMessage.getKey()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, final String s) {
                 MessageComment messageComment = dataSnapshot.getValue(MessageComment.class);
                 if (messageComment != null) {
-                    if (!isDestroyed()) {
-                        mCommentsAdapter.add(messageComment);//todo
-                        FirebaseUtils.markNotificationsAsRead(mMessageKey);
-                    }
+                    if (isDestroyed()) return;
+                    mCommentsAdapter.add(messageComment);
+                    mListComments.scrollToPosition(0);
+                    FirebaseUtils.markNotificationsAsRead(mMessage.getKey());
                 }
             }
 
@@ -229,7 +194,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                 MessageComment messageComment = dataSnapshot.getValue(MessageComment.class);
                 if (messageComment != null) {
                     mCommentsAdapter.update(messageComment);
-                    FirebaseUtils.markNotificationsAsRead(mMessageKey);
+                    FirebaseUtils.markNotificationsAsRead(mMessage.getKey());
                 }
             }
 
@@ -247,30 +212,27 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         });
     }
 
-    private void editMk() {
-        Intent intent = new Intent(DialogActivity.this, DialogEditActivity.class);
-        intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, mMessageKey);
-        startActivityForResult(intent, Constants.REQUEST_CODE_EDIT);
+    private void editItem() {
+        startActivityForResult(DialogEditActivity.getLaunchIntent(this, mMessage.getKey()), Constants.REQUEST_CODE_EDIT);
     }
 
-    private void deleteMk() {
+    private void deleteItem() {
         AlertDialog.Builder builder = new AlertDialog.Builder(DialogActivity.this);
         AlertDialog dialog = builder.setTitle(R.string.dialog_delete_notification_title)
                 .setMessage(R.string.dialog_delete_notification_message)
-                .setPositiveButton("Видалити", (dialog1, which) -> {
-                    database.getReference(DC.DB_DIALOGS)
+                .setPositiveButton(R.string.action_remove, (dialog1, which) -> {
+                    getDatabase().getReference(DC.DB_DIALOGS)
                             .child(mMessage.getKey())
                             .removeValue();
                     FirebaseUtils.clearNotificationsForAllUsers(mMessage.getKey());
                     onBackPressed();
                 })
-                .setNegativeButton("Повернутись", null).create();
+                .setNegativeButton(R.string.action_cancel, null).create();
         dialog.show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_messages, menu);
         return true;
     }
@@ -280,9 +242,9 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         super.onPrepareOptionsMenu(menu);
         if (mMessage != null) {
             menu.findItem(R.id.action_delete).setVisible(FirebaseUtils.isAdmin()
-                    || mMessage.getUserId().equals(mUser.getUid()));
+                    || mMessage.getUserId().equals(getUser().getUid()));
             menu.findItem(R.id.action_edit).setVisible(FirebaseUtils.isAdmin()
-                    || mMessage.getUserId().equals(mUser.getUid()));
+                    || mMessage.getUserId().equals(getUser().getUid()));
         }
         return true;
     }
@@ -291,8 +253,8 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     public void onItemClicked(View view, final int position) {
         MessageComment item = mCommentsAdapter.getItemAtPosition(position);
         if (item.getFile() != null && !item.getFile().isEmpty() && !item.getRemoved()) {
-//            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, "image");
-            startActivity(PhotoPreviewActivity.getLaunchIntent(this, item.getFile(), item.getUserName()));
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, "image");
+            startActivity(PhotoPreviewActivity.getLaunchIntent(this, item.getFile(), item.getUserName(), item.getThumbnail(), true), options.toBundle());
         } else
             Toast.makeText(this, DateUtils.toString(mCommentsAdapter.getItemAtPosition(position).getDate(),
                     "EEEE dd.MM.yyyy").toUpperCase(), Toast.LENGTH_SHORT).show();
@@ -310,16 +272,16 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_remove_title)
                 .setMessage(item.getMessage())
-                .setPositiveButton("Видалити", (dialog, which) -> {
-                    removeMessage(item);
+                .setPositiveButton(R.string.action_remove, (dialog, which) -> {
+                    removeItem(item);
                 })
-                .setNegativeButton("Скасувати", null)
+                .setNegativeButton(R.string.action_cancel, null)
                 .show();
     }
 
-    private void removeMessage(final MessageComment item) {
-        database.getReference(DC.DB_MESSAGES)
-                .child(mMessageKey)
+    private void removeItem(final MessageComment item) {
+        getDatabase().getReference(DC.DB_MESSAGES)
+                .child(mMessage.getKey())
                 .child(item.getKey())
                 .child(DC.DIALOG_MESSAGE_REMOVED)
                 .setValue(true);
@@ -327,7 +289,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
 
     @OnClick(R.id.fab)
     public void onDownButtonClicked() {
-        mListComments.smoothScrollToPosition(mCommentsAdapter.getItemCount());
+        mListComments.smoothScrollToPosition(0);
         mFab.hide();
     }
 
@@ -336,13 +298,13 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         String comment = mEditComment.getText().toString().trim();
         mEditComment.setText("");
         if (comment.isEmpty()) return;
-        if (mMessageKey.isEmpty()) return;
+        if (mMessage.getKey().isEmpty()) return;
         sendComment(comment);
     }
 
     private void sendComment(String comment) {
-        DatabaseReference ref = database.getReference(DC.DB_MESSAGES)
-                .child(mMessageKey)
+        DatabaseReference ref = getDatabase().getReference(DC.DB_MESSAGES)
+                .child(mMessage.getKey())
                 .push();
         ref.setValue(new MessageComment(ref.getKey(), comment, FirebaseUtils.getUser()));
     }
@@ -454,10 +416,10 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void sendCommentFile(String file, String thumbnail) {
-        DatabaseReference ref = database.getReference(DC.DB_MESSAGES)
-                .child(mMessageKey)
+        DatabaseReference ref = getDatabase().getReference(DC.DB_MESSAGES)
+                .child(mMessage.getKey())
                 .push();
-        ref.setValue(new MessageComment(ref.getKey(), "фото", file, thumbnail, FirebaseUtils.getUser()));
+        ref.setValue(new MessageComment(ref.getKey(), getString(R.string.text_send_file_photo), file, thumbnail, FirebaseUtils.getUser()));
     }
 
     @Override

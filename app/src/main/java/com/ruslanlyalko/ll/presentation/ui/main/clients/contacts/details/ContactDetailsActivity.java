@@ -194,13 +194,13 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_remove_contact_title)
                 .setMessage(R.string.dialog_remove_contact_message)
-                .setPositiveButton("Видалити", (dialog, which) -> {
+                .setPositiveButton(R.string.action_remove, (dialog, which) -> {
                     finish();
                     FirebaseDatabase.getInstance()
                             .getReference(DC.DB_CONTACTS)
                             .child(mContact.getKey()).removeValue();
                 })
-                .setNegativeButton("Повернутись", null)
+                .setNegativeButton(R.string.action_cancel, null)
                 .show();
     }
 

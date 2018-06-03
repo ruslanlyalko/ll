@@ -1,5 +1,7 @@
 package com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -58,6 +60,11 @@ public class DialogEditActivity extends BaseActivity {
     private Message mMessage = new Message();
     private String notKey;
 
+    public static Intent getLaunchIntent(Context context, String messageKey) {
+        Intent intent = new Intent(context, DialogEditActivity.class);
+        intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, messageKey);
+        return intent;
+    }
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_dialog_edit;
@@ -261,4 +268,5 @@ public class DialogEditActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
         return true;
     }
+
 }

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -31,11 +30,20 @@ public class PhotoPreviewActivity extends BaseActivity {
     private String mUri = "";
     private String mUserName = "";
     private String mFolder = "";
+    private String mThumbnail = "";
 
     public static Intent getLaunchIntent(final AppCompatActivity launchActivity, String uri, String userName) {
         Intent intent = new Intent(launchActivity, PhotoPreviewActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_URI, uri);
         intent.putExtra(Keys.Extras.EXTRA_USER_NAME, userName);
+        return intent;
+    }
+
+    public static Intent getLaunchIntent(final AppCompatActivity launchActivity, String uri, String userName, String thumbnail, boolean a) {
+        Intent intent = new Intent(launchActivity, PhotoPreviewActivity.class);
+        intent.putExtra(Keys.Extras.EXTRA_URI, uri);
+        intent.putExtra(Keys.Extras.EXTRA_USER_NAME, userName);
+        intent.putExtra(Keys.Extras.EXTRA_THUMBNAIL, thumbnail);
         return intent;
     }
 
@@ -57,6 +65,7 @@ public class PhotoPreviewActivity extends BaseActivity {
         final Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mUri = bundle.getString(Keys.Extras.EXTRA_URI);
+            mThumbnail = bundle.getString(Keys.Extras.EXTRA_THUMBNAIL);
             mUserName = bundle.getString(Keys.Extras.EXTRA_USER_NAME);
             mFolder = bundle.getString(Keys.Extras.EXTRA_FOLDER, DC.STORAGE_EXPENSES);
         }
@@ -64,7 +73,7 @@ public class PhotoPreviewActivity extends BaseActivity {
 
     @Override
     protected void setupView() {
-        loadWithGlide(mUri);
+        loadWithGlide(mUri, mThumbnail);
     }
 
     @Override
@@ -73,40 +82,33 @@ public class PhotoPreviewActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.nothing, R.anim.fadeout);
     }
 
-    private void loadWithGlide(String uri) {
+    private void loadWithGlide(String uri, final String thumbnail) {
         if (uri == null || uri.isEmpty()) return;
-        setTitle("Загрузка....");
+        setTitle(getString(R.string.text_loading));
         if (uri.contains("http")) {
-            Glide.with(PhotoPreviewActivity.this).load(uri).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable final GlideException e, final Object model, final Target<Drawable> target, final boolean isFirstResource) {
-                    setTitle("Помилка при загрузці");
-                    mProgressBar.setVisibility(View.GONE);
-                    return false;
-                }
+            Glide.with(PhotoPreviewActivity.this)
+                    .load(uri)
+                    .thumbnail(Glide.with(this).load(thumbnail))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable final GlideException e, final Object model, final Target<Drawable> target, final boolean isFirstResource) {
+                            setTitle(R.string.error_loading);
+                            mProgressBar.setVisibility(View.GONE);
+                            return false;
+                        }
 
-                @Override
-                public boolean onResourceReady(final Drawable resource, final Object model, final Target<Drawable> target, final DataSource dataSource, final boolean isFirstResource) {
-                    setTitle("Автор: " + mUserName);
-                    mProgressBar.setVisibility(View.GONE);
-                    return false;
-                }
-            }).into(mPhotoView);
+                        @Override
+                        public boolean onResourceReady(final Drawable resource, final Object model, final Target<Drawable> target, final DataSource dataSource, final boolean isFirstResource) {
+                            setTitle(getString(R.string.text_author) + mUserName);
+                            mProgressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    }).into(mPhotoView);
         } else {
             StorageReference ref = FirebaseStorage.getInstance().getReference(mFolder).child(uri);
             //load mPhotoView using Glide
@@ -114,14 +116,14 @@ public class PhotoPreviewActivity extends BaseActivity {
                     PhotoPreviewActivity.this).load(uri1).listener(new RequestListener<Drawable>() {
                 @Override
                 public boolean onLoadFailed(@Nullable final GlideException e, final Object model, final Target<Drawable> target, final boolean isFirstResource) {
-                    setTitle("Помилка при загрузці");
+                    setTitle(R.string.error_loading);
                     mProgressBar.setVisibility(View.GONE);
                     return false;
                 }
 
                 @Override
                 public boolean onResourceReady(final Drawable resource, final Object model, final Target<Drawable> target, final DataSource dataSource, final boolean isFirstResource) {
-                    setTitle("Автор: " + mUserName);
+                    setTitle(getString(R.string.text_author) + mUserName);
                     mProgressBar.setVisibility(View.GONE);
                     return false;
                 }

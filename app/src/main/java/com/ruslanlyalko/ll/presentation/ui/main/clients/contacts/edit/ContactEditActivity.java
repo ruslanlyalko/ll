@@ -318,7 +318,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ContactEditActivity.this,
                 android.R.layout.select_dialog_singlechoice);
         arrayAdapter.addAll(ContactHolder.getContactString());
-        builderSingle.setNegativeButton(getString(R.string.action_cancel), (dialog, which) -> dialog.dismiss());
+        builderSingle.setNegativeButton(R.string.action_cancel, (dialog, which) -> dialog.dismiss());
         builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
             mEditName.setText(ContactHolder.getContact().get(which).first);
             mEditPhone1.setText(ContactHolder.getContact().get(which).second);

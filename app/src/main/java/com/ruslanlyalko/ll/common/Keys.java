@@ -11,6 +11,7 @@ public interface Keys {
 
         String EXTRA_UID = "extra_uid";
         String EXTRA_USER_NAME = "extra_user_name";
+        String EXTRA_THUMBNAIL = "extra_thumbnail";
         String EXTRA_DATE = "extra_date";
         String EXTRA_URI = "extra_uri";
         String EXTRA_ITEM_ID = "extra_mk_id";

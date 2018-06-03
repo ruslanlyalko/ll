@@ -416,25 +416,25 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
             EasyPermissions.requestPermissions(this, getString(R.string.image_permissions), REQUEST_IMAGE_PERMISSION, perms);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-
     private void logout() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_logout_title)
                 .setMessage(R.string.dialog_logout_message)
-                .setPositiveButton("Вийти", (dialog, which) -> {
+                .setPositiveButton(R.string.action_exit, (dialog, which) -> {
                     FirebaseUtils.clearPushToken();
                     FirebaseUtils.setIsAdmin(false);
                     FirebaseAuth.getInstance().signOut();
                     startActivity(LoginActivity.getLaunchIntent(this));
                     finish();
                 })
-                .setNegativeButton("Повернутись", null)
+                .setNegativeButton(R.string.action_cancel, null)
                 .show();
     }
 
