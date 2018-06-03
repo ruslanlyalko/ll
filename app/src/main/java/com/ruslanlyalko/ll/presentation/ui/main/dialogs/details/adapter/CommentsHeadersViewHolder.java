@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 public class CommentsHeadersViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.text_date) TextView mTextDate;
+    @BindView(R.id.text_date_1) TextView mTextDate1;
 
     public CommentsHeadersViewHolder(View view) {
         super(view);
@@ -23,6 +24,7 @@ public class CommentsHeadersViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bindData(final Date date) {
-        mTextDate.setText(DateUtils.toString(date, "dd MMMM yyyy"));
+        mTextDate.setText(DateUtils.getHowLongTime(mTextDate.getResources(), date, "dd MMMM yyyy"));
+        mTextDate1.setText(DateUtils.getHowLongTime(mTextDate.getResources(), date, "dd MMMM yyyy"));
     }
 }

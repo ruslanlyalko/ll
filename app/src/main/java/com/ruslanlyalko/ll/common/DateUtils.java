@@ -115,13 +115,13 @@ public class DateUtils {
         return " (" + ageInt.toString() + "р)";
     }
 
-    public static String getHowLongTime(final Date date, final String pattern) {
+    public static String getHowLongTime(final Resources resources, final Date date, final String pattern) {
         return isToday(date)
-                ? "Сьогодні"
+                ? resources.getString(R.string.today)
                 : isTomorrow(date)
-                ? "Завтра"
+                ? resources.getString(R.string.tomorrow)
                 : isYesterday(date)
-                ? "Вчора"
+                ? resources.getString(R.string.yesterday)
                 : toString(date, pattern);
     }
 

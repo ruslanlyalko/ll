@@ -251,6 +251,9 @@
     <string name="text_loading">Загрузка…</string>
     <string name="error_loading">Помилка при загрузці</string>
     <string name="text_author">"Автор: "</string>
+    <string name="today">Сьогодні</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="yesterday">Вчора</string>
 
     <string-array name="months">
         <item>Січень</item>

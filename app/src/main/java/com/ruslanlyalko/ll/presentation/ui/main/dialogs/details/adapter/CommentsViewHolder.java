@@ -6,13 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.models.MessageComment;
 
 import butterknife.BindView;
@@ -89,7 +86,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
     @OnLongClick(R.id.linear_root)
     boolean onItemLongCLick() {
         if (mOnCommentClickListener == null) return false;
-        mOnCommentClickListener.onItemLongClicked(mImageUser,getAdapterPosition());
+        mOnCommentClickListener.onItemLongClicked(mImageUser, getAdapterPosition());
         return true;
     }
 }
