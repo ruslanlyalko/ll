@@ -1,7 +1,5 @@
 package com.ruslanlyalko.ll.data.models;
 
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.Date;
 
 /**
@@ -151,5 +149,9 @@ public class MessageComment {
 
     public void setUserName(final String userName) {
         this.userName = userName;
+    }
+
+    public boolean hasImage() {
+        return file != null && !file.isEmpty();
     }
 }

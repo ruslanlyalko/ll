@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.MenuRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.PopupMenu;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -136,5 +138,12 @@ public abstract class BaseActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
         if (isRightView())
             overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+    }
+
+    protected void showMenu(View v, @MenuRes int menu, PopupMenu.OnMenuItemClickListener onMenuItemClickListener) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(onMenuItemClickListener);
+        popup.inflate(menu);
+        popup.show();
     }
 }

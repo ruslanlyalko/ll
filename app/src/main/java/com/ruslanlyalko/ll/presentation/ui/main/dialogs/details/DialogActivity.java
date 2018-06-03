@@ -277,17 +277,44 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
 
     @Override
     public void onItemLongClicked(View view, final int position) {
-        MessageComment item = mCommentsAdapter.getItemAtPosition(position);
-        if (!FirebaseUtils.isAdmin() || !item.getUserId().equals(getUser().getUid())) return;
-        //todo open cotext menu
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle(R.string.dialog_remove_title)
-                .setMessage(item.getMessage())
-                .setPositiveButton(R.string.action_remove, (dialog, which) -> {
-                    removeItem(item);
-                })
-                .setNegativeButton(R.string.action_cancel, null)
-                .show();
+        MessageComment comment = mCommentsAdapter.getItemAtPosition(position);
+        if (comment.getRemoved()) return;
+        int menu = !comment.getUserId().equals(getUser().getUid())
+                ? R.menu.menu_popup_dialog_copy : comment.hasImage()
+                ? R.menu.menu_popup_dialog_image : R.menu.menu_popup_dialog_full;
+        showMenu(view, menu, item -> {
+            switch (item.getItemId()) {
+                case R.id.action_copy:
+                    if (comment.hasImage())
+                        copyToClipboard(comment.getFile(), comment.getFile());
+                    else
+                        copyToClipboard(comment.getMessage(), comment.getMessage());
+                    Toast.makeText(this, R.string.toast_text_copied, Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.action_edit:
+                    //todo edit
+                    return true;
+                case R.id.action_delete:
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DialogActivity.this);
+                    builder.setTitle(R.string.dialog_remove_title)
+                            .setMessage(comment.getMessage())
+                            .setPositiveButton(R.string.action_remove, (dialog, which) -> {
+                                removeItem(comment);
+                            })
+                            .setNegativeButton(R.string.action_cancel, null)
+                            .show();
+                    return true;
+            }
+            return false;
+        });
+    }
+
+    private void editItem(final MessageComment item) {
+        getDatabase().getReference(DC.DB_MESSAGES)
+                .child(mMessage.getKey())
+                .child(item.getKey())
+                .child(DC.DIALOG_MESSAGE_MESSAGE)
+                .setValue(item.getMessage());
     }
 
     private void removeItem(final MessageComment item) {

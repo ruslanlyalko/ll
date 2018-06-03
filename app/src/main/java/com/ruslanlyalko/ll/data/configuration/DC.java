@@ -30,5 +30,6 @@ public interface DC {
     String USER_TOKEN = "token";
     String LATEST_VERSION = "latestVersion";
     String DIALOG_MESSAGE_REMOVED = "removed";
+    String DIALOG_MESSAGE_MESSAGE = "message";
     String ABOUT_TEXT = "aboutText";
 }
