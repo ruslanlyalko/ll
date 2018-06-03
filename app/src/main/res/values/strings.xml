@@ -250,7 +250,7 @@
     <string name="action_exit">Вихід</string>
     <string name="text_loading">Загрузка…</string>
     <string name="error_loading">Помилка при загрузці</string>
-    <string name="text_author">Автор :</string>
+    <string name="text_author">Автор: </string>
 
     <string-array name="months">
         <item>Січень</item>
