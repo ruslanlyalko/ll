@@ -32,6 +32,8 @@ public class LlApplication extends Application {
     private void initDb() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FirebaseDatabase.getInstance().getReference(DC.DB_LESSONS).keepSynced(true);
+        FirebaseDatabase.getInstance().getReference(DC.DB_DIALOGS).keepSynced(true);
+        FirebaseDatabase.getInstance().getReference(DC.DB_MESSAGES).keepSynced(true);
         loadUserData();
     }
 

@@ -121,5 +121,7 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+    implementation "com.timehop.stickyheadersrecyclerview:library:0.4.3"
+
 }
 apply plugin: 'com.google.gms.google-services'

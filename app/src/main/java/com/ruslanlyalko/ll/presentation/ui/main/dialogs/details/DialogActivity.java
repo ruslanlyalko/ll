@@ -43,6 +43,7 @@ import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter.OnCommen
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.DialogEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
 import com.ruslanlyalko.ll.presentation.widget.PhotoPreviewActivity;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -138,6 +139,14 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         mLayoutManager.setReverseLayout(true);//false
         mListComments.setLayoutManager(mLayoutManager);
         mListComments.setAdapter(mCommentsAdapter);
+        StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(mCommentsAdapter);
+        mListComments.addItemDecoration(headersDecor);
+        mCommentsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                headersDecor.invalidateHeaders();
+            }
+        });
     }
 
     private void loadDetailsFromDB() {
@@ -267,8 +276,10 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     @Override
-    public void onItemLongClicked(final int position) {
+    public void onItemLongClicked(View view, final int position) {
         MessageComment item = mCommentsAdapter.getItemAtPosition(position);
+        if (!FirebaseUtils.isAdmin() || !item.getUserId().equals(getUser().getUid())) return;
+        //todo open cotext menu
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_remove_title)
                 .setMessage(item.getMessage())

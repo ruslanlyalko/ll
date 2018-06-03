@@ -10,6 +10,8 @@ import android.view.View;
 public interface OnCommentClickListener {
 
     void onItemClicked(View v, final int position);
+
     void onUserClicked(final int position);
-    void onItemLongClicked(final int position);
+
+    void onItemLongClicked(View v, final int position);
 }
