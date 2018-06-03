@@ -1,5 +1,6 @@
 package com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter;
 
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -32,11 +33,13 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.image_view)
     ImageView mImageView;
 
-    private OnCommentClickListener mOnCommentClickListener;
+    private final OnCommentClickListener mOnCommentClickListener;
+    private final Resources mResources;
 
     public CommentsViewHolder(View view, final OnCommentClickListener onCommentClickListener) {
         super(view);
         mOnCommentClickListener = onCommentClickListener;
+        mResources = view.getResources();
         ButterKnife.bind(this, view);
     }
 
@@ -44,7 +47,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
         if (mTextUserName != null)
             mTextUserName.setText(messageComment.getUserName());
         if (mTextComment != null) {
-            mTextComment.setText(messageComment.getRemoved() ? "Повідомлення видалено" : messageComment.getMessage());
+            mTextComment.setText(messageComment.getRemoved() ? mResources.getString(R.string.text_message_removed) : messageComment.getMessage());
             mTextComment.setTextColor(ContextCompat.getColor(mTextComment.getContext(),
                     messageComment.getRemoved() ? R.color.colorComment : R.color.colorBlack));
         }

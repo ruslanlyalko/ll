@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:alpha="0.5"
         android:background="@drawable/bg_sticky"
         android:paddingBottom="2dp"
         android:paddingEnd="8dp"
@@ -18,30 +17,14 @@
         tools:ignore="UselessParent">
 
         <TextView
-            android:id="@+id/text_date_1"
+            android:id="@+id/text_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textColor="@color/colorWhite"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:visibility="invisible"
             tools:text="Today" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/text_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:paddingBottom="2dp"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-        android:paddingTop="2dp"
-        android:textColor="@color/colorWhite"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        tools:text="Today" />
 
 </RelativeLayout>

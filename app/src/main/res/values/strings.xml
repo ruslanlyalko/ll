@@ -254,6 +254,7 @@
     <string name="today">Сьогодні</string>
     <string name="tomorrow">Завтра</string>
     <string name="yesterday">Вчора</string>
+    <string name="text_message_removed">Повідомлення видалено</string>
 
     <string-array name="months">
         <item>Січень</item>
