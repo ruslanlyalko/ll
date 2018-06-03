@@ -32,6 +32,9 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
     @Nullable
     @BindView(R.id.image_view)
     ImageView mImageView;
+    @Nullable
+    @BindView(R.id.image_edit)
+    ImageView mImageEdit;
 
     private final OnCommentClickListener mOnCommentClickListener;
     private final Resources mResources;
@@ -51,6 +54,8 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
             mTextComment.setTextColor(ContextCompat.getColor(mTextComment.getContext(),
                     messageComment.getRemoved() ? R.color.colorComment : R.color.colorBlack));
         }
+        if (mImageEdit != null)
+            mImageEdit.setVisibility(messageComment.getEdited() ? View.VISIBLE : View.GONE);
         mTextCommentTime.setText(DateUtils.toString(messageComment.getDate(), "HH:mm"));
         try {
             if (messageComment.getThumbnail() != null && !messageComment.getThumbnail().isEmpty() && mImageView != null) {

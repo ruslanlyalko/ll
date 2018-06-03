@@ -47,7 +47,9 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -292,7 +294,17 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                     Toast.makeText(this, R.string.toast_text_copied, Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_edit:
-                    //todo edit
+                    final EditText input = new EditText(this);
+                    input.setText(comment.getMessage());
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                    alert.setTitle(R.string.title_activity_edit)
+                            .setView(input)
+                            .setPositiveButton(R.string.action_save, (dialog, whichButton) -> {
+                                comment.setMessage(input.getText().toString());
+                                editItem(comment);
+                            })
+                            .setNegativeButton(R.string.action_cancel, null)
+                            .show();
                     return true;
                 case R.id.action_delete:
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DialogActivity.this);
@@ -310,11 +322,13 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void editItem(final MessageComment item) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(DC.DIALOG_MESSAGE_MESSAGE, item.getMessage());
+        childUpdates.put(DC.DIALOG_MESSAGE_EDITED, true);
         getDatabase().getReference(DC.DB_MESSAGES)
                 .child(mMessage.getKey())
                 .child(item.getKey())
-                .child(DC.DIALOG_MESSAGE_MESSAGE)
-                .setValue(item.getMessage());
+                .updateChildren(childUpdates);
     }
 
     private void removeItem(final MessageComment item) {

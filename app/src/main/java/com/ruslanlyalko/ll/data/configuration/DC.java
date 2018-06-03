@@ -31,5 +31,6 @@ public interface DC {
     String LATEST_VERSION = "latestVersion";
     String DIALOG_MESSAGE_REMOVED = "removed";
     String DIALOG_MESSAGE_MESSAGE = "message";
+    String DIALOG_MESSAGE_EDITED = "edited";
     String ABOUT_TEXT = "aboutText";
 }

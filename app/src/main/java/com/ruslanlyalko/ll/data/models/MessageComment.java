@@ -17,6 +17,7 @@ public class MessageComment {
     private String thumbnail;
     private Date date;
     private boolean removed;
+    private boolean edited;
     private String userAvatar;
 
     public MessageComment() {
@@ -141,6 +142,14 @@ public class MessageComment {
 
     public void setRemoved(final boolean removed) {
         this.removed = removed;
+    }
+
+    public boolean getEdited() {
+        return edited;
+    }
+
+    public void setEdited(final boolean edited) {
+        this.edited = edited;
     }
 
     public void setFile(final String file) {
