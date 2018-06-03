@@ -1,5 +1,6 @@
 package com.ruslanlyalko.ll.data.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * on 21.01.2018.
  */
 
-public class MessageComment {
+public class MessageComment implements Serializable{
 
     private String key;
     private String message;

@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.data.configuration.DC;
+import com.ruslanlyalko.ll.data.models.DialogReadUser;
 import com.ruslanlyalko.ll.data.models.User;
 
 import java.util.Date;
@@ -73,12 +74,17 @@ public class FirebaseUtils {
                 });
     }
 
-    public static void markNotificationsAsRead(String key) {
+    public static void markNotificationsAsRead(final User user, String key) {
         FirebaseDatabase.getInstance()
                 .getReference(DC.DB_USERS_NOTIFICATIONS)
-                .child(FirebaseAuth.getInstance().getUid())
+                .child(user.getId())
                 .child(key)
                 .removeValue();
+        FirebaseDatabase.getInstance()
+                .getReference(DC.DB_DIALOGS_READ_DATE)
+                .child(key)
+                .child(user.getId())
+                .setValue(new DialogReadUser(user.getId(), user.getFullName(), user.getAvatar()));
     }
 
     public static User getUser() {

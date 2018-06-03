@@ -40,6 +40,7 @@ import com.ruslanlyalko.ll.data.models.MessageComment;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter.CommentsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter.OnCommentClickListener;
+import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.info.DialogInfoActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.DialogEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
 import com.ruslanlyalko.ll.presentation.widget.PhotoPreviewActivity;
@@ -94,7 +95,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     @Override
     protected void setupView() {
         setupRecycler();
-        FirebaseUtils.markNotificationsAsRead(mMessage.getKey());
+        FirebaseUtils.markNotificationsAsRead(FirebaseUtils.getUser(), mMessage.getKey());
         loadDetailsFromDB();
         mListComments.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
@@ -169,7 +170,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void updateUI() {
-        if (mMessage != null) {
+        if (mMessage != null && mMessage.getUserId() != null) {
             invalidateOptionsMenu();
             mCardCommentsSend.setVisibility(mMessage.getCommentsEnabled() ? View.VISIBLE : View.GONE);
             if (getSupportActionBar() != null) getSupportActionBar().setTitle(mMessage.getTitle1());
@@ -196,7 +197,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                     if (isDestroyed()) return;
                     mCommentsAdapter.add(messageComment);
                     mListComments.scrollToPosition(0);
-                    FirebaseUtils.markNotificationsAsRead(mMessage.getKey());
+                    FirebaseUtils.markNotificationsAsRead(FirebaseUtils.getUser(), mMessage.getKey());
                 }
             }
 
@@ -205,7 +206,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                 MessageComment messageComment = dataSnapshot.getValue(MessageComment.class);
                 if (messageComment != null) {
                     mCommentsAdapter.update(messageComment);
-                    FirebaseUtils.markNotificationsAsRead(mMessage.getKey());
+                    FirebaseUtils.markNotificationsAsRead(FirebaseUtils.getUser(), mMessage.getKey());
                 }
             }
 
@@ -251,7 +252,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (mMessage != null) {
+        if (mMessage != null && mMessage.getUserId() != null) {
             menu.findItem(R.id.action_delete).setVisible(FirebaseUtils.isAdmin()
                     || mMessage.getUserId().equals(getUser().getUid()));
             menu.findItem(R.id.action_edit).setVisible(FirebaseUtils.isAdmin()
@@ -286,6 +287,10 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                 ? R.menu.menu_popup_dialog_image : R.menu.menu_popup_dialog_full;
         showMenu(view, menu, item -> {
             switch (item.getItemId()) {
+                case R.id.action_info:
+                    //todo
+                    startActivity(DialogInfoActivity.getLaunchIntent(this, mMessage.getKey(), comment));
+                    return true;
                 case R.id.action_copy:
                     if (comment.hasImage())
                         copyToClipboard(comment.getFile(), comment.getFile());
