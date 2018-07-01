@@ -48,6 +48,7 @@ import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -64,6 +65,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @BindView(R.id.card_phone2) CardView mCardPhone2;
     @BindView(R.id.card_balance) CardView mCardBalance;
     @BindView(R.id.text_description) TextView mTextDescription;
+    @BindView(R.id.text_lesson_count) TextView mTextLessonCount;
     @BindView(R.id.list_lessons) RecyclerView mListLessons;
     @BindView(R.id.list_income) RecyclerView mListIncome;
     @BindView(R.id.text_user_name) TextView mTextUserName;
@@ -291,6 +293,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                         }
                         Collections.sort(lessons, (o1, o2) ->
                                 Long.compare(o2.getDateTime().getTime(), o1.getDateTime().getTime()));
+                        String count = String.format(Locale.US, "[%d]", lessons.size());
+                        mTextLessonCount.setText(count);
                         mLessonsAdapter.setData(lessons);
                         calcBalance();
                     }
@@ -440,7 +444,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 //        iOnLine += onlineTotalIncome + onlineTotalChildIncome;
         mContact.setSaldo(mTotalCharge - totalIncome);
         mTextBalance.setText(String.format(getString(R.string.hrn_d), mContact.getSaldo()));
-        mTextBalance.setTextColor(ContextCompat.getColor(this, mContact.getSaldo() < 0 ? R.color.colorPrimary : R.color.colorBlack));
+        mTextBalance.setTextColor(ContextCompat.getColor(this, mContact.getSaldo() < 0 ? R.color.colorPrimary : R.color.colorAccent));
     }
 
     private void loadContacts() {

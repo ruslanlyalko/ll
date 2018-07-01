@@ -213,6 +213,11 @@
             android:label="@string/title_activity_reminder"
             android:parentActivityName="com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.reminder.ReminderShowActivity"
+            android:label="@string/title_activity_reminder"
+            android:screenOrientation="portrait"
+            />
         <!-- optional (needed if default theme has no action bar) -->
 
         <meta-data

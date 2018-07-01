@@ -34,5 +34,6 @@ public interface Keys {
         String EXTRA_LESSON_MODEL = "EXTRA_LESSON_MODEL";
         String EXTRA_LESSON_DATE = "EXTRA_LESSON_DATE";
         String EXTRA_COMMENT_MODEL = "EXTRA_COMMENT_MODEL";
+        String EXTRA_TEXT = "EXTRA_TEXT ";
     }
 }
