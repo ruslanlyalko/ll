@@ -160,7 +160,7 @@ public class SalaryActivity extends BaseActivity {
     }
 
     private void loadSettingsSalaries() {
-        getDatabase().getReference(DC.DB_SETTINGS_SALARY).child("first_key")
+        getDB(DC.DB_SETTINGS_SALARY).child("first_key")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -204,7 +204,7 @@ public class SalaryActivity extends BaseActivity {
     }
 
     private void loadLessons() {
-        getDatabase().getReference(DC.DB_LESSONS)
+        getDB(DC.DB_LESSONS)
                 .child(DateUtils.toString(mCurrentMonth.getTime(), "yyyy/MM"))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

@@ -18,6 +18,7 @@ import android.widget.PopupMenu;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
 
@@ -105,8 +106,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    protected FirebaseDatabase getDatabase() {
-        return FirebaseDatabase.getInstance();
+    protected DatabaseReference getDB(final String db) {
+        return FirebaseDatabase.getInstance().getReference(db);
     }
 
     public void hideKeyboard() {

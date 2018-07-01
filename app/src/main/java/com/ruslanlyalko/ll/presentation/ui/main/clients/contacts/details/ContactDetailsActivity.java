@@ -135,8 +135,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     @Override
     protected void onPause() {
-        getDatabase().getReference(DC.DB_LESSONS).removeEventListener(mValueEventListener);
-        getDatabase().getReference(DC.DB_CONTACTS_RECHARGE).child(mContactKey).removeEventListener(mContactValueEventListener);
+        getDB(DC.DB_LESSONS).removeEventListener(mValueEventListener);
+        getDB(DC.DB_CONTACTS_RECHARGE).child(mContactKey).removeEventListener(mContactValueEventListener);
         super.onPause();
     }
 
@@ -154,8 +154,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void loadContactRecharges() {
-        mContactValueEventListener = getDatabase()
-                .getReference(DC.DB_CONTACTS_RECHARGE)
+        mContactValueEventListener = getDB(DC.DB_CONTACTS_RECHARGE)
                 .child(mContactKey).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -228,7 +227,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void loadSettingsSalaries() {
-        getDatabase().getReference(DC.DB_SETTINGS_SALARY).child("first_key")
+        getDB(DC.DB_SETTINGS_SALARY).child("first_key")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -268,7 +267,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     private void loadLessons() {
         if (isDestroyed()) return;
-        mValueEventListener = getDatabase().getReference(DC.DB_LESSONS)
+        mValueEventListener = getDB(DC.DB_LESSONS)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -445,8 +444,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void loadContacts() {
-        Query ref = FirebaseDatabase.getInstance()
-                .getReference(DC.DB_CONTACTS)
+        Query ref = getDB(DC.DB_CONTACTS)
                 .orderByChild("name");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -530,8 +528,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void removeLesson(final Lesson lesson) {
-        getDatabase()
-                .getReference(DC.DB_LESSONS)
+        getDB(DC.DB_LESSONS)
                 .child(DateUtils.toString(lesson.getDateTime(), "yyyy/MM/dd"))
                 .child(lesson.getKey()).removeValue().addOnSuccessListener(aVoid -> {
             loadLessons();
@@ -541,7 +538,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     @Override
     public void onRemoveClicked(final ContactRecharge contactRecharge) {
-        getDatabase().getReference(DC.DB_CONTACTS_RECHARGE)
+        getDB(DC.DB_CONTACTS_RECHARGE)
                 .child(contactRecharge.getContactKey())
                 .child(contactRecharge.getKey()).removeValue().addOnCompleteListener(task ->
                 Snackbar.make(mListLessons, getString(R.string.toast_deleted), Snackbar.LENGTH_LONG).show());

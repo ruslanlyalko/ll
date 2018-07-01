@@ -45,7 +45,6 @@
             android:theme="@style/AppTheme.NoActionBar.Main" />
         <activity
             android:name="com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity"
-            android:label="@string/title_activity_user"
             android:parentActivityName="com.ruslanlyalko.ll.presentation.ui.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -209,6 +208,11 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
+        <activity
+            android:name=".presentation.ui.main.profile.reminder.ReminderActivity"
+            android:label="@string/title_activity_reminder"
+            android:parentActivityName="com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity"
+            android:screenOrientation="portrait" />
         <!-- optional (needed if default theme has no action bar) -->
 
         <meta-data

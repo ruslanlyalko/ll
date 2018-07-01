@@ -18,6 +18,11 @@
         android:title="@string/action_dashboard" />
 
     <item
+        android:id="@+id/action_reminder"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_reminder" />
+
+    <item
         android:id="@+id/action_change_ava"
         android:icon="@drawable/ic_settings"
         android:title="@string/action_change_ava" />

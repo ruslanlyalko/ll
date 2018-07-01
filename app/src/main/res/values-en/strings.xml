@@ -225,5 +225,9 @@
     <string name="text_message_removed">Message removed</string>
     <string name="action_copy">Copy</string>
     <string name="action_info">Info</string>
+    <string name="action_reminder">Reminders</string>
+    <string name="title_activity_reminder">Reminder</string>
+    <string name="hint_before_reminder">Before First Lesson</string>
+    <string name="hint_after_reminder">After Last Lesson</string>
 
 </resources>

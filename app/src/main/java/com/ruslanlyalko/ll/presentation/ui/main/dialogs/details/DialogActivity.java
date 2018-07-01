@@ -153,7 +153,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void loadDetailsFromDB() {
-        getDatabase().getReference(DC.DB_DIALOGS)
+        getDB(DC.DB_DIALOGS)
                 .child(mMessage.getKey())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -188,7 +188,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
 
     private void loadMoreCommentsFromDB() {
         if (!mMessage.getCommentsEnabled()) return;
-        getDatabase().getReference(DC.DB_MESSAGES)
+        getDB(DC.DB_MESSAGES)
                 .child(mMessage.getKey()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, final String s) {
@@ -233,7 +233,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         AlertDialog dialog = builder.setTitle(R.string.dialog_delete_notification_title)
                 .setMessage(R.string.dialog_delete_notification_message)
                 .setPositiveButton(R.string.action_remove, (dialog1, which) -> {
-                    getDatabase().getReference(DC.DB_DIALOGS)
+                    getDB(DC.DB_DIALOGS)
                             .child(mMessage.getKey())
                             .removeValue();
                     FirebaseUtils.clearNotificationsForAllUsers(mMessage.getKey());
@@ -330,14 +330,14 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(DC.DIALOG_MESSAGE_MESSAGE, item.getMessage());
         childUpdates.put(DC.DIALOG_MESSAGE_EDITED, true);
-        getDatabase().getReference(DC.DB_MESSAGES)
+        getDB(DC.DB_MESSAGES)
                 .child(mMessage.getKey())
                 .child(item.getKey())
                 .updateChildren(childUpdates);
     }
 
     private void removeItem(final MessageComment item) {
-        getDatabase().getReference(DC.DB_MESSAGES)
+        getDB(DC.DB_MESSAGES)
                 .child(mMessage.getKey())
                 .child(item.getKey())
                 .child(DC.DIALOG_MESSAGE_REMOVED)
@@ -360,7 +360,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void sendComment(String comment) {
-        DatabaseReference ref = getDatabase().getReference(DC.DB_MESSAGES)
+        DatabaseReference ref = getDB(DC.DB_MESSAGES)
                 .child(mMessage.getKey())
                 .push();
         ref.setValue(new MessageComment(ref.getKey(), comment, FirebaseUtils.getUser()));
@@ -473,7 +473,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void sendCommentFile(String file, String thumbnail) {
-        DatabaseReference ref = getDatabase().getReference(DC.DB_MESSAGES)
+        DatabaseReference ref = getDB(DC.DB_MESSAGES)
                 .child(mMessage.getKey())
                 .push();
         ref.setValue(new MessageComment(ref.getKey(), getString(R.string.text_send_file_photo), file, thumbnail, FirebaseUtils.getUser()));

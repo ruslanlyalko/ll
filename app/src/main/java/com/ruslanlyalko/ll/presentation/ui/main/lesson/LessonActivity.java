@@ -155,8 +155,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     }
 
     private void loadLesson() {
-        getDatabase()
-                .getReference(DC.DB_LESSONS)
+        getDB(DC.DB_LESSONS)
                 .child(DateUtils.toString(mLesson.getDateTime(), "yyyy/MM/dd"))
                 .child(mLesson.getKey()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -175,8 +174,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
     }
 
     private void saveLesson() {
-        DatabaseReference ref = getDatabase()
-                .getReference(DC.DB_LESSONS)
+        DatabaseReference ref = getDB(DC.DB_LESSONS)
                 .child(DateUtils.toString(mLesson.getDateTime(), "yyyy/MM/dd"));
         if (isNew()) {
             mLesson.setKey(ref.push().getKey());

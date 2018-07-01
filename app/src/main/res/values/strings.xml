@@ -257,6 +257,10 @@
     <string name="text_message_removed">Повідомлення видалено</string>
     <string name="action_copy">Копіювати</string>
     <string name="action_info">Інформація</string>
+    <string name="action_reminder">Нагадування</string>
+    <string name="title_activity_reminder">Нагадування</string>
+    <string name="hint_before_reminder">Перед першим уроком</string>
+    <string name="hint_after_reminder">Після останнього уроку</string>
 
     <string-array name="months">
         <item>Січень</item>

@@ -141,7 +141,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     }
 
     private void loadExpenses() {
-        getDatabase().getReference(DC.DB_EXPENSES)
+        getDB(DC.DB_EXPENSES)
                 .child(DateUtils.toString(mCurrentMonth.getTime(), "yyyy/M"))
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -252,7 +252,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     private void removeAllExpenses() {
         mExpensesAdapter.clearData();
         String dateStr = new SimpleDateFormat("yyyy/M", Locale.US).format(new Date());
-        getDatabase().getReference(DC.DB_EXPENSES)
+        getDB(DC.DB_EXPENSES)
                 .child(dateStr)
                 .removeValue();
         calcTotal();
@@ -295,7 +295,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     }
 
     private void removeExpense(Expense expense) {
-        getDatabase().getReference(DC.DB_EXPENSES)
+        getDB(DC.DB_EXPENSES)
                 .child(DateUtils.toString(expense.getExpenseDate(), "yyyy/M"))
                 .child(expense.getKey()).removeValue().addOnCompleteListener(task ->
                 Snackbar.make(mExpensesList, getString(R.string.toast_deleted), Snackbar.LENGTH_LONG).show());

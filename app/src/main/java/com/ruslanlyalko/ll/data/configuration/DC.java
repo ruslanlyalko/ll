@@ -17,6 +17,7 @@ public interface DC {
     String DB_EXPENSES = "EXPENSES";
     String DB_RESULTS = "RESULTS";
     String DB_INFO = "APP_INFO";
+    String DB_REMINDERS = "REMINDERS";
     String DB_CONTACTS = "CONTACTS";
     String DB_CONTACTS_RECHARGE = "CONTACTS_RECHARGE";
 

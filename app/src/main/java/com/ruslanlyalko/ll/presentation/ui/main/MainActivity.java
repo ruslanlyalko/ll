@@ -24,11 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ruslanlyalko.ll.R;
@@ -44,8 +42,8 @@ import com.ruslanlyalko.ll.presentation.ui.main.clients.ClientsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.DialogsActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
 import java.util.ArrayList;
@@ -68,12 +66,10 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.button_arrow) Button mArrowButton;
     @BindView(R.id.swipe_layout) SwipeLayout mSwipeLayout;
     @BindView(R.id.button_events) ImageView mEventsButton;
-    @BindView(R.id.layout_clients) LinearLayout mLayoutClients;
+    @BindView(R.id.layout_expenses) LinearLayout mLayoutExepenses;
 
     boolean mDoubleBackToExitPressedOnce = false;
     boolean mSwipeOpened = false;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private float x1;
     private float y1;
     private List<Notification> mNotifications = new ArrayList<>();
@@ -96,13 +92,28 @@ public class MainActivity extends BaseActivity {
         sendRegistrationToServer(FirebaseInstanceId.getInstance().getToken());
     }
 
-    private void initCurrentUser() {
-        if (mAuth.getCurrentUser() == null) {
+    @Override
+    public void onBackPressed() {
+        if (mSwipeOpened) {
+            mSwipeLayout.close();
+            return;
+        }
+        if (mDoubleBackToExitPressedOnce) {
             finish();
             return;
         }
-        mDatabase.getReference(DC.DB_USERS)
-                .child(mAuth.getCurrentUser().getUid())
+        mDoubleBackToExitPressedOnce = true;
+        Toast.makeText(this, R.string.hint_double_press, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(() -> mDoubleBackToExitPressedOnce = false, 2000);
+    }
+
+    private void initCurrentUser() {
+        if (getUser() == null) {
+            finish();
+            return;
+        }
+        getDB(DC.DB_USERS)
+                .child(getUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -111,7 +122,7 @@ public class MainActivity extends BaseActivity {
                             FirebaseUtils.setIsAdmin(user.getIsAdmin());
                             FirebaseUtils.setUser(user);
                             if (isDestroyed()) return;
-                            mLayoutClients.setVisibility(user.getIsAdmin() || user.getIsAllowViewExpenses() ? View.VISIBLE : View.GONE);
+                            mLayoutExepenses.setVisibility(user.getIsAdmin() || user.getIsAllowViewExpenses() ? View.VISIBLE : View.GONE);
                         }
                     }
 
@@ -119,7 +130,7 @@ public class MainActivity extends BaseActivity {
                     public void onCancelled(final DatabaseError databaseError) {
                     }
                 });
-        mDatabase.getReference(DC.DB_INFO)
+        getDB(DC.DB_INFO)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -168,12 +179,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadBadge() {
-        if (mAuth.getCurrentUser() == null) {
+        if (getUser() == null) {
             finish();
             return;
         }
-        mDatabase.getReference(DC.DB_USERS_NOTIFICATIONS)
-                .child(mAuth.getCurrentUser().getUid())
+        getDB(DC.DB_USERS_NOTIFICATIONS)
+                .child(getUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -192,7 +203,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void sendRegistrationToServer(final String refreshedToken) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -200,9 +210,9 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
         String version = (pInfo != null ? pInfo.versionName : "");
-        if (user != null) {
-            DatabaseReference ref = mDatabase.getReference(DC.DB_USERS)
-                    .child(user.getUid());
+        if (getUser() != null) {
+            DatabaseReference ref = getDB(DC.DB_USERS)
+                    .child(getUser().getUid());
             ref.child(DC.USER_TOKEN).setValue(refreshedToken);
             ref.child(DC.USER_APP_VERSION).setValue(version);
             ref.child(DC.USER_LAST_ONLINE).onDisconnect().setValue(new Date());
@@ -225,7 +235,7 @@ public class MainActivity extends BaseActivity {
         } else {
             showVersionLink(false);
             if (myVersion > mAppInfo.getLatestVersion() && !DEBUG) {
-                mDatabase.getReference(DC.DB_INFO)
+                getDB(DC.DB_INFO)
                         .child(DC.LATEST_VERSION).setValue(myVersion);
             }
         }
@@ -252,21 +262,6 @@ public class MainActivity extends BaseActivity {
         mLinkDetailsText.setText(mAppInfo.getTitle2());
         mLinkText.setVisibility(show ? View.VISIBLE : View.GONE);
         mLinkDetailsText.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mSwipeOpened) {
-            mSwipeLayout.close();
-            return;
-        }
-        if (mDoubleBackToExitPressedOnce) {
-            finish();
-            return;
-        }
-        mDoubleBackToExitPressedOnce = true;
-        Toast.makeText(this, R.string.hint_double_press, Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(() -> mDoubleBackToExitPressedOnce = false, 2000);
     }
 
     void setupShortCuts() {

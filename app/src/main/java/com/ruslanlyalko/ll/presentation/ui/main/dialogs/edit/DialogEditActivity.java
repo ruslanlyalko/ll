@@ -3,7 +3,6 @@ package com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,6 +64,7 @@ public class DialogEditActivity extends BaseActivity {
         intent.putExtra(Keys.Extras.EXTRA_ITEM_ID, messageKey);
         return intent;
     }
+
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_dialog_edit;
@@ -97,10 +97,7 @@ public class DialogEditActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_save) {
-            if (isNew)
-                addNotification();
-            else
-                updateNotification();
+            save();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -116,10 +113,7 @@ public class DialogEditActivity extends BaseActivity {
             builder.setTitle(R.string.dialog_report_save_before_close_title)
                     .setMessage(R.string.dialog_mk_edit_text)
                     .setPositiveButton(R.string.action_save, (dialog, which) -> {
-                        if (isNew)
-                            addNotification();
-                        else
-                            updateNotification();
+                        save();
                         onBackPressed();
                     })
                     .setNegativeButton(R.string.action_cancel, (dialog, which) -> {
@@ -224,28 +218,21 @@ public class DialogEditActivity extends BaseActivity {
         mMessage.setCommentsEnabled(mCheckBoxComments.isChecked());
     }
 
-    private void addNotification() {
+    private void save() {
         updateNotModel();
-        isNew = false;
-        notKey = database.getReference(DC.DB_DIALOGS).push().getKey();
-        mMessage.setKey(notKey);
-        mMessage.setDate(new SimpleDateFormat("d-M-yyyy", Locale.US).format(new Date()));
-        mMessage.setUserId(mUser.getUid());
-        mMessage.setUserName(mUser.getDisplayName());
+        if (isNew) {
+            notKey = database.getReference(DC.DB_DIALOGS).push().getKey();
+            mMessage.setKey(notKey);
+            mMessage.setDate(new SimpleDateFormat("d-M-yyyy", Locale.US).format(new Date()));
+            mMessage.setUserId(mUser.getUid());
+            mMessage.setUserName(mUser.getDisplayName());
+        }
         database.getReference(DC.DB_DIALOGS)
                 .child(notKey).setValue(mMessage).addOnCompleteListener(task ->
-                Snackbar.make(imageView, getString(R.string.toast_dialog_added), Snackbar.LENGTH_SHORT).show());
+                Toast.makeText(this, getString(R.string.toast_saved), Toast.LENGTH_SHORT).show());
         saveMembers();
         needToSave = false;
-    }
-
-    private void updateNotification() {
-        updateNotModel();
-        database.getReference(DC.DB_DIALOGS)
-                .child(mMessage.getKey()).setValue(mMessage).addOnCompleteListener(task ->
-                Snackbar.make(imageView, getString(R.string.toast_updated), Snackbar.LENGTH_SHORT).show());
-        saveMembers();
-        needToSave = false;
+        onBackPressed();
     }
 
     private void saveMembers() {
@@ -268,5 +255,4 @@ public class DialogEditActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
         return true;
     }
-
 }

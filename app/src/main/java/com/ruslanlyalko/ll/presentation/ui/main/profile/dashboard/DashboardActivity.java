@@ -116,7 +116,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void loadResults() {
-        getDatabase().getReference(DC.DB_RESULTS)
+        getDB(DC.DB_RESULTS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -263,7 +263,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void loadLessons() {
-        getDatabase().getReference(DC.DB_LESSONS)
+        getDB(DC.DB_LESSONS)
                 .child(DateUtils.toString(mCurrentMonth.getTime(), "yyyy/MM"))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -287,7 +287,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void loadExpenses() {
-        getDatabase().getReference(DC.DB_EXPENSES)
+        getDB(DC.DB_EXPENSES)
                 .child(DateUtils.toString(mCurrentMonth.getTime(), "yyyy/M"))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -309,7 +309,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void loadUsers() {
-        getDatabase().getReference(DC.DB_USERS)
+        getDB(DC.DB_USERS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -510,7 +510,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void loadSettingsSalaries() {
-        getDatabase().getReference(DC.DB_SETTINGS_SALARY).child("first_key")
+        getDB(DC.DB_SETTINGS_SALARY).child("first_key")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {

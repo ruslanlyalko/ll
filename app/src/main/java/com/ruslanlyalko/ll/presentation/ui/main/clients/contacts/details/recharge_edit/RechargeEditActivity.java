@@ -139,12 +139,12 @@ public class RechargeEditActivity extends BaseActivity {
     private void updateExpense() {
         updateModel();
         if (isNew()) {
-            DatabaseReference ref = getDatabase().getReference(DC.DB_CONTACTS_RECHARGE)
+            DatabaseReference ref = getDB(DC.DB_CONTACTS_RECHARGE)
                     .child(mContactRecharge.getContactKey())
                     .push();
             mContactRecharge.setKey(ref.getKey());
         }
-        getDatabase().getReference(DC.DB_CONTACTS_RECHARGE)
+        getDB(DC.DB_CONTACTS_RECHARGE)
                 .child(mContactRecharge.getContactKey())
                 .child(mContactRecharge.getKey())
                 .setValue(mContactRecharge)

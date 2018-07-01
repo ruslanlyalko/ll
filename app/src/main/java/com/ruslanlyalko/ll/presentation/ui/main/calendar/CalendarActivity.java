@@ -130,7 +130,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
         mFab.setVisibility((FirebaseUtils.isAdmin() || DateUtils.isTodayOrFuture(mCurrentDate.getTime()))
                 ? View.VISIBLE : View.GONE);
         String aDate = DateFormat.format("yyyy/MM/dd", mCurrentDate.getTime()).toString();
-        getDatabase().getReference(DC.DB_LESSONS)
+        getDB(DC.DB_LESSONS)
                 .child(aDate)
                 .orderByChild("dateTime/time")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -155,8 +155,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
     }
 
     private void loadContacts() {
-        Query ref = FirebaseDatabase.getInstance()
-                .getReference(DC.DB_CONTACTS)
+        Query ref = getDB(DC.DB_CONTACTS)
                 .orderByChild("name");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -179,7 +178,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     private void showLessonsOnCalendar() {
         mSwipeRefresh.setRefreshing(true);
-        getDatabase().getReference(DC.DB_LESSONS)
+        getDB(DC.DB_LESSONS)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -249,8 +248,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
     }
 
     private void removeLesson(final Lesson lesson) {
-        getDatabase()
-                .getReference(DC.DB_LESSONS)
+        getDB(DC.DB_LESSONS)
                 .child(DateUtils.toString(lesson.getDateTime(), "yyyy/MM/dd"))
                 .child(lesson.getKey()).removeValue().addOnSuccessListener(aVoid -> {
             showLessonsForDate();

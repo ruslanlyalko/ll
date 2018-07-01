@@ -152,7 +152,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     }
 
     private void loadUsers() {
-        getDatabase().getReference(DC.DB_USERS)
+        getDB(DC.DB_USERS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {

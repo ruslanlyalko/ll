@@ -157,7 +157,7 @@ public class SalaryEditActivity extends BaseActivity {
     }
 
     private void loadSalaries() {
-        getDatabase().getReference(DC.DB_SETTINGS_SALARY).child("first_key")
+        getDB(DC.DB_SETTINGS_SALARY).child("first_key")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -221,10 +221,10 @@ public class SalaryEditActivity extends BaseActivity {
             return;
         }
         if (!mSettingsSalary.hasKey()) {
-            String key = getDatabase().getReference(DC.DB_SETTINGS_SALARY).push().getKey();
+            String key = getDB(DC.DB_SETTINGS_SALARY).push().getKey();
             mSettingsSalary.setKey(key);
         }
-        getDatabase().getReference(DC.DB_SETTINGS_SALARY)
+        getDB(DC.DB_SETTINGS_SALARY)
                 .child(mSettingsSalary.getKey())
                 .setValue(mSettingsSalary)
                 .addOnCompleteListener(task -> {

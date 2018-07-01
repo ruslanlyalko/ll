@@ -62,7 +62,7 @@ public class DialogInfoActivity extends BaseActivity {
     }
 
     private void loadDetailsFromDB() {
-        getDatabase().getReference(DC.DB_DIALOGS_READ_DATE)
+        getDB(DC.DB_DIALOGS_READ_DATE)
                 .child(mDialogId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override

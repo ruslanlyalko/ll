@@ -48,6 +48,7 @@ import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.SignupActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.adapter.UsersAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.dashboard.DashboardActivity;
+import com.ruslanlyalko.ll.presentation.ui.main.profile.reminder.ReminderActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.SalaryActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary_edit.SalaryEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.settings.ProfileSettingsActivity;
@@ -134,6 +135,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
 
     @Override
     protected void setupView() {
+        collapsingToolbar.setTitle(mIsCurrentUserPage ? getUser().getDisplayName() : " ");
         initRecycle();
         loadUsers();
         checkConnection();
@@ -156,6 +158,10 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
             }
             case R.id.action_dashboard: {
                 startActivity(DashboardActivity.getLaunchIntent(this));
+                return true;
+            }
+            case R.id.action_reminder: {
+                startActivity(ReminderActivity.getLaunchIntent(this));
                 return true;
             }
             case R.id.action_change_ava: {
@@ -218,6 +224,12 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
     public void onPermissionsGranted(int requestCode, List<String> list) {
         switch (requestCode) {
             case REQUEST_IMAGE_PERMISSION:
@@ -241,6 +253,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         menu.findItem(R.id.action_add_user).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
         menu.findItem(R.id.action_settings_salary).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
         menu.findItem(R.id.action_dashboard).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
+        menu.findItem(R.id.action_reminder).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
         menu.findItem(R.id.action_settings).setVisible(FirebaseUtils.isAdmin() || mIsCurrentUserPage);
         menu.findItem(R.id.action_change_ava).setVisible(mIsCurrentUserPage);
         menu.findItem(R.id.action_logout).setVisible(mIsCurrentUserPage);
@@ -415,12 +428,6 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.image_permissions), REQUEST_IMAGE_PERMISSION, perms);
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     private void logout() {
