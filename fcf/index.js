@@ -283,6 +283,7 @@ exports.before10 = functions.https.onRequest((req, res)=>{
 					|| (lessonObj.dateTime.hours === (hrs+1) && mnt > 49 && lessonObj.dateTime.minutes === 0)) {					
 						const membersRef = admin.database().ref(refString+"/"+lessonObj.key+"/clients/");
 						sendLessonRemainder(lessonObj.userId, contactsSnap, membersRef);
+						sendReminderIfFirstLesson(lessonObj, lessonsSnap);
 						messages = messages + 1;
 				}
 			});	
@@ -292,6 +293,39 @@ exports.before10 = functions.https.onRequest((req, res)=>{
 			return 0;		
 	});
 });
+
+function sendReminderIfFirstLesson(lessonObj, lessonsSnap){
+	const reminderPromise = admin.database().ref("/REMINDERS").once('value');	
+	return reminderPromise.then(reminderSnap => {
+		const reminderObj = reminderSnap.val();			
+		var beforeCount = 0;
+		//var afterCount = 0;
+		lessonsSnap.forEach(lesson => {	
+			var lessonO = lesson.val();				
+			if(lessonO.dateTime.time < lessonObj.dateTime.time){
+				beforeCount = beforeCount + 1;
+			}
+		//	if(lessonO.dateTime.time > lessonObj.dateTime.time){
+		//		afterCount = afterCount + 1;
+		//	}
+		});
+		if(beforeCount===0 && reminderObj.beforeLessonReminder && reminderObj.beforeLessonReminder !== ""){
+			console.log("Reminder " + lessonObj.userId);
+			var usersIds = [];
+			usersIds.push(lessonObj.userId);
+			var payload = {
+				data:{
+					title: "Нагадування",
+					message:  reminderObj.beforeLessonReminder,
+					type: "REMINDER"
+				}
+			};
+			return sendMessagesToUsers(payload, usersIds);
+		} else {
+			return 0;	
+		}
+	});
+}
 
 function sendLessonRemainder(userId, contactsSnap, membersRef) {	
 	return membersRef.once('value').then(membersSnap => {
