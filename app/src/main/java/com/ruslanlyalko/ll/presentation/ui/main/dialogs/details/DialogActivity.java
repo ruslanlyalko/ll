@@ -30,7 +30,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
@@ -41,6 +40,7 @@ import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter.OnCommen
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.info.DialogInfoActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.DialogEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.presentation.widget.PhotoPreviewActivity;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -96,6 +96,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     protected void setupView() {
         setupRecycler();
         FirebaseUtils.markNotificationsAsRead(getCurrentUser(), mMessage.getKey());
+        clearPushNotificationForDialog(mMessage.getKey());
         loadDetailsFromDB();
         mListComments.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
@@ -122,13 +123,13 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                 return true;
             case R.id.action_edit:
                 if (getCurrentUser().getIsAdmin()
-                        || mMessage.getUserId().equals(getUser().getUid())) {
+                        || mMessage.getUserId().equals(getFirebaseUser().getUid())) {
                     editItem();
                 }
                 break;
             case R.id.action_delete:
                 if (getCurrentUser().getIsAdmin()
-                        || mMessage.getUserId().equals(getUser().getUid())) {
+                        || mMessage.getUserId().equals(getFirebaseUser().getUid())) {
                     deleteItem();
                 }
                 break;
@@ -198,6 +199,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                     mCommentsAdapter.add(messageComment);
                     mListComments.scrollToPosition(0);
                     FirebaseUtils.markNotificationsAsRead(getCurrentUser(), mMessage.getKey());
+                    clearPushNotificationForDialog(mMessage.getKey());
                 }
             }
 
@@ -207,6 +209,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                 if (messageComment != null) {
                     mCommentsAdapter.update(messageComment);
                     FirebaseUtils.markNotificationsAsRead(getCurrentUser(), mMessage.getKey());
+                    clearPushNotificationForDialog(mMessage.getKey());
                 }
             }
 
@@ -254,9 +257,9 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         super.onPrepareOptionsMenu(menu);
         if (mMessage != null && mMessage.getUserId() != null) {
             menu.findItem(R.id.action_delete).setVisible(getCurrentUser().getIsAdmin()
-                    || mMessage.getUserId().equals(getUser().getUid()));
+                    || mMessage.getUserId().equals(getFirebaseUser().getUid()));
             menu.findItem(R.id.action_edit).setVisible(getCurrentUser().getIsAdmin()
-                    || mMessage.getUserId().equals(getUser().getUid()));
+                    || mMessage.getUserId().equals(getFirebaseUser().getUid()));
         }
         return true;
     }
@@ -282,7 +285,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     public void onItemLongClicked(View view, final int position) {
         MessageComment comment = mCommentsAdapter.getItemAtPosition(position);
         if (comment.getRemoved()) return;
-        int menu = !comment.getUserId().equals(getUser().getUid())
+        int menu = !comment.getUserId().equals(getFirebaseUser().getUid())
                 ? R.menu.menu_popup_dialog_copy : comment.hasImage()
                 ? R.menu.menu_popup_dialog_image : R.menu.menu_popup_dialog_full;
         showMenu(view, menu, item -> {
@@ -400,8 +403,15 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     @Override
+    protected void onPause() {
+        FirebaseUtils.setCurrentDialog(null);
+        super.onPause();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        FirebaseUtils.setCurrentDialog(mMessage.getKey());
         mListComments.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private static final int HIDE_THRESHOLD = 20;
             private int scrolledDistance = 0;

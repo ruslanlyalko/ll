@@ -108,18 +108,18 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initCurrentUser() {
-        if (getUser() == null) {
+        if (getFirebaseUser() == null) {
             finish();
             return;
         }
         getDB(DC.DB_USERS)
-                .child(getUser().getUid())
+                .child(getFirebaseUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
                         if (user != null) {
-                            new PreferenceHelper(getApplicationContext()).setUser(user);
+                            PreferenceHelper.newInstance(getApplicationContext()).setUser(user);
                             if (isDestroyed()) return;
                             mLayoutExepenses.setVisibility(user.getIsAdmin() || user.getIsAllowViewExpenses() ? View.VISIBLE : View.GONE);
                         }
@@ -178,12 +178,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadBadge() {
-        if (getUser() == null) {
+        if (getFirebaseUser() == null) {
             finish();
             return;
         }
         getDB(DC.DB_USERS_NOTIFICATIONS)
-                .child(getUser().getUid())
+                .child(getFirebaseUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -209,9 +209,9 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
         String version = (pInfo != null ? pInfo.versionName : "");
-        if (getUser() != null) {
+        if (getFirebaseUser() != null) {
             DatabaseReference ref = getDB(DC.DB_USERS)
-                    .child(getUser().getUid());
+                    .child(getFirebaseUser().getUid());
             ref.child(DC.USER_TOKEN).setValue(refreshedToken);
             ref.child(DC.USER_APP_VERSION).setValue(version);
             ref.child(DC.USER_LAST_ONLINE).onDisconnect().setValue(new Date());

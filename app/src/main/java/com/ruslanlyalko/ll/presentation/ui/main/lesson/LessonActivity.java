@@ -81,9 +81,9 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
         if (bundle != null && bundle.containsKey(Keys.Extras.EXTRA_LESSON_MODEL))
             mLesson = (Lesson) bundle.getSerializable(Keys.Extras.EXTRA_LESSON_MODEL);
         else if (bundle != null && bundle.containsKey(Keys.Extras.EXTRA_LESSON_DATE))
-            mLesson = new Lesson(getUser().getUid(), getUser().getDisplayName(), (Date) bundle.getSerializable(Keys.Extras.EXTRA_LESSON_DATE));
+            mLesson = new Lesson(getFirebaseUser().getUid(), getFirebaseUser().getDisplayName(), (Date) bundle.getSerializable(Keys.Extras.EXTRA_LESSON_DATE));
         else
-            mLesson = new Lesson(getUser().getUid(), getUser().getDisplayName());
+            mLesson = new Lesson(getFirebaseUser().getUid(), getFirebaseUser().getDisplayName());
     }
 
     @Override

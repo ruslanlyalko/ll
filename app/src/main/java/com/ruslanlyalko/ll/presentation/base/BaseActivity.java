@@ -1,5 +1,6 @@
 package com.ruslanlyalko.ll.presentation.base;
 
+import android.app.NotificationManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -21,8 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.data.models.User;
+import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -46,7 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(getLayoutResource());
         mUnBinder = ButterKnife.bind(this);
-        mCurrentUser = new PreferenceHelper(this).getUser();
+        mCurrentUser = PreferenceHelper.newInstance(this).getUser();
         parseExtras();
         initToolbar();
         setupView();
@@ -110,8 +111,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         return mCurrentUser;
     }
 
-    protected FirebaseUser getUser() {
+    protected FirebaseUser getFirebaseUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    protected void clearPushNotificationForDialog(String key) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(key.hashCode());
+        }
     }
 
     protected DatabaseReference getDB(final String db) {
@@ -149,7 +157,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
     }
 
-    protected void showMenu(View v, @MenuRes int menu, PopupMenu.OnMenuItemClickListener onMenuItemClickListener) {
+    protected void showMenu(View v, @MenuRes int menu, PopupMenu.
+            OnMenuItemClickListener onMenuItemClickListener) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(onMenuItemClickListener);
         popup.inflate(menu);

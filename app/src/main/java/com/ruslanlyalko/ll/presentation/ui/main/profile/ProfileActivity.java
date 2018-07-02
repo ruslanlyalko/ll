@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,9 +37,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.UploadTask;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
-import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
@@ -53,6 +49,9 @@ import com.ruslanlyalko.ll.presentation.ui.main.profile.reminder.ReminderActivit
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.SalaryActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary_edit.SalaryEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.settings.ProfileSettingsActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
+import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -95,7 +94,6 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     @BindView(R.id.text_last_online) TextView mTextLastOnline;
     @BindView(R.id.progress_bar) ContentLoadingProgressBar mProgressBar;
 
-    private FirebaseUser mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private String mUID;
     private User mUser;
@@ -128,15 +126,20 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     public void parseExtras() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            mUID = bundle.getString(Keys.Extras.EXTRA_UID, mFirebaseUser.getUid());
+            mUID = bundle.getString(Keys.Extras.EXTRA_UID, getFirebaseUser().getUid());
         } else
-            mUID = mFirebaseUser.getUid();
-        mIsCurrentUserPage = mUID.equals(mFirebaseUser.getUid());
+            mUID = getFirebaseUser().getUid();
+        mIsCurrentUserPage = mUID.equals(getFirebaseUser().getUid());
     }
 
     @Override
     protected void setupView() {
-        collapsingToolbar.setTitle(mIsCurrentUserPage ? getUser().getDisplayName() : " ");
+        if (mIsCurrentUserPage) {
+            mUser = getCurrentUser();
+            updateUI();
+        } else {
+            collapsingToolbar.setTitle(" ");
+        }
         initRecycle();
         loadUsers();
         checkConnection();
@@ -356,7 +359,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
 
     private void updateUI() {
         if (isDestroyed()) return;
-        if (mUser == null || mFirebaseUser == null) return;
+        if (mUser == null || getFirebaseUser() == null) return;
         // if current mUser is admin or open his friends
         fab.setVisibility(getCurrentUser().getIsAdmin() || mIsCurrentUserPage ? View.VISIBLE : View.GONE);
 //        if (mUser.getIsAdmin() && mIsCurrentUserPage)
@@ -437,7 +440,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 .setMessage(R.string.dialog_logout_message)
                 .setPositiveButton(R.string.action_exit, (dialog, which) -> {
                     FirebaseUtils.clearPushToken();
-                    new PreferenceHelper(this).releaseData();
+                    PreferenceHelper.newInstance(this).releaseData();
                     FirebaseAuth.getInstance().signOut();
                     startActivity(LoginActivity.getLaunchIntent(this));
                     finish();
@@ -488,12 +491,6 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
 
     @OnClick(R.id.fab)
     void onFabClicked() {
-        final boolean myPage = mUser.getId().equals(mFirebaseUser.getUid());
-//        if (getCurrentUser().getIsAdmin() && myPage) {
-//            startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
-//        } else
-        {
-            startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUser));
-        }
+        startActivity(SalaryActivity.getLaunchIntent(ProfileActivity.this, mUser));
     }
 }

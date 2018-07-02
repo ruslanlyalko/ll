@@ -17,6 +17,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.DialogActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.reminder.ReminderShowActivity;
@@ -25,6 +26,7 @@ import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 import java.util.Map;
 import java.util.Random;
 
+import static com.ruslanlyalko.ll.presentation.service.NotificationType.COMMENT;
 import static com.ruslanlyalko.ll.presentation.service.NotificationType.REMINDER;
 
 /**
@@ -110,7 +112,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pendingIntent);
-        if(notificationType.equals(REMINDER)){
+        if (notificationType.equals(REMINDER)) {
             builder.setDeleteIntent(pendingIntent);
         }
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -121,7 +123,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 builder.setNumber(1);
                 builder.setChannelId(chanelId);
             }
-            notificationManager.notify(new Random().nextInt(250), builder.build());
+            if (notificationType.equals(COMMENT)) {
+                int pushId = payload.get("messageKey").hashCode();
+                if (!payload.get("messageKey").equals(FirebaseUtils.getCurrentDialog()))
+                    notificationManager.notify(pushId, builder.build());
+            } else {
+                notificationManager.notify(new Random().nextInt(), builder.build());
+            }
         }
     }
 

@@ -14,6 +14,8 @@ import java.util.Date;
 
 public class FirebaseUtils {
 
+    private static String mCurrentDialog;
+
     public static void clearPushToken() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -69,5 +71,13 @@ public class FirebaseUtils {
                 .child(key)
                 .child(user.getId())
                 .setValue(new DialogReadUser(user.getId(), user.getFullName(), user.getAvatar()));
+    }
+
+    public static String getCurrentDialog() {
+        return mCurrentDialog;
+    }
+
+    public static void setCurrentDialog(final String currentDialog) {
+        mCurrentDialog = currentDialog;
     }
 }

@@ -47,7 +47,7 @@ public class LlApplication extends Application {
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
                         if (user != null) {
-                            new PreferenceHelper(getApplicationContext()).setUser(user);
+                            PreferenceHelper.newInstance(getApplicationContext()).setUser(user);
                         }
                     }
 
