@@ -63,7 +63,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
 
     private FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private Animation fab_open, fab_close, rotate_forward, rotate_backward, fade, fade_back_quick;
-    private ExpensesAdapter mExpensesAdapter = new ExpensesAdapter(this, getCurrentUser());
+    private ExpensesAdapter mExpensesAdapter;
     private Boolean mIsFabOpen = false;
     private Calendar mCurrentMonth = Calendar.getInstance();
 
@@ -126,6 +126,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
     }
 
     private void initRecycler() {
+        mExpensesAdapter = new ExpensesAdapter(this, getCurrentUser());
         mExpensesList.setLayoutManager(new LinearLayoutManager(this));
         mExpensesList.setAdapter(mExpensesAdapter);
     }

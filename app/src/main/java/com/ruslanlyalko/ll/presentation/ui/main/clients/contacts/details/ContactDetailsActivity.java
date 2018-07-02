@@ -75,7 +75,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private SettingsSalary mSettingsSalary = new SettingsSalary();
     private String mContactKey = "";
     private LessonsHeaderAdapter mLessonsAdapter = new LessonsHeaderAdapter(this);
-    private ContactRechargesAdapter mContactRechargesAdapter = new ContactRechargesAdapter(this, getCurrentUser());
+    private ContactRechargesAdapter mContactRechargesAdapter ;
     private ValueEventListener mValueEventListener;
     private ValueEventListener mContactValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
@@ -206,6 +206,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void setupRecycler() {
+        mContactRechargesAdapter = new ContactRechargesAdapter(this, getCurrentUser());
         mListLessons.setLayoutManager(new LinearLayoutManager(this));
         mListLessons.setAdapter(mLessonsAdapter);
         mListIncome.setLayoutManager(new LinearLayoutManager(this));
