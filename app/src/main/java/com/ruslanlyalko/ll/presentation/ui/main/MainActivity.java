@@ -30,7 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.AppInfo;
 import com.ruslanlyalko.ll.data.models.Notification;
@@ -54,7 +54,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.ruslanlyalko.ll.BuildConfig.DEBUG;
-import static com.ruslanlyalko.ll.common.ViewUtils.viewToDrawable;
+import static com.ruslanlyalko.ll.presentation.utils.ViewUtils.viewToDrawable;
 
 public class MainActivity extends BaseActivity {
 
@@ -119,8 +119,7 @@ public class MainActivity extends BaseActivity {
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
                         if (user != null) {
-                            FirebaseUtils.setIsAdmin(user.getIsAdmin());
-                            FirebaseUtils.setUser(user);
+                            new PreferenceHelper(getApplicationContext()).setUser(user);
                             if (isDestroyed()) return;
                             mLayoutExepenses.setVisibility(user.getIsAdmin() || user.getIsAllowViewExpenses() ? View.VISIBLE : View.GONE);
                         }

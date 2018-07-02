@@ -122,6 +122,7 @@ dependencies {
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     implementation "com.timehop.stickyheadersrecyclerview:library:0.4.3"
+    implementation 'com.google.code.gson:gson:2.8.5'
 
 }
 apply plugin: 'com.google.gms.google-services'

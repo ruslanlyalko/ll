@@ -21,9 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -224,7 +223,7 @@ public class LessonActivity extends BaseActivity implements OnFilterListener {
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)
                 );
-                if (!FirebaseUtils.isAdmin())
+                if (!getCurrentUser().getIsAdmin())
                     dialog.setMinDate(DateUtils.getYesterday());
                 dialog.show(getFragmentManager(), "date");
                 break;

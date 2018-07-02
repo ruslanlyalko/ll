@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
 
@@ -21,11 +20,13 @@ import butterknife.OnClick;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder> {
 
+    private final User mCurrentUser;
     private List<User> mDataSource = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
 
-    public UsersAdapter(OnItemClickListener onItemClickListener) {
+    public UsersAdapter(OnItemClickListener onItemClickListener, final User currentUser) {
         this.mOnItemClickListener = onItemClickListener;
+        mCurrentUser = currentUser;
     }
 
     @Override
@@ -72,7 +73,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         @BindView(R.id.image_user_logo) ImageView imageUserLogo;
         @BindView(R.id.image_notifications_off) ImageView imageNotificationsOff;
 
-        private User mUser;
         private OnItemClickListener mOnItemClickListener;
 
         public MyViewHolder(View view, final OnItemClickListener onItemClickListener) {
@@ -82,10 +82,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         }
 
         void bindData(final User user) {
-            mUser = user;
             textUserName.setText(user.getFullName());
             textPositionTitle.setText(user.getPositionTitle());
-            if(FirebaseUtils.isAdmin())
+            if (mCurrentUser.getIsAdmin())
                 imageNotificationsOff.setVisibility(user.getIsReceiveNotifications() ? View.GONE : View.VISIBLE);
             imageUserLogo.setImageResource(user.getIsOnline() ? R.drawable.ic_user_primary : R.drawable.ic_user_name);
         }

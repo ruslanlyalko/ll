@@ -14,8 +14,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
@@ -61,8 +60,8 @@ public class AboutActivity extends BaseActivity {
         }
         String version = getString(R.string.dialog_about_message) + "" + (pInfo != null ? pInfo.versionName : "");
         textVersion.setText(version);
-        fab.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
-        if (FirebaseUtils.isAdmin()) {
+        fab.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
+        if (getCurrentUser().getIsAdmin()) {
             textAbout.setVisibility(View.GONE);
             editAbout.setVisibility(View.VISIBLE);
         }
@@ -70,7 +69,7 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.fab)
     void onFabClicked() {
-        if (FirebaseUtils.isAdmin())
+        if (getCurrentUser().getIsAdmin())
             FirebaseDatabase.getInstance().getReference(DC.DB_INFO)
                     .child(DC.ABOUT_TEXT)
                     .setValue(editAbout.getText().toString().trim())

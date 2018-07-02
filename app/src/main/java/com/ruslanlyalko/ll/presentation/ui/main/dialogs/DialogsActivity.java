@@ -57,7 +57,7 @@ public class DialogsActivity extends BaseActivity {
     protected void setupView() {
         initRecycler();
         loadMessages();
-        fab.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
+        fab.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
         loadBadge();
     }
 
@@ -77,7 +77,7 @@ public class DialogsActivity extends BaseActivity {
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         List<Message> list = new ArrayList<>();
                         for (DataSnapshot messageSS : dataSnapshot.getChildren()) {
-                            if (FirebaseUtils.isAdmin() || messageSS.child(DC.MESSAGE_MEMBERS).child(mUser.getUid()).exists()) {
+                            if (getCurrentUser().getIsAdmin() || messageSS.child(DC.MESSAGE_MEMBERS).child(mUser.getUid()).exists()) {
                                 Message message = messageSS.getValue(Message.class);
                                 if (message != null) {
                                     list.add(0, message);

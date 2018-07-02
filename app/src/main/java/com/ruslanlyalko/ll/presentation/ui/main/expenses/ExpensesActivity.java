@@ -23,8 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Expense;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -64,7 +63,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
 
     private FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
     private Animation fab_open, fab_close, rotate_forward, rotate_backward, fade, fade_back_quick;
-    private ExpensesAdapter mExpensesAdapter = new ExpensesAdapter(this);
+    private ExpensesAdapter mExpensesAdapter = new ExpensesAdapter(this, getCurrentUser());
     private Boolean mIsFabOpen = false;
     private Calendar mCurrentMonth = Calendar.getInstance();
 
@@ -82,7 +81,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
         initSwitcher();
         initRecycler();
         initFAB();
-        mButtonCostDeleteAll.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
+        mButtonCostDeleteAll.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
         mTextUserName.setText(mCurrentUser.getDisplayName());
         updateMonth();
         loadExpenses();
@@ -149,7 +148,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
                         List<Expense> expenseList = new ArrayList<>();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             Expense expense = data.getValue(Expense.class);
-                            if (expense != null && (FirebaseUtils.isAdmin() || expense.getUserId().equals(mCurrentUser.getUid()))) {
+                            if (expense != null && (getCurrentUser().getIsAdmin() || expense.getUserId().equals(mCurrentUser.getUid()))) {
                                 expenseList.add(0, expense);
                             }
                         }
@@ -239,7 +238,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
 
     @OnClick(R.id.button_cost_delete_all)
     void onDeleteAllCLicked() {
-        if (FirebaseUtils.isAdmin()) {
+        if (getCurrentUser().getIsAdmin()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ExpensesActivity.this);
             builder.setTitle(R.string.dialog_cost_delete_all_title)
                     .setMessage(R.string.dialog_cost_delete_all_message)
@@ -284,7 +283,7 @@ public class ExpensesActivity extends BaseActivity implements OnExpenseClickList
 
     @Override
     public void onEditClicked(final Expense expense) {
-        if (FirebaseUtils.isAdmin()) {
+        if (getCurrentUser().getIsAdmin()) {
             startActivity(ExpenseEditActivity.getLaunchIntent(this, expense));
         }
     }

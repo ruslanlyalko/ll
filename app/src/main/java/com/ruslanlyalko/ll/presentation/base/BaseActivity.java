@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
+import com.ruslanlyalko.ll.data.models.User;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -34,6 +36,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
     private Unbinder mUnBinder;
+    private User mCurrentUser;
 
     @CallSuper
     @Override
@@ -43,6 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(getLayoutResource());
         mUnBinder = ButterKnife.bind(this);
+        mCurrentUser = new PreferenceHelper(this).getUser();
         parseExtras();
         initToolbar();
         setupView();
@@ -100,6 +104,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected boolean isModalView() {
         return false;
+    }
+
+    protected User getCurrentUser() {
+        return mCurrentUser;
     }
 
     protected FirebaseUser getUser() {

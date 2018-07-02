@@ -17,7 +17,7 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 

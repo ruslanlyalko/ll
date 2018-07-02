@@ -1,6 +1,6 @@
 package com.ruslanlyalko.ll.data.models;
 
-import com.ruslanlyalko.ll.common.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
 import java.util.Date;
 

@@ -1,6 +1,6 @@
 package com.ruslanlyalko.ll.data.models;
 
-import com.ruslanlyalko.ll.common.UserType;
+import com.ruslanlyalko.ll.presentation.utils.UserType;
 
 import java.io.Serializable;
 import java.util.Date;

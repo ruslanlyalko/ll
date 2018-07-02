@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {

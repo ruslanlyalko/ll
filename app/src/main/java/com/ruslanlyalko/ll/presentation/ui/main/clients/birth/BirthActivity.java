@@ -15,8 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Constants;
-import com.ruslanlyalko.ll.common.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -24,12 +23,10 @@ import com.ruslanlyalko.ll.presentation.ui.main.clients.birth.adapter.BirthConta
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.OnContactClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.ContactDetailsActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;

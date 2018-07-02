@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.ContactRecharge;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;

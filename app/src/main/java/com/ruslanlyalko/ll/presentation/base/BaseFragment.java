@@ -14,7 +14,9 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ruslanlyalko.ll.data.models.User;
 
 import butterknife.ButterKnife;
 
@@ -55,12 +57,16 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected FirebaseUser getUser() {
+    protected FirebaseUser getFirebaseUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    protected FirebaseDatabase getDatabase() {
-        return FirebaseDatabase.getInstance();
+    protected User getCurrentUser() {
+        return getBaseActivity().getCurrentUser();
+    }
+
+    protected DatabaseReference getDB(String db) {
+        return FirebaseDatabase.getInstance().getReference(db);
     }
 
     protected BaseActivity getBaseActivity() {

@@ -76,7 +76,6 @@ public class SignupActivity extends BaseActivity {
                 .addOnCompleteListener(SignupActivity.this, task -> {
                     progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
-                        FirebaseUtils.setIsAdmin(false);
                         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(name)
                                 .build();

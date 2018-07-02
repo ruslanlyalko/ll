@@ -10,7 +10,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.DialogReadUser;
 import com.ruslanlyalko.ll.data.models.MessageComment;

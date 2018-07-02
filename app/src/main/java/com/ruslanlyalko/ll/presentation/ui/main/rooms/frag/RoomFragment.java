@@ -15,8 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.Lesson;
@@ -103,7 +102,7 @@ public class RoomFragment extends BaseFragment implements OnLessonClickListener 
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             Lesson lesson = data.getValue(Lesson.class);
                             if (lesson != null) {
-                                if ((FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId))
+                                if ((getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId))
                                         && lesson.getRoomType() == mCurrentRoomType) {
                                     lessons.add(lesson);
                                 }
@@ -154,7 +153,7 @@ public class RoomFragment extends BaseFragment implements OnLessonClickListener 
 
     @Override
     public void onRemoveClicked(final Lesson lesson) {
-        if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
+        if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getBaseActivity());
             builder.setTitle(R.string.dialog_calendar_remove_title)
                     .setPositiveButton(R.string.action_remove, (dialog, which) -> removeLesson(lesson))

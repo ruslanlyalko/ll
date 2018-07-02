@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
 import java.util.Calendar;
 import java.util.Date;

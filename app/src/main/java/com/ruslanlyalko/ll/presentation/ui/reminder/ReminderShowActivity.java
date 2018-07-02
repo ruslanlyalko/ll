@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.splash.SplashActivity;
 

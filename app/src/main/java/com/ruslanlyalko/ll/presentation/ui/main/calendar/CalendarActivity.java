@@ -19,12 +19,10 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.Lesson;
@@ -127,7 +125,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     private void showLessonsForDate() {
         if (isDestroyed()) return;
-        mFab.setVisibility((FirebaseUtils.isAdmin() || DateUtils.isTodayOrFuture(mCurrentDate.getTime()))
+        mFab.setVisibility((getCurrentUser().getIsAdmin() || DateUtils.isTodayOrFuture(mCurrentDate.getTime()))
                 ? View.VISIBLE : View.GONE);
         String aDate = DateFormat.format("yyyy/MM/dd", mCurrentDate.getTime()).toString();
         getDB(DC.DB_LESSONS)
@@ -140,7 +138,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             Lesson lesson = data.getValue(Lesson.class);
                             if (lesson != null) {
-                                if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
+                                if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
                                     lessons.add(lesson);
                                 }
                             }
@@ -190,7 +188,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
                                 for (DataSnapshot datMonth : datYear.getChildren()) {
                                     for (DataSnapshot datDay : datMonth.getChildren()) {
                                         Lesson lesson = datDay.getValue(Lesson.class);
-                                        if (lesson != null && (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId))) {
+                                        if (lesson != null && (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId))) {
                                             int color = getUserColor(lesson.getUserId());
                                             long date = lesson.getDateTime().getTime();
                                             String uId = lesson.getUserId();
@@ -235,7 +233,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     @Override
     public void onRemoveClicked(final Lesson lesson) {
-        if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(mUserId)) {
+        if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
             builder.setTitle(R.string.dialog_calendar_remove_title)
                     .setPositiveButton(R.string.action_remove, (dialog, which) ->

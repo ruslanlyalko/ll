@@ -11,13 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Constants;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.models.ContactRecharge;
+import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
 import java.util.ArrayList;
@@ -32,10 +29,12 @@ public class ContactRechargesAdapter extends RecyclerView.Adapter<ContactRecharg
 
     private OnContactRechargeClickListener mOnContactRechargeClickListener;
     private List<ContactRecharge> mContactRechargeList = new ArrayList<>();
-    private FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final User mUser;
+    private final static int CONST_EDIT_MIN = 5;
 
-    public ContactRechargesAdapter(OnContactRechargeClickListener onContactRechargeClickListener) {
+    public ContactRechargesAdapter(OnContactRechargeClickListener onContactRechargeClickListener, final User user) {
         this.mOnContactRechargeClickListener = onContactRechargeClickListener;
+        mUser = user;
     }
 
     @Override
@@ -96,17 +95,17 @@ public class ContactRechargesAdapter extends RecyclerView.Adapter<ContactRecharg
             mTextPrice.setText(mResources.getString(R.string.hrn, contactRecharge.getPrice() + ""));
             mTextDate.setText(DateUtils.toString(contactRecharge.getCreatedAt()));
             int diff = DateUtils.getDifference(contactRecharge.getCreatedAt());
-            boolean justAdded = (diff <= Constants.COST_EDIT_MIN);
+            boolean justAdded = (diff <= CONST_EDIT_MIN);
             // Avoid delete
-            if (!FirebaseUtils.isAdmin() && justAdded) {
+            if (!mUser.getIsAdmin() && justAdded) {
                 // start this code after 5* minutes
                 new Handler().postDelayed(() -> {
                     mSwipeLayout.close();
                     mSwipeLayout.setRightSwipeEnabled(false);
                     mMenuLayout.setVisibility(View.GONE);
-                }, (Constants.COST_EDIT_MIN - diff + 1) * 60 * 1000);
+                }, (CONST_EDIT_MIN - diff + 1) * 60 * 1000);
             }
-            if (FirebaseUtils.isAdmin() || justAdded) {
+            if (mUser.getIsAdmin() || justAdded) {
                 mSwipeLayout.addDrag(SwipeLayout.DragEdge.Right, R.id.swipe_menu);
                 mSwipeLayout.setRightSwipeEnabled(true);
                 mSwipeLayout.setBottomSwipeEnabled(false);

@@ -25,8 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
@@ -97,9 +96,9 @@ public class ProfileSettingsActivity extends BaseActivity {
         inputPassword2.setEnabled(isCurrentUser);
         panelPassword.setEnabled(isCurrentUser);
         buttonChangePassword.setEnabled(isCurrentUser);
-        panelFirstDate.setVisibility(FirebaseUtils.isAdmin() && !isCurrentUser ? View.VISIBLE : View.GONE);
-        mPanelReceiveNotifications.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
-        mPanelShowCLients.setVisibility(FirebaseUtils.isAdmin() && !isCurrentUser ? View.VISIBLE : View.GONE);
+        panelFirstDate.setVisibility(getCurrentUser().getIsAdmin() && !isCurrentUser ? View.VISIBLE : View.GONE);
+        mPanelReceiveNotifications.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
+        mPanelShowCLients.setVisibility(getCurrentUser().getIsAdmin() && !isCurrentUser ? View.VISIBLE : View.GONE);
         inputCard.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

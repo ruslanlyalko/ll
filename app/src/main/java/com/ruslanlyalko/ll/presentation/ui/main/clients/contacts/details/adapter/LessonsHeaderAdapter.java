@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;

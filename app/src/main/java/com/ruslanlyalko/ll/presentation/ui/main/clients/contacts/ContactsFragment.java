@@ -25,9 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.common.UserType;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
+import com.ruslanlyalko.ll.presentation.utils.UserType;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.User;
@@ -87,8 +86,8 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
 
     @Override
     protected void onViewReady(final Bundle savedInstanceState) {
-        mLayoutFilterSpinner.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
-        mCheckBoxMy.setVisibility(FirebaseUtils.isAdmin() ? View.GONE : View.VISIBLE);
+        mLayoutFilterSpinner.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
+        mCheckBoxMy.setVisibility(getCurrentUser().getIsAdmin() ? View.GONE : View.VISIBLE);
         mContactsAdapter = new ContactsAdapter(this, getActivity(), mIsSelectable);
         if (mSelectedClients != null)
             mContactsAdapter.setSelectedCotacts(mSelectedClients);
@@ -112,12 +111,12 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
         mEditFilterPhone.addTextChangedListener(watcher);
         setupRecycler();
         loadContacts();
-        if (FirebaseUtils.isAdmin())
+        if (getCurrentUser().getIsAdmin())
             loadUsers();
     }
 
     private void loadUsers() {
-        getDatabase().getReference(DC.DB_USERS)
+        getDB(DC.DB_USERS)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -212,7 +211,7 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
             phone = " ";
         String filter = name + "/" + phone + mTeacherId;
         mContactsAdapter.getFilter().filter(filter);
-        if (FirebaseUtils.isAdmin()) {
+        if (getCurrentUser().getIsAdmin()) {
             new Handler().postDelayed(() -> {
                 String title = "[" + mContactsAdapter.getItemCount() + "]";
                 mTextCount.setText(title);

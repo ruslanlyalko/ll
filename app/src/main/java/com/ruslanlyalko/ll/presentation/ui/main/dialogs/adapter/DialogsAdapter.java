@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.Notification;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.DialogActivity;

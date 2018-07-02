@@ -9,7 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 
@@ -47,8 +47,7 @@ public class LlApplication extends Application {
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
                         if (user != null) {
-                            FirebaseUtils.setIsAdmin(user.getIsAdmin());
-                            FirebaseUtils.setUser(user);
+                            new PreferenceHelper(getApplicationContext()).setUser(user);
                         }
                     }
 

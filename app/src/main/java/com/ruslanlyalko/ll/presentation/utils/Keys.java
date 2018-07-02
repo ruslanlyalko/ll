@@ -1,4 +1,4 @@
-package com.ruslanlyalko.ll.common;
+package com.ruslanlyalko.ll.presentation.utils;
 
 /**
  * Created by Ruslan Lyalko

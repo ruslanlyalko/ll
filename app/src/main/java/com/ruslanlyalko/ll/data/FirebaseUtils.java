@@ -14,22 +14,6 @@ import java.util.Date;
 
 public class FirebaseUtils {
 
-    private static boolean mIsAdmin;
-    private static User mUser;
-
-    public static boolean isAdmin() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        return mIsAdmin
-                || (user != null
-                && user.getEmail() != null
-                && (user.getEmail().equalsIgnoreCase("tanya.porynets2@gmail.com")
-                || user.getEmail().equalsIgnoreCase("ruslan.lyalko@gmail.com")));
-    }
-
-    public static void setIsAdmin(boolean mIsAdmin) {
-        FirebaseUtils.mIsAdmin = mIsAdmin;
-    }
-
     public static void clearPushToken() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -85,13 +69,5 @@ public class FirebaseUtils {
                 .child(key)
                 .child(user.getId())
                 .setValue(new DialogReadUser(user.getId(), user.getFullName(), user.getAvatar()));
-    }
-
-    public static User getUser() {
-        return mUser;
-    }
-
-    public static void setUser(final User user) {
-        mUser = user;
     }
 }

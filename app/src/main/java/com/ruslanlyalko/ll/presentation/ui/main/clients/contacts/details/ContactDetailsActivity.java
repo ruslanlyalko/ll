@@ -28,9 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.common.Keys;
-import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.ContactRecharge;
@@ -76,7 +75,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private SettingsSalary mSettingsSalary = new SettingsSalary();
     private String mContactKey = "";
     private LessonsHeaderAdapter mLessonsAdapter = new LessonsHeaderAdapter(this);
-    private ContactRechargesAdapter mContactRechargesAdapter = new ContactRechargesAdapter(this);
+    private ContactRechargesAdapter mContactRechargesAdapter = new ContactRechargesAdapter(this, getCurrentUser());
     private ValueEventListener mValueEventListener;
     private ValueEventListener mContactValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
@@ -153,7 +152,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void setupBalance() {
-        mCardBalance.setVisibility(FirebaseUtils.isAdmin() ? View.VISIBLE : View.GONE);
+        mCardBalance.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
     }
 
     private void loadContactRecharges() {
@@ -291,7 +290,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                                     for (DataSnapshot datDay : datMonth.getChildren()) {
                                         Lesson lesson = datDay.getValue(Lesson.class);
                                         if (lesson != null && (lesson.getClients().contains(mContact.getKey()))) {
-                                            if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid()))
+                                            if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid()))
                                                 lessons.add(lesson);
                                             else
                                                 mHasLessonsWithOtherTeachers = true;
@@ -487,7 +486,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_delete).setVisible(FirebaseUtils.isAdmin());
+        menu.findItem(R.id.action_delete).setVisible(getCurrentUser().getIsAdmin());
         menu.findItem(R.id.action_edit).setVisible(true);
         return true;
     }
@@ -527,7 +526,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     @Override
     public void onRemoveClicked(final Lesson lesson) {
-        if (FirebaseUtils.isAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
+        if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(ContactDetailsActivity.this);
             builder.setTitle(R.string.dialog_calendar_remove_title)
                     .setPositiveButton(R.string.action_remove, (dialog, which) -> {

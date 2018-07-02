@@ -30,9 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.Constants;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Message;
@@ -43,6 +41,7 @@ import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter.OnCommen
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.info.DialogInfoActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.edit.DialogEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.presentation.widget.PhotoPreviewActivity;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -61,6 +60,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class DialogActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks, OnCommentClickListener {
 
     private static final int REQUEST_IMAGE_PERMISSION = 1001;
+    private static final int RC_EDIT = 1002;
     @BindView(R.id.text_description) TextView textDescription;
     @BindView(R.id.list_comments) RecyclerView mListComments;
     @BindView(R.id.card_comments_send) CardView mCardCommentsSend;
@@ -95,7 +95,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     @Override
     protected void setupView() {
         setupRecycler();
-        FirebaseUtils.markNotificationsAsRead(FirebaseUtils.getUser(), mMessage.getKey());
+        FirebaseUtils.markNotificationsAsRead(getCurrentUser(), mMessage.getKey());
         loadDetailsFromDB();
         mListComments.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
@@ -121,13 +121,13 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                 onBackPressed();
                 return true;
             case R.id.action_edit:
-                if (FirebaseUtils.isAdmin()
+                if (getCurrentUser().getIsAdmin()
                         || mMessage.getUserId().equals(getUser().getUid())) {
                     editItem();
                 }
                 break;
             case R.id.action_delete:
-                if (FirebaseUtils.isAdmin()
+                if (getCurrentUser().getIsAdmin()
                         || mMessage.getUserId().equals(getUser().getUid())) {
                     deleteItem();
                 }
@@ -197,7 +197,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                     if (isDestroyed()) return;
                     mCommentsAdapter.add(messageComment);
                     mListComments.scrollToPosition(0);
-                    FirebaseUtils.markNotificationsAsRead(FirebaseUtils.getUser(), mMessage.getKey());
+                    FirebaseUtils.markNotificationsAsRead(getCurrentUser(), mMessage.getKey());
                 }
             }
 
@@ -206,7 +206,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
                 MessageComment messageComment = dataSnapshot.getValue(MessageComment.class);
                 if (messageComment != null) {
                     mCommentsAdapter.update(messageComment);
-                    FirebaseUtils.markNotificationsAsRead(FirebaseUtils.getUser(), mMessage.getKey());
+                    FirebaseUtils.markNotificationsAsRead(getCurrentUser(), mMessage.getKey());
                 }
             }
 
@@ -225,7 +225,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void editItem() {
-        startActivityForResult(DialogEditActivity.getLaunchIntent(this, mMessage.getKey()), Constants.REQUEST_CODE_EDIT);
+        startActivityForResult(DialogEditActivity.getLaunchIntent(this, mMessage.getKey()), RC_EDIT);
     }
 
     private void deleteItem() {
@@ -253,9 +253,9 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     public boolean onPrepareOptionsMenu(final Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if (mMessage != null && mMessage.getUserId() != null) {
-            menu.findItem(R.id.action_delete).setVisible(FirebaseUtils.isAdmin()
+            menu.findItem(R.id.action_delete).setVisible(getCurrentUser().getIsAdmin()
                     || mMessage.getUserId().equals(getUser().getUid()));
-            menu.findItem(R.id.action_edit).setVisible(FirebaseUtils.isAdmin()
+            menu.findItem(R.id.action_edit).setVisible(getCurrentUser().getIsAdmin()
                     || mMessage.getUserId().equals(getUser().getUid()));
         }
         return true;
@@ -363,7 +363,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         DatabaseReference ref = getDB(DC.DB_MESSAGES)
                 .child(mMessage.getKey())
                 .push();
-        ref.setValue(new MessageComment(ref.getKey(), comment, FirebaseUtils.getUser()));
+        ref.setValue(new MessageComment(ref.getKey(), comment, getCurrentUser()));
     }
 
     @OnClick(R.id.button_attachments)
@@ -383,7 +383,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE_EDIT) {
+        if (requestCode == RC_EDIT) {
             loadDetailsFromDB();
         }
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
@@ -476,7 +476,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
         DatabaseReference ref = getDB(DC.DB_MESSAGES)
                 .child(mMessage.getKey())
                 .push();
-        ref.setValue(new MessageComment(ref.getKey(), getString(R.string.text_send_file_photo), file, thumbnail, FirebaseUtils.getUser()));
+        ref.setValue(new MessageComment(ref.getKey(), getString(R.string.text_send_file_photo), file, thumbnail, getCurrentUser()));
     }
 
     @Override

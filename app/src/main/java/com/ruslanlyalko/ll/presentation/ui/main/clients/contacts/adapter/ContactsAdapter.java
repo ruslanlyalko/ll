@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.models.Contact;
 
 import java.util.ArrayList;

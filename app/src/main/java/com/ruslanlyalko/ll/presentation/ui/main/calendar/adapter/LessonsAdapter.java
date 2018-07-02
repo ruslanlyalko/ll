@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;

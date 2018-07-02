@@ -38,8 +38,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.UploadTask;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.common.DateUtils;
-import com.ruslanlyalko.ll.common.Keys;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
+import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
@@ -179,7 +180,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     private void initRecycle() {
         if (mIsCurrentUserPage) {
             mCardView.setVisibility(View.VISIBLE);
-            mUsersAdapter = new UsersAdapter(this);
+            mUsersAdapter = new UsersAdapter(this, getCurrentUser());
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setAdapter(mUsersAdapter);
         } else {
@@ -250,11 +251,11 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
 
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
-        menu.findItem(R.id.action_add_user).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
-        menu.findItem(R.id.action_settings_salary).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
-        menu.findItem(R.id.action_dashboard).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
-        menu.findItem(R.id.action_reminder).setVisible(FirebaseUtils.isAdmin() && mIsCurrentUserPage);
-        menu.findItem(R.id.action_settings).setVisible(FirebaseUtils.isAdmin() || mIsCurrentUserPage);
+        menu.findItem(R.id.action_add_user).setVisible(getCurrentUser().getIsAdmin() && mIsCurrentUserPage);
+        menu.findItem(R.id.action_settings_salary).setVisible(getCurrentUser().getIsAdmin() && mIsCurrentUserPage);
+        menu.findItem(R.id.action_dashboard).setVisible(getCurrentUser().getIsAdmin() && mIsCurrentUserPage);
+        menu.findItem(R.id.action_reminder).setVisible(getCurrentUser().getIsAdmin() && mIsCurrentUserPage);
+        menu.findItem(R.id.action_settings).setVisible(getCurrentUser().getIsAdmin() || mIsCurrentUserPage);
         menu.findItem(R.id.action_change_ava).setVisible(mIsCurrentUserPage);
         menu.findItem(R.id.action_logout).setVisible(mIsCurrentUserPage);
         return true;
@@ -357,7 +358,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         if (isDestroyed()) return;
         if (mUser == null || mFirebaseUser == null) return;
         // if current mUser is admin or open his friends
-        fab.setVisibility(FirebaseUtils.isAdmin() || mIsCurrentUserPage ? View.VISIBLE : View.GONE);
+        fab.setVisibility(getCurrentUser().getIsAdmin() || mIsCurrentUserPage ? View.VISIBLE : View.GONE);
 //        if (mUser.getIsAdmin() && mIsCurrentUserPage)
 //            fab.setImageResource(R.drawable.ic_action_money);
         mTitlePositionText.setText(mUser.getPositionTitle());
@@ -391,7 +392,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 clipboard.setPrimaryClip(clip);
             Toast.makeText(ProfileActivity.this, getString(R.string.toast_text_copied), Toast.LENGTH_SHORT).show();
         });
-        if (FirebaseUtils.isAdmin() && !mIsCurrentUserPage) {
+        if (getCurrentUser().getIsAdmin() && !mIsCurrentUserPage) {
             mFirsDateLayout.setVisibility(View.VISIBLE);
         }
         if (mUser.getAvatar() != null && !mUser.getAvatar().isEmpty()) {
@@ -436,7 +437,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 .setMessage(R.string.dialog_logout_message)
                 .setPositiveButton(R.string.action_exit, (dialog, which) -> {
                     FirebaseUtils.clearPushToken();
-                    FirebaseUtils.setIsAdmin(false);
+                    new PreferenceHelper(this).releaseData();
                     FirebaseAuth.getInstance().signOut();
                     startActivity(LoginActivity.getLaunchIntent(this));
                     finish();
@@ -488,7 +489,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     @OnClick(R.id.fab)
     void onFabClicked() {
         final boolean myPage = mUser.getId().equals(mFirebaseUser.getUid());
-//        if (FirebaseUtils.isAdmin() && myPage) {
+//        if (getCurrentUser().getIsAdmin() && myPage) {
 //            startActivity(DashboardActivity.getLaunchIntent(ProfileActivity.this));
 //        } else
         {
