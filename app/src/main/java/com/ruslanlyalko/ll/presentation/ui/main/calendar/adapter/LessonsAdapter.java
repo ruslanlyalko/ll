@@ -29,9 +29,12 @@ import butterknife.OnClick;
 
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHolder> {
 
-    private final List<Lesson> mLessons = new ArrayList<>();
-    private final List<Contact> mContacts = new ArrayList<>();
-    private final OnLessonClickListener mOnLessonClickListener;
+    protected final List<Lesson> mLessons = new ArrayList<>();
+    protected final List<Contact> mContacts = new ArrayList<>();
+    protected   OnLessonClickListener mOnLessonClickListener;
+
+    public LessonsAdapter() {
+    }
 
     public LessonsAdapter(OnLessonClickListener onLessonClickListener) {
         mOnLessonClickListener = onLessonClickListener;

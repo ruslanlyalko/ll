@@ -37,13 +37,14 @@ import com.ruslanlyalko.ll.data.models.ContactRecharge;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.data.models.SettingsSalary;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
-import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.adapter.ContactRechargesAdapter;
+import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.adapter.LessonsHeaderAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.adapter.OnContactRechargeClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.recharge_edit.RechargeEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit.ContactEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +75,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private Contact mContact;
     private SettingsSalary mSettingsSalary = new SettingsSalary();
     private String mContactKey = "";
-    private LessonsAdapter mLessonsAdapter = new LessonsAdapter(this);
+    private LessonsHeaderAdapter mLessonsAdapter = new LessonsHeaderAdapter(this);
     private ContactRechargesAdapter mContactRechargesAdapter = new ContactRechargesAdapter(this);
     private ValueEventListener mValueEventListener;
     private ValueEventListener mContactValueEventListener;
@@ -210,6 +211,14 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         mListLessons.setAdapter(mLessonsAdapter);
         mListIncome.setLayoutManager(new LinearLayoutManager(this));
         mListIncome.setAdapter(mContactRechargesAdapter);
+        StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(mLessonsAdapter);
+        mListLessons.addItemDecoration(headersDecor);
+        mLessonsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                headersDecor.invalidateHeaders();
+            }
+        });
     }
 
     private void loadDetails() {
