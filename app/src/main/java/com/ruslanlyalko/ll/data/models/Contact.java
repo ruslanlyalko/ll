@@ -24,7 +24,8 @@ public class Contact implements Serializable {
     private Date createdAt = new Date();
     private Date birthDay = new Date();
     private String description;
-    private int saldo;
+    private int totalIncome;
+    private int totalExpense;
 
     public Contact() {
         userType = UserType.ADULT;
@@ -126,12 +127,20 @@ public class Contact implements Serializable {
         this.description = description;
     }
 
-    public int getSaldo() {
-        return saldo;
+    public int getTotalIncome() {
+        return totalIncome;
     }
 
-    public void setSaldo(final int saldo) {
-        this.saldo = saldo;
+    public void setTotalIncome(final int totalIncome) {
+        this.totalIncome = totalIncome;
+    }
+
+    public int getTotalExpense() {
+        return totalExpense;
+    }
+
+    public void setTotalExpense(final int totalExpense) {
+        this.totalExpense = totalExpense;
     }
 
     public boolean hasUser() {

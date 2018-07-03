@@ -16,8 +16,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="card_comment_radius">12dp</dimen>
     <dimen name="card_comment_user_radius">12dp</dimen>
-    <dimen name="card_comment_user_size">48dp</dimen>
+    <dimen name="card_comment_user_size">36dp</dimen>
     <dimen name="card_comment_margin">4dp</dimen>
+    <dimen name="card_comment_margin_12">12dp</dimen>
     <dimen name="card_comment_margin_x2">8dp</dimen>
     <dimen name="card_comment_margin_top_bottom">8dp</dimen>
     <dimen name="main_button_height">45dp</dimen>

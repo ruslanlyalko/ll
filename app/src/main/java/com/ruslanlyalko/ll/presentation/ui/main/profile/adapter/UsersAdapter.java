@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
@@ -87,6 +89,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             if (mCurrentUser.getIsAdmin())
                 imageNotificationsOff.setVisibility(user.getIsReceiveNotifications() ? View.GONE : View.VISIBLE);
             imageUserLogo.setImageResource(user.getIsOnline() ? R.drawable.ic_user_primary : R.drawable.ic_user_name);
+            try {
+                if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+                    Glide.with(imageUserLogo)
+                            .load(user.getAvatar())
+                            .apply(new RequestOptions().circleCrop())
+                            .into(imageUserLogo);
+                } else {
+                    imageUserLogo.setImageResource(R.drawable.ic_user_name);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @OnClick(R.id.linear_user)

@@ -9,20 +9,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.models.MessageComment;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import butterknife.Optional;
 
 //
 public class CommentsViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.text_comment_time) TextView mTextCommentTime;
-    @BindView(R.id.image_user) ImageView mImageUser;
+    @Nullable
+    @BindView(R.id.image_user)
+    ImageView mImageUser;
     @Nullable
     @BindView(R.id.text_user_name)
     TextView mTextUserName;
@@ -66,17 +70,19 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try {
-            if (messageComment.getUserAvatar() != null && !messageComment.getUserAvatar().isEmpty()) {
-                Glide.with(mTextCommentTime.getContext())
-                        .load(messageComment.getUserAvatar())
-                        .into(mImageUser);
-            } else {
-                mImageUser.setImageResource(R.drawable.ic_user_name);
+        if (mImageUser != null)
+            try {
+                if (messageComment.getUserAvatar() != null && !messageComment.getUserAvatar().isEmpty()) {
+                    Glide.with(mTextCommentTime.getContext())
+                            .load(messageComment.getUserAvatar())
+                            .apply(new RequestOptions().circleCrop())
+                            .into(mImageUser);
+                } else {
+                    mImageUser.setImageResource(R.drawable.ic_user_name);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @OnClick(R.id.linear_root)
@@ -85,7 +91,8 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
             mOnCommentClickListener.onItemClicked(mImageView, getAdapterPosition());
     }
 
-    @OnClick(R.id.card_user)
+    @Optional
+    @OnClick(R.id.image_user)
     void onUserCLick() {
         if (mOnCommentClickListener != null)
             mOnCommentClickListener.onUserClicked(getAdapterPosition());

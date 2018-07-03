@@ -28,8 +28,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.ContactRecharge;
@@ -43,6 +41,8 @@ import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.adapter
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.recharge_edit.RechargeEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.edit.ContactEditActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private SettingsSalary mSettingsSalary = new SettingsSalary();
     private String mContactKey = "";
     private LessonsHeaderAdapter mLessonsAdapter = new LessonsHeaderAdapter(this);
-    private ContactRechargesAdapter mContactRechargesAdapter ;
+    private ContactRechargesAdapter mContactRechargesAdapter;
     private ValueEventListener mValueEventListener;
     private ValueEventListener mContactValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
@@ -148,7 +148,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         new Handler().postDelayed(() -> {
             loadLessons();
             loadContactRecharges();
-        }, 400);
+        }, 500);
     }
 
     private void setupBalance() {
@@ -274,6 +274,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         mCardPhone2.setVisibility(mContact.getPhone2() != null & !mContact.getPhone2().isEmpty() ? View.VISIBLE : View.GONE);
         mTextDescription.setText(mContact.getDescription());
         mTextDescription.setVisibility(mContact.getDescription() != null & !mContact.getDescription().isEmpty() ? View.VISIBLE : View.GONE);
+        mTextBalance.setText(String.format(getString(R.string.hrn_d), (mContact.getTotalIncome() - mContact.getTotalExpense())));
+        mTextBalance.setTextColor(ContextCompat.getColor(this, (mContact.getTotalIncome() - mContact.getTotalExpense()) < 0 ? R.color.colorPrimary : R.color.colorAccent));
     }
 
     private void loadLessons() {
@@ -451,9 +453,10 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 //        iPair += pairTotalIncome + pairTotalChildIncome;
 //        iGroup += groupTotalIncome + groupTotalChildIncome;
 //        iOnLine += onlineTotalIncome + onlineTotalChildIncome;
-        mContact.setSaldo(mTotalCharge - totalIncome);
-        mTextBalance.setText(String.format(getString(R.string.hrn_d), mContact.getSaldo()));
-        mTextBalance.setTextColor(ContextCompat.getColor(this, mContact.getSaldo() < 0 ? R.color.colorPrimary : R.color.colorAccent));
+        mContact.setTotalIncome(mTotalCharge);
+        mContact.setTotalExpense(totalIncome);
+        mTextBalance.setText(String.format(getString(R.string.hrn_d), (mContact.getTotalIncome() - mContact.getTotalExpense())));
+        mTextBalance.setTextColor(ContextCompat.getColor(this, (mContact.getTotalIncome() - mContact.getTotalExpense()) < 0 ? R.color.colorPrimary : R.color.colorAccent));
     }
 
     private void loadContacts() {
