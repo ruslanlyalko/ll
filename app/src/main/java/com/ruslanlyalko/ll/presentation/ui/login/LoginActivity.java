@@ -1,5 +1,6 @@
 package com.ruslanlyalko.ll.presentation.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -23,8 +24,8 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.text_password) EditText inputPassword;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
 
-    public static Intent getLaunchIntent(final AppCompatActivity launchActivity) {
-        return new Intent(launchActivity, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    public static Intent getLaunchIntent(final Context context) {
+        return new Intent(context, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     @Override

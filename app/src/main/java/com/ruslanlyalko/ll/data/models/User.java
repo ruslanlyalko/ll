@@ -20,6 +20,7 @@ public class User implements Serializable {
     private boolean isReceiveNotifications;
     private boolean isAllowViewExpenses;
     private boolean isOnline;
+    private boolean isBlocked;
 
     public User(String id, String fullName, String phone, String email, String birthdayDate, String workingFromDate, String card, boolean isAdmin) {
         this.id = id;
@@ -162,5 +163,13 @@ public class User implements Serializable {
 
     public void setOnline(final boolean online) {
         isOnline = online;
+    }
+
+    public boolean getIsBlocked() {
+        return isBlocked;
+    }
+
+    public void setIsBlocked(final boolean blocked) {
+        isBlocked = blocked;
     }
 }

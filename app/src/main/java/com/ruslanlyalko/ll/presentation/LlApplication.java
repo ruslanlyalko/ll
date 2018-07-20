@@ -9,9 +9,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
+import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
+import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -47,6 +48,10 @@ public class LlApplication extends Application {
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
                         if (user != null) {
+                            if (user.getIsBlocked()) {
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(LoginActivity.getLaunchIntent(getApplicationContext()));
+                            }
                             PreferenceHelper.newInstance(getApplicationContext()).setUser(user);
                         }
                     }

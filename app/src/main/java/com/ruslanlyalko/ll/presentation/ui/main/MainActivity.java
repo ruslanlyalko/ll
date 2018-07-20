@@ -30,13 +30,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.AppInfo;
 import com.ruslanlyalko.ll.data.models.Notification;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.about.AboutActivity;
+import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.CalendarActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.ClientsTabActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.DialogsActivity;
@@ -44,6 +44,7 @@ import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.ProfileActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.rooms.RoomsTabActivity;
+import com.ruslanlyalko.ll.presentation.utils.PreferenceHelper;
 import com.ruslanlyalko.ll.presentation.widget.SwipeLayout;
 
 import java.util.ArrayList;
@@ -122,6 +123,10 @@ public class MainActivity extends BaseActivity {
                             PreferenceHelper.newInstance(getApplicationContext()).setUser(user);
                             if (isDestroyed()) return;
                             mLayoutExepenses.setVisibility(user.getIsAdmin() || user.getIsAllowViewExpenses() ? View.VISIBLE : View.GONE);
+                            if (user.getIsBlocked()) {
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(LoginActivity.getLaunchIntent(getApplicationContext()));
+                            }
                         }
                     }
 
