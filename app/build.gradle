@@ -22,8 +22,8 @@ android {
         applicationId "com.ruslanlyalko.ll"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 38
-        versionName "3.8"
+        versionCode 39
+        versionName "3.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
