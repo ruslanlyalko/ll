@@ -44,6 +44,17 @@
             android:layout_below="@id/text_user_name" />
 
         <ImageView
+            android:id="@+id/image_blocked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/image_notifications_off"
+            android:src="@drawable/ic_block_30"
+            android:visibility="gone"
+            tools:ignore="ContentDescription"
+            tools:visibility="visible" />
+
+        <ImageView
             android:id="@+id/image_notifications_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

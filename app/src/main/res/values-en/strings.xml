@@ -229,5 +229,6 @@
     <string name="title_activity_reminder">Reminder</string>
     <string name="hint_before_reminder">Before First Lesson</string>
     <string name="hint_after_reminder">After Last Lesson</string>
+    <string name="hint_block">Block user</string>
 
 </resources>

@@ -277,7 +277,8 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                                 mUser = user;
                                 updateUI();
                             } else if (mIsCurrentUserPage) {
-                                mUsersAdapter.add(user);
+                                if (getCurrentUser().getIsAdmin() || !user.getIsBlocked())
+                                    mUsersAdapter.add(user);
                             }
                         }
                     }

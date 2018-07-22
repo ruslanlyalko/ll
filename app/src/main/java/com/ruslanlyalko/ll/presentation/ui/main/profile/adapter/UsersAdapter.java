@@ -74,6 +74,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         @BindView(R.id.text_position_title) TextView textPositionTitle;
         @BindView(R.id.image_user_logo) ImageView imageUserLogo;
         @BindView(R.id.image_notifications_off) ImageView imageNotificationsOff;
+        @BindView(R.id.image_blocked) ImageView imageBlocked;
 
         private OnItemClickListener mOnItemClickListener;
 
@@ -86,8 +87,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         void bindData(final User user) {
             textUserName.setText(user.getFullName());
             textPositionTitle.setText(user.getPositionTitle());
-            if (mCurrentUser.getIsAdmin())
-                imageNotificationsOff.setVisibility(user.getIsReceiveNotifications() ? View.GONE : View.VISIBLE);
+            if (mCurrentUser.getIsAdmin()) {
+                imageNotificationsOff.setVisibility(user.getIsReceiveNotifications() ? View.INVISIBLE : View.VISIBLE);
+                imageBlocked.setVisibility(user.getIsBlocked() ? View.VISIBLE : View.GONE);
+            }
             imageUserLogo.setImageResource(user.getIsOnline() ? R.drawable.ic_user_primary : R.drawable.ic_user_name);
             try {
                 if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {

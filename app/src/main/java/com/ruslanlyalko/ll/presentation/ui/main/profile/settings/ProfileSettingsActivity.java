@@ -25,10 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,9 +55,11 @@ public class ProfileSettingsActivity extends BaseActivity {
     @BindView(R.id.panel_password) LinearLayout panelPassword;
     @BindView(R.id.button_change_password) Button buttonChangePassword;
     @BindView(R.id.switch_receive_notifications) Switch mSwitchReceiveNotifications;
-    @BindView(R.id.switch_show_clients) Switch mSwitchShowClients;
+    @BindView(R.id.switch_view_expense) Switch mSwitchAllowViewExpense;
+    @BindView(R.id.switch_block) Switch mSwitchBlock;
     @BindView(R.id.panel_receive_notifications) LinearLayout mPanelReceiveNotifications;
-    @BindView(R.id.panel_show_clients) LinearLayout mPanelShowCLients;
+    @BindView(R.id.layout_view_expense) LinearLayout mPanelAllowViewExpense;
+    @BindView(R.id.layout_block) LinearLayout mLayoutBlock;
 
     private Calendar mBirthDay = Calendar.getInstance();
     private Calendar mFirstDate = Calendar.getInstance();
@@ -98,7 +100,8 @@ public class ProfileSettingsActivity extends BaseActivity {
         buttonChangePassword.setEnabled(isCurrentUser);
         panelFirstDate.setVisibility(getCurrentUser().getIsAdmin() && !isCurrentUser ? View.VISIBLE : View.GONE);
         mPanelReceiveNotifications.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
-        mPanelShowCLients.setVisibility(getCurrentUser().getIsAdmin() && !isCurrentUser ? View.VISIBLE : View.GONE);
+        mPanelAllowViewExpense.setVisibility(getCurrentUser().getIsAdmin() && !isCurrentUser ? View.VISIBLE : View.GONE);
+        mLayoutBlock.setVisibility(getCurrentUser().getIsAdmin() && !isCurrentUser ? View.VISIBLE : View.GONE);
         inputCard.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -159,8 +162,10 @@ public class ProfileSettingsActivity extends BaseActivity {
         final String tFirstDate = inputFirstDate.getTag().toString().trim();
         final boolean receiveNotifications = mSwitchReceiveNotifications.isChecked();
         final boolean tReceiveNotifications = (boolean) mSwitchReceiveNotifications.getTag();
-        final boolean showClients = mSwitchShowClients.isChecked();
-        final boolean tShowClients = (boolean) mSwitchShowClients.getTag();
+        final boolean allowViewExpense = mSwitchAllowViewExpense.isChecked();
+        final boolean tAllowViewExpense = (boolean) mSwitchAllowViewExpense.getTag();
+        final boolean block = mSwitchBlock.isChecked();
+        final boolean tBlock = (boolean) mSwitchBlock.getTag();
         Map<String, Object> childUpdates = new HashMap<>();
         boolean needUpdate = false;
         if (!phone.equals(tPhone)) {
@@ -192,8 +197,12 @@ public class ProfileSettingsActivity extends BaseActivity {
             childUpdates.put("isReceiveNotifications", receiveNotifications);
             needUpdate = true;
         }
-        if (showClients != tShowClients) {
-            childUpdates.put("isAllowViewExpenses", showClients);
+        if (allowViewExpense != tAllowViewExpense) {
+            childUpdates.put("isAllowViewExpenses", allowViewExpense);
+            needUpdate = true;
+        }
+        if (block != tBlock) {
+            childUpdates.put("isBlocked", block);
             needUpdate = true;
         }
         if (needUpdate) {
@@ -234,8 +243,10 @@ public class ProfileSettingsActivity extends BaseActivity {
                 inputFirstDate.setTag(user.getWorkingFromDate());
                 mSwitchReceiveNotifications.setChecked(user.getIsReceiveNotifications());
                 mSwitchReceiveNotifications.setTag(user.getIsReceiveNotifications());
-                mSwitchShowClients.setChecked(user.getIsAllowViewExpenses());
-                mSwitchShowClients.setTag(user.getIsAllowViewExpenses());
+                mSwitchAllowViewExpense.setChecked(user.getIsAllowViewExpenses());
+                mSwitchAllowViewExpense.setTag(user.getIsAllowViewExpenses());
+                mSwitchBlock.setChecked(user.getIsBlocked());
+                mSwitchBlock.setTag(user.getIsBlocked());
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
                 Date dt = new Date();
                 try {

@@ -261,6 +261,7 @@
     <string name="title_activity_reminder">Нагадування</string>
     <string name="hint_before_reminder">Перед першим уроком</string>
     <string name="hint_after_reminder">Після останнього уроку</string>
+    <string name="hint_block">Блокувати користувача</string>
 
     <string-array name="months">
         <item>Січень</item>

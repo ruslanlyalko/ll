@@ -10,6 +10,9 @@
 
     </style>
 
+    <style name="AppTheme.Accent" parent="AppTheme">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
     <!-- Theme with no Action Bar -->
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">true</item>

@@ -81,7 +81,6 @@
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
-
         <!-- Phone-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -265,9 +264,9 @@
 
         </LinearLayout>
 
-        <!-- Receive Notifications -->
+        <!-- View Expense-->
         <LinearLayout
-            android:id="@+id/panel_show_clients"
+            android:id="@+id/layout_view_expense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -282,12 +281,39 @@
                 tools:ignore="ContentDescription" />
 
             <Switch
-                android:id="@+id/switch_show_clients"
+                android:id="@+id/switch_view_expense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:hint="@string/hint_show_clients" />
+
+        </LinearLayout>
+
+        <!-- Block -->
+        <LinearLayout
+            android:id="@+id/layout_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_block"
+                tools:ignore="ContentDescription" />
+
+            <Switch
+                android:id="@+id/switch_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:hint="@string/hint_block"
+                android:theme="@style/AppTheme.Accent" />
 
         </LinearLayout>
 
