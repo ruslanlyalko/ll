@@ -101,7 +101,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
     @OnLongClick(R.id.linear_root)
     boolean onItemLongCLick() {
         if (mOnCommentClickListener == null) return false;
-        mOnCommentClickListener.onItemLongClicked(mImageUser, getAdapterPosition());
+        mOnCommentClickListener.onItemLongClicked(mTextCommentTime, getAdapterPosition());
         return true;
     }
 }
