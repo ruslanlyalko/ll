@@ -10,12 +10,14 @@ import android.widget.TextView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.ruslanlyalko.ll.R;
+import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.birth.adapter.BirthContactsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.OnContactClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.ContactDetailsActivity;
 import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -67,8 +69,9 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
     private void loadContacts() {
         getDataManager().getAllContacts().observe(this, list -> {
             if(list == null) return;
-            Collections.sort(list, (contact, t1) -> contact.getBirthDay().compareTo(t1.getBirthDay()));
-            mBirthContactsAdapter.setData(list);
+            List<Contact> contacts = new ArrayList<>(list);
+            Collections.sort(contacts, (contact, contact1) -> contact.getBirthDay().compareTo(contact1.getBirthDay()));
+            mBirthContactsAdapter.setData(contacts);
             onFilterTextChanged(mLastDate);
         });
     }
