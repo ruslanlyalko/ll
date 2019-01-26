@@ -22,11 +22,8 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
@@ -155,22 +152,15 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     }
 
     private void loadUsers() {
-        getDB(DC.DB_USERS)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mUsers.clear();
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            User user = data.getValue(User.class);
-                            mUsers.add(user);
-                        }
-                        initSpinnerTeacher();
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
+        getDataManager().getAllUsers().observe(this, list -> {
+            if(list == null) return;
+            mUsers.clear();
+            for (User user : list) {
+                if(user != null)
+                    mUsers.add(user);
+            }
+            initSpinnerTeacher();
+        });
     }
 
     private void initSpinnerTeacher() {

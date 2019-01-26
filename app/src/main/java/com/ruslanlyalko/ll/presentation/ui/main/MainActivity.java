@@ -33,7 +33,6 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.AppInfo;
 import com.ruslanlyalko.ll.data.models.Notification;
-import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.about.AboutActivity;
 import com.ruslanlyalko.ll.presentation.ui.login.LoginActivity;
@@ -95,11 +94,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mSwipeOpened) {
+        if(mSwipeOpened) {
             mSwipeLayout.close();
             return;
         }
-        if (mDoubleBackToExitPressedOnce) {
+        if(mDoubleBackToExitPressedOnce) {
             finish();
             return;
         }
@@ -109,31 +108,22 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initCurrentUser() {
-        if (getFirebaseUser() == null) {
+        if(getFirebaseUser() == null) {
             finish();
             return;
         }
-        getDB(DC.DB_USERS)
-                .child(getFirebaseUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user != null) {
-                            PreferenceHelper.newInstance(getApplicationContext()).setUser(user);
-                            if (isDestroyed()) return;
-                            mLayoutExepenses.setVisibility(user.getIsAdmin() || user.getIsAllowViewExpenses() ? View.VISIBLE : View.GONE);
-                            if (user.getIsBlocked()) {
-                                FirebaseAuth.getInstance().signOut();
-                                startActivity(LoginActivity.getLaunchIntent(getApplicationContext()));
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
+        getDataManager().getAllUsers();
+        getDataManager().getAllContacts();
+        getDataManager().getMyUser().observe(this, user -> {
+            if(user != null) {
+                PreferenceHelper.newInstance(getApplicationContext()).setUser(user);
+                mLayoutExepenses.setVisibility(user.getIsAdmin() || user.getIsAllowViewExpenses() ? View.VISIBLE : View.GONE);
+                if(user.getIsBlocked()) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(LoginActivity.getLaunchIntent(getApplicationContext()));
+                }
+            }
+        });
         getDB(DC.DB_INFO)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -183,7 +173,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadBadge() {
-        if (getFirebaseUser() == null) {
+        if(getFirebaseUser() == null) {
             finish();
             return;
         }
@@ -214,7 +204,7 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
         String version = (pInfo != null ? pInfo.versionName : "");
-        if (getFirebaseUser() != null) {
+        if(getFirebaseUser() != null) {
             DatabaseReference ref = getDB(DC.DB_USERS)
                     .child(getFirebaseUser().getUid());
             ref.child(DC.USER_TOKEN).setValue(refreshedToken);
@@ -226,7 +216,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void checkVersion() {
-        if (isDestroyed()) return;
+        if(isDestroyed()) return;
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -234,11 +224,11 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
         int myVersion = (pInfo != null ? pInfo.versionCode : 0);
-        if (myVersion < mAppInfo.getLatestVersion() || mAppInfo.getShowAnyWay()) {
+        if(myVersion < mAppInfo.getLatestVersion() || mAppInfo.getShowAnyWay()) {
             showVersionLink(true);
         } else {
             showVersionLink(false);
-            if (myVersion > mAppInfo.getLatestVersion() && !DEBUG) {
+            if(myVersion > mAppInfo.getLatestVersion() && !DEBUG) {
                 getDB(DC.DB_INFO)
                         .child(DC.LATEST_VERSION).setValue(myVersion);
             }
@@ -246,8 +236,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void redrawCountOfNotifications(int count) {
-        if (isDestroyed()) return;
-        if (count == 0) {
+        if(isDestroyed()) return;
+        if(count == 0) {
             mEventsButton.setImageDrawable(getDrawable(R.drawable.ic_event1));
             return;
         }
@@ -269,12 +259,12 @@ public class MainActivity extends BaseActivity {
     }
 
     void setupShortCuts() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-            if (shortcutManager != null && shortcutManager.isRequestPinShortcutSupported()) {
+            if(shortcutManager != null && shortcutManager.isRequestPinShortcutSupported()) {
                 // create ShortcutInfo with details of shortcut
                 // if 'uniqueShortcutId' already existed, we could just access it using the Id
-                if (shortcutManager.getPinnedShortcuts().size() > 0) return;
+                if(shortcutManager.getPinnedShortcuts().size() > 0) return;
                 ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(this, "calendarId")
                         .setIcon(Icon.createWithResource(this, R.mipmap.ic_launcher))
                         .setShortLabel(getString(R.string.shortcut_calendar_short_label))
@@ -299,7 +289,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.button_arrow)
     void onArrowClicked() {
-        if (mSwipeOpened)
+        if(mSwipeOpened)
             mSwipeLayout.close();
         else
             mSwipeLayout.open();
@@ -375,12 +365,12 @@ public class MainActivity extends BaseActivity {
             case MotionEvent.ACTION_UP:
                 float x2 = event.getX();
                 float deltaX = x2 - x1;
-                if (deltaX > MIN_DISTANCE) {
+                if(deltaX > MIN_DISTANCE) {
                     // left2right
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                     startActivity(intent);
                     break;
-                } else if (deltaX < (0 - MIN_DISTANCE)) {
+                } else if(deltaX < (0 - MIN_DISTANCE)) {
                     // right2left
                     Intent intent = new Intent(MainActivity.this, DialogsActivity.class);
                     startActivity(intent);
@@ -391,10 +381,10 @@ public class MainActivity extends BaseActivity {
 //                }
                 float y2 = event.getY();
                 float deltaY = y2 - y1;
-                if (deltaY > MIN_DISTANCE) {
+                if(deltaY > MIN_DISTANCE) {
                     // top2bottom
                     mSwipeLayout.close();
-                } else if (deltaY < (0 - MIN_DISTANCE)) {
+                } else if(deltaY < (0 - MIN_DISTANCE)) {
                     // bottom2top
                     mSwipeLayout.open();
                 }
@@ -409,7 +399,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
         }
     }

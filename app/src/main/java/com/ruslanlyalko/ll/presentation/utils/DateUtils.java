@@ -21,6 +21,14 @@ public class DateUtils {
         return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
     }
 
+
+    public static boolean dateEquals(final Date d1, final Date d2) {
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(d1);
+        Calendar c2 = Calendar.getInstance();
+        c2.setTime(d2);
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
+    }
     public static String getIntWithSpace(int data) {
         String resultStr = data + "";
         if (resultStr.length() > 3)

@@ -35,4 +35,7 @@ public interface DC {
     String DIALOG_MESSAGE_MESSAGE = "message";
     String DIALOG_MESSAGE_EDITED = "edited";
     String ABOUT_TEXT = "aboutText";
+    String FIELD_FULL_NAME = "fullName";
+    String FIELD_NAME = "name";
+    String FIELD_TOKEN = "token";
 }

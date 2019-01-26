@@ -27,8 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -58,6 +56,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -125,7 +124,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     @Override
     public void parseExtras() {
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
+        if(bundle != null) {
             mUID = bundle.getString(Keys.Extras.EXTRA_UID, getFirebaseUser().getUid());
         } else
             mUID = getFirebaseUser().getUid();
@@ -134,7 +133,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
 
     @Override
     protected void setupView() {
-        if (mIsCurrentUserPage) {
+        if(mIsCurrentUserPage) {
             mUser = getCurrentUser();
             updateUI();
         } else {
@@ -181,11 +180,11 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
     }
 
     private void initRecycle() {
-        if (mIsCurrentUserPage) {
+        mUsersAdapter = new UsersAdapter(this, getCurrentUser());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mUsersAdapter);
+        if(mIsCurrentUserPage) {
             mCardView.setVisibility(View.VISIBLE);
-            mUsersAdapter = new UsersAdapter(this, getCurrentUser());
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mRecyclerView.setAdapter(mUsersAdapter);
         } else {
             mCardView.setVisibility(View.GONE);
         }
@@ -205,14 +204,14 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 onPhotosReturned(imageFile);
             }
         });
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
+            if(resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
                 showProgressBarUpload();
                 String imageFileName = DateUtils.getCurrentTimeStamp() + "_original" + ".jpg";
                 uploadFile(resultUri, imageFileName, 95).addOnSuccessListener(taskSnapshot -> {
-                    if (taskSnapshot.getDownloadUrl() != null) {
+                    if(taskSnapshot.getDownloadUrl() != null) {
                         Map<String, Object> childUpdates = new HashMap<>();
                         childUpdates.put("avatar", taskSnapshot.getDownloadUrl().toString());
                         mDatabase.getReference().child(DC.DB_USERS).child(mUID).updateChildren(childUpdates)
@@ -220,7 +219,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                                         hideProgressBarUpload());
                     }
                 }).addOnFailureListener(exception -> hideProgressBarUpload());
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            } else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 error.printStackTrace();
             }
@@ -252,6 +251,24 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         return true;
     }
 
+    private void loadUsers() {
+        getDataManager().getAllUsers().observe(this, list -> {
+            if(list == null) return;
+            boolean isAdmin = getCurrentUser().getIsAdmin();
+            List<User> users = new ArrayList<>();
+            for (User user : list) {
+                if(user.getId().equals(mUID)) {
+                    mUser = user;
+                    updateUI();
+                } else if(mIsCurrentUserPage) {
+                    if(isAdmin || !user.getIsBlocked())
+                        users.add(user);
+                }
+            }
+            mUsersAdapter.setData(users);
+        });
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
         menu.findItem(R.id.action_add_user).setVisible(getCurrentUser().getIsAdmin() && mIsCurrentUserPage);
@@ -264,54 +281,8 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         return true;
     }
 
-    private void loadUsers() {
-        if (mIsCurrentUserPage)
-            mUsersAdapter.notifyDataSetChanged();
-        mDatabase.getReference(DC.DB_USERS)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user != null) {
-                            if (user.getId().equals(mUID)) {
-                                mUser = user;
-                                updateUI();
-                            } else if (mIsCurrentUserPage) {
-                                if (getCurrentUser().getIsAdmin() || !user.getIsBlocked())
-                                    mUsersAdapter.add(user);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user != null) {
-                            if (user.getId().equals(mUID)) {
-                                mUser = user;
-                                updateUI();
-                            } else if (mIsCurrentUserPage) {
-                                mUsersAdapter.update(user);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-    }
-
     private void checkConnection() {
-        if (mIsCurrentUserPage) {
+        if(mIsCurrentUserPage) {
             mDatabase.getReference(".info/connected")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -325,42 +296,12 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                             System.err.println("Listener was cancelled");
                         }
                     });
-        } else {
-            mDatabase.getReference(DC.DB_USERS)
-                    .child(mUID)
-                    .child(DC.USER_IS_ONLINE)
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(final DataSnapshot dataSnapshot) {
-                            mConnected = dataSnapshot.getValue(Boolean.class);
-                            updateLastOnline();
-                        }
-
-                        @Override
-                        public void onCancelled(final DatabaseError databaseError) {
-                        }
-                    });
-            mDatabase.getReference(DC.DB_USERS)
-                    .child(mUID)
-                    .child(DC.USER_LAST_ONLINE)
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            mLastOnline = snapshot.getValue(Date.class);
-                            updateLastOnline();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError error) {
-                            System.err.println("Listener was cancelled");
-                        }
-                    });
         }
     }
 
     private void updateUI() {
-        if (isDestroyed()) return;
-        if (mUser == null || getFirebaseUser() == null) return;
+        if(isDestroyed()) return;
+        if(mUser == null || getFirebaseUser() == null) return;
         // if current mUser is admin or open his friends
         fab.setVisibility(getCurrentUser().getIsAdmin() || mIsCurrentUserPage ? View.VISIBLE : View.GONE);
 //        if (mUser.getIsAdmin() && mIsCurrentUserPage)
@@ -384,7 +325,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         mEmailLayout.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText(email, email);
-            if (clipboard != null)
+            if(clipboard != null)
                 clipboard.setPrimaryClip(clip);
             Toast.makeText(ProfileActivity.this, getString(R.string.toast_text_copied), Toast.LENGTH_SHORT).show();
         });
@@ -392,17 +333,17 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
         mCardLayout.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText(card, card);
-            if (clipboard != null)
+            if(clipboard != null)
                 clipboard.setPrimaryClip(clip);
             Toast.makeText(ProfileActivity.this, getString(R.string.toast_text_copied), Toast.LENGTH_SHORT).show();
         });
-        if (getCurrentUser().getIsAdmin() && !mIsCurrentUserPage) {
+        if(getCurrentUser().getIsAdmin() && !mIsCurrentUserPage) {
             mFirsDateLayout.setVisibility(View.VISIBLE);
         }
-        if (mUser.getAvatar() != null && !mUser.getAvatar().isEmpty()) {
+        if(mUser.getAvatar() != null && !mUser.getAvatar().isEmpty()) {
             mAvaImageView.setVisibility(View.VISIBLE);
             mBackImageView.setVisibility(View.VISIBLE);
-            if (!isDestroyed())
+            if(!isDestroyed())
                 Glide.with(this)
                         .load(mUser.getAvatar())
                         .into(mAvaImageView);
@@ -410,17 +351,18 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
             mAvaImageView.setVisibility(View.GONE);
             mBackImageView.setVisibility(View.GONE);
         }
+        updateLastOnline();
     }
 
     private void updateLastOnline() {
-        if (isDestroyed()) return;
-        if (mConnected != null && mConnected) {
+        if(isDestroyed()) return;
+        if(mUser.getIsOnline()) {
             mTextAvailable.setVisibility(View.VISIBLE);
             mTextLastOnline.setText(R.string.online);
         } else {
             mTextAvailable.setVisibility(View.INVISIBLE);
-            if (mLastOnline != null)
-                mTextLastOnline.setText(getString(R.string.text_last_online, DateUtils.getUpdatedAt(mLastOnline)));
+            if(mUser.getLastOnline() != null)
+                mTextLastOnline.setText(getString(R.string.text_last_online, DateUtils.getUpdatedAt(mUser.getLastOnline())));
             else
                 mTextLastOnline.setText(getString(R.string.text_last_online_long_time_ago));
         }
@@ -428,7 +370,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
 
     private void choosePhoto() {
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        if (EasyPermissions.hasPermissions(this, perms)) {
+        if(EasyPermissions.hasPermissions(this, perms)) {
             EasyImage.openChooserWithGallery(this, getString(R.string.text_choose_images), 0);
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.image_permissions), REQUEST_IMAGE_PERMISSION, perms);
@@ -442,7 +384,7 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 .setPositiveButton(R.string.action_exit, (dialog, which) -> {
                     FirebaseUtils.clearPushToken();
                     PreferenceHelper.newInstance(this).releaseData();
-                    FirebaseAuth.getInstance().signOut();
+                    getDataManager().logout();
                     startActivity(LoginActivity.getLaunchIntent(this));
                     finish();
                 })

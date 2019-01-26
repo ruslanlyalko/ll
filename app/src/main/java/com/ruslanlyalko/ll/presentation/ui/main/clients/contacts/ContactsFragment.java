@@ -19,13 +19,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseFragment;
@@ -116,23 +110,15 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
     }
 
     private void loadUsers() {
-        getDB(DC.DB_USERS)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mUsers.clear();
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            User user = data.getValue(User.class);
-                            if(user != null && !user.getIsBlocked())
-                                mUsers.add(user);
-                        }
-                        initSpinnerTeacher();
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
+        getDataManager().getAllUsers().observe(this, list -> {
+            if(list == null) return;
+            mUsers.clear();
+            for (User user : list) {
+                if(user != null && !user.getIsBlocked())
+                    mUsers.add(user);
+            }
+            initSpinnerTeacher();
+        });
     }
 
     private void initSpinnerTeacher() {
@@ -179,32 +165,16 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
     }
 
     private void loadContacts() {
-        Query ref = FirebaseDatabase.getInstance()
-                .getReference(DC.DB_CONTACTS)
-                .orderByChild("name");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                if(getActivity() == null || getActivity().isDestroyed()) return;
-                List<Contact> contacts = new ArrayList<>();
-                List<Contact> archivedContacts = new ArrayList<>();
-                for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
-                    Contact contact = clientSS.getValue(Contact.class);
-                    if(contact != null && contact.getUserType() == mUserType) {
-                        if(contact.getIsArchived())
-                            archivedContacts.add(contact);
-                        else
-                            contacts.add(contact);
-                    }
+        getDataManager().getAllContacts().observe(this, list -> {
+            if(list == null) return;
+            List<Contact> contacts = new ArrayList<>();
+            for (Contact contact : list) {
+                if(contact != null && contact.getUserType() == mUserType) {
+                    contacts.add(contact);
                 }
-                contacts.addAll(archivedContacts);
-                mContactsAdapter.setData(contacts);
-                onFilterTextChanged();
             }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-            }
+            mContactsAdapter.setData(contacts);
+            onFilterTextChanged();
         });
     }
 

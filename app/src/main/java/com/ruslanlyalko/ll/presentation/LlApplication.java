@@ -40,15 +40,15 @@ public class LlApplication extends Application {
 
     private void loadUserData() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) return;
+        if(user == null) return;
         FirebaseDatabase.getInstance().getReference(DC.DB_USERS)
                 .child(user.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        if (user != null) {
-                            if (user.getIsBlocked()) {
+                        if(user != null) {
+                            if(user.getIsBlocked()) {
                                 FirebaseAuth.getInstance().signOut();
                                 startActivity(LoginActivity.getLaunchIntent(getApplicationContext()));
                             }

@@ -1,6 +1,7 @@
 package com.ruslanlyalko.ll.data.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class User implements Serializable {
 
@@ -21,6 +22,7 @@ public class User implements Serializable {
     private boolean isAllowViewExpenses;
     private boolean isOnline;
     private boolean isBlocked;
+    private Date lastOnline;
 
     public User(String id, String fullName, String phone, String email, String birthdayDate, String workingFromDate, String card, boolean isAdmin) {
         this.id = id;
@@ -35,6 +37,14 @@ public class User implements Serializable {
 
     public User() {
         // Default constructor required
+    }
+
+    public Date getLastOnline() {
+        return lastOnline;
+    }
+
+    public void setLastOnline(final Date lastOnline) {
+        this.lastOnline = lastOnline;
     }
 
     public boolean getIsReceiveNotifications() {

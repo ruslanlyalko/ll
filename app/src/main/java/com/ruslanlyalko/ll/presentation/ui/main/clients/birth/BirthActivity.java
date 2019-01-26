@@ -9,22 +9,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.data.configuration.DC;
-import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.birth.adapter.BirthContactsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.OnContactClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.ContactDetailsActivity;
 import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -72,26 +65,11 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
     }
 
     private void loadContacts() {
-        Query ref = FirebaseDatabase.getInstance()
-                .getReference(DC.DB_CONTACTS)
-                .orderByChild("birthDay/time");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                List<Contact> contacts = new ArrayList<>();
-                for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
-                    Contact contact = clientSS.getValue(Contact.class);
-                    if(contact != null) {
-                        contacts.add(0, contact);
-                    }
-                }
-                mBirthContactsAdapter.setData(contacts);
-                onFilterTextChanged(mLastDate);
-            }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-            }
+        getDataManager().getAllContacts().observe(this, list -> {
+            if(list == null) return;
+            Collections.sort(list, (contact, t1) -> contact.getBirthDay().compareTo(t1.getBirthDay()));
+            mBirthContactsAdapter.setData(list);
+            onFilterTextChanged(mLastDate);
         });
     }
 

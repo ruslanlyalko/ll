@@ -29,8 +29,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
-import com.ruslanlyalko.ll.presentation.utils.ViewUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Expense;
 import com.ruslanlyalko.ll.data.models.Lesson;
@@ -41,6 +39,8 @@ import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.dashboard.adapter.UsersSalaryAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.profile.salary.SalaryActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.ViewUtils;
 import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
 
 import java.util.ArrayList;
@@ -124,7 +124,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                         for (DataSnapshot year : dataSnapshot.getChildren()) {
                             for (DataSnapshot month : year.getChildren()) {
                                 Result result = month.getValue(Result.class);
-                                if (result != null) {
+                                if(result != null) {
                                     results.add(result);
                                 }
                             }
@@ -221,9 +221,9 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         int type0 = 0;
         int type1 = 0;
         for (Expense expense : mExpenses) {
-            if (expense.getTypeId() == 0)
+            if(expense.getTypeId() == 0)
                 type0 += expense.getPrice();
-            if (expense.getTypeId() == 1)
+            if(expense.getTypeId() == 1)
                 type1 += expense.getPrice();
         }
         mExpensesTotal = type0 + type1;
@@ -242,7 +242,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         String year = DateUtils.toString(mCurrentMonth.getTime(), "yyyy");
         String month = DateUtils.toString(mCurrentMonth.getTime(), "MM");
         Result result = new Result(mIncomeTotal, mSalaryTotal, mExpensesTotal, netIncome, year, month);
-        if (mIncomeTotal != 0 && mSalaryTotal != 0)
+        if(mIncomeTotal != 0 && mSalaryTotal != 0)
             FirebaseDatabase.getInstance()
                     .getReference(DC.DB_RESULTS)
                     .child(year)
@@ -253,7 +253,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
 
     @OnClick(R.id.panel_action)
     void onExpandClicked() {
-        if (mLayoutCollapsing.getVisibility() == View.VISIBLE) {
+        if(mLayoutCollapsing.getVisibility() == View.VISIBLE) {
             mImageView.setImageResource(R.drawable.ic_action_expand_more);
             ViewUtils.collapse(mLayoutCollapsing);
         } else {
@@ -272,7 +272,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             for (DataSnapshot ds : data.getChildren()) {
                                 Lesson lesson = ds.getValue(Lesson.class);
-                                if (lesson != null) {
+                                if(lesson != null) {
                                     mLessonList.add(lesson);
                                 }
                             }
@@ -295,7 +295,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                         mExpenses.clear();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             Expense expense = data.getValue(Expense.class);
-                            if (expense != null) {
+                            if(expense != null) {
                                 mExpenses.add(0, expense);
                             }
                         }
@@ -309,24 +309,15 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void loadUsers() {
-        getDB(DC.DB_USERS)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mUsers.clear();
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            User user = data.getValue(User.class);
-                            if (user != null) {
-                                mUsers.add(0, user);
-                            }
-                        }
-                        calcSalaryForUsers();
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
+        getDataManager().getAllUsers().observe(this, list -> {
+            if(list == null) return;
+            mUsers.clear();
+            for (User user : list) {
+                if(user != null)
+                    mUsers.add(user);
+            }
+            calcSalaryForUsers();
+        });
     }
 
     private void calcSalaryForUsers() {
@@ -375,10 +366,10 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             int groupTotalChildCount = 0;
             int onlineTotalChildCount = 0;
             for (Lesson lesson : mLessonList) {
-                if (!lesson.getUserId().equals(user.getId())) continue;
-                if (lesson.getStatusType() == 1) continue;
-                if (lesson.getUserType() == 0) {
-                    if (lesson.getLessonLengthId() == 0) {
+                if(!lesson.getUserId().equals(user.getId())) continue;
+                if(lesson.getStatusType() == 1) continue;
+                if(lesson.getUserType() == 0) {
+                    if(lesson.getLessonLengthId() == 0) {
                         switch (lesson.getLessonType()) {
                             case 0:
                                 privateTotalCount += 1;
@@ -426,7 +417,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                         }
                     }
                 } else {
-                    if (lesson.getLessonLengthId() == 0) {
+                    if(lesson.getLessonLengthId() == 0) {
                         switch (lesson.getLessonType()) {
                             case 0:
                                 privateTotalChildCount += 1;
@@ -491,7 +482,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             aPair += pairTotal + pairTotalChild;
             aGroup += groupTotal + groupTotalChild;
             aOnLine += onlineTotal + onlineTotalChild;
-            if (total != 0)
+            if(total != 0)
                 mUsersSalaryAdapter.add(user, total);
             birthdays = birthdays.concat(user.getBirthdayDate() + " - " + user.getFullName() + "\n");
         }//user
@@ -515,7 +506,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         SettingsSalary settingsSalary = dataSnapshot.getValue(SettingsSalary.class);
-                        if (settingsSalary != null) {
+                        if(settingsSalary != null) {
                             mSettingsSalary = settingsSalary;
                         }
                     }
@@ -540,7 +531,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             values.add(new BarEntry(i, val, val));
         }
         BarDataSet set1;
-        if (mBarChart.getData() != null &&
+        if(mBarChart.getData() != null &&
                 mBarChart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) mBarChart.getData().getDataSetByIndex(0);
             set1.setValues(values);
@@ -581,11 +572,11 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         }
         BarDataSet set1;
         BarDataSet set1Profit;
-        if (mBarChartIncome.getData() != null &&
+        if(mBarChartIncome.getData() != null &&
                 mBarChartIncome.getData().getDataSetCount() == 1) {
             set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
             set1.setValues(values);
-        } else if (mBarChartIncome.getData() != null &&
+        } else if(mBarChartIncome.getData() != null &&
                 mBarChartIncome.getData().getDataSetCount() == 2) {
             set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
             set1.setValues(values);

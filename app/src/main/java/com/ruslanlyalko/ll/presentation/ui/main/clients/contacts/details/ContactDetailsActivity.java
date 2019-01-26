@@ -28,7 +28,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.configuration.DC;
@@ -89,6 +88,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private ValueEventListener mContactValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
     private int mTotalCharge = 0;
+    private List<Lesson> mLessons = new ArrayList<>();
+    private Date mCurrentDate;
 
     public static Intent getLaunchIntent(final Context launchIntent, final Contact contact) {
         Intent intent = new Intent(launchIntent, ContactDetailsActivity.class);
@@ -139,6 +140,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         mCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
+                mCurrentDate = dateClicked;
+                showLessonsOnList();
             }
 
             @Override
@@ -316,6 +319,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         if(isDestroyed()) return;
         mValueEventListener = getDB(DC.DB_LESSONS)
                 .addValueEventListener(new ValueEventListener() {
+
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         if(isDestroyed()) return;
@@ -346,7 +350,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                                 Long.compare(o2.getDateTime().getTime(), o1.getDateTime().getTime()));
                         String count = String.format(Locale.US, "[%d]", lessons.size());
                         mTextLessonCount.setText(count);
-                        mLessonsAdapter.setData(lessons);
+                        mLessons = lessons;
+                        showLessonsOnList();
                         calcBalance();
                     }
 
@@ -354,6 +359,24 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                     public void onCancelled(final DatabaseError databaseError) {
                     }
                 });
+    }
+
+    private void showLessonsOnList() {
+        if(mCurrentDate == null) {
+            mLessonsAdapter.setData(mLessons);
+        } else {
+            mLessonsAdapter.setData(getLessonsForCurrentDate());
+        }
+    }
+
+    private List<Lesson> getLessonsForCurrentDate() {
+        List<Lesson> list = new ArrayList<>();
+        for (Lesson lesson : mLessons) {
+            if(DateUtils.dateEquals(mCurrentDate, lesson.getDateTime())) {
+                list.add(lesson);
+            }
+        }
+        return list;
     }
 
     private void calcBalance() {
@@ -500,24 +523,9 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void loadContacts() {
-        Query ref = getDB(DC.DB_CONTACTS)
-                .orderByChild("name");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                List<Contact> contacts = new ArrayList<>();
-                for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
-                    Contact contact = clientSS.getValue(Contact.class);
-                    if(contact != null) {
-                        contacts.add(contact);
-                    }
-                }
-                mLessonsAdapter.setContacts(contacts);
-            }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-            }
+        getDataManager().getAllContacts().observe(this, list -> {
+            if(list == null) return;
+            mLessonsAdapter.setContacts(list);
         });
     }
 
@@ -611,6 +619,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     public void onMonthClick() {
         if(mCalendarView.getVisibility() == View.VISIBLE) {
             mCalendarView.setVisibility(View.GONE);
+            mCurrentDate = null;
+            showLessonsOnList();
         } else {
             mCalendarView.setVisibility(View.VISIBLE);
         }

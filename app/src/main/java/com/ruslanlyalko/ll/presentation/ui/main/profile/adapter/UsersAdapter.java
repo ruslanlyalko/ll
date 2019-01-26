@@ -53,19 +53,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         return mDataSource.get(position);
     }
 
-    public void add(final User user) {
-        mDataSource.add(user);
-        notifyItemInserted(mDataSource.size() - 1);
-    }
-
-    public void update(final User user) {
-        for (int i = 0; i < mDataSource.size(); i++) {
-            if (user.getId().equalsIgnoreCase(mDataSource.get(i).getId())) {
-                mDataSource.set(i, user);
-                notifyItemChanged(i);
-                break;
-            }
-        }
+    public void setData(final List<User> users) {
+        mDataSource.clear();
+        mDataSource.addAll(users);
+        notifyDataSetChanged();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -87,13 +78,16 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         void bindData(final User user) {
             textUserName.setText(user.getFullName());
             textPositionTitle.setText(user.getPositionTitle());
-            if (mCurrentUser.getIsAdmin()) {
+            if(mCurrentUser.getIsAdmin()) {
                 imageNotificationsOff.setVisibility(user.getIsReceiveNotifications() ? View.INVISIBLE : View.VISIBLE);
                 imageBlocked.setVisibility(user.getIsBlocked() ? View.VISIBLE : View.GONE);
+            } else {
+                imageNotificationsOff.setVisibility(View.INVISIBLE);
+                imageBlocked.setVisibility(View.GONE);
             }
             imageUserLogo.setImageResource(user.getIsOnline() ? R.drawable.ic_user_primary : R.drawable.ic_user_name);
             try {
-                if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+                if(user.getAvatar() != null && !user.getAvatar().isEmpty()) {
                     Glide.with(imageUserLogo)
                             .load(user.getAvatar())
                             .apply(new RequestOptions().circleCrop())
@@ -108,7 +102,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
         @OnClick(R.id.linear_user)
         void onItemCLick() {
-            if (mOnItemClickListener != null)
+            if(mOnItemClickListener != null)
                 mOnItemClickListener.onItemClicked(getAdapterPosition());
         }
     }

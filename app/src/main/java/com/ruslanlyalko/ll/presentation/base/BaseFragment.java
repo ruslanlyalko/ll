@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ruslanlyalko.ll.data.DataManager;
+import com.ruslanlyalko.ll.data.DataManagerImpl;
 import com.ruslanlyalko.ll.data.models.User;
 
 import butterknife.ButterKnife;
@@ -25,6 +27,18 @@ import butterknife.ButterKnife;
  * on 19.05.2018.
  */
 public abstract class BaseFragment extends Fragment {
+
+    private DataManager mDataManager;
+
+    public BaseFragment() {
+        mDataManager = DataManagerImpl.newInstance();
+    }
+
+    protected FirebaseAuth getAuth() {return FirebaseAuth.getInstance();}
+
+    protected DataManager getDataManager() {
+        return mDataManager;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
