@@ -60,6 +60,8 @@ public class ProfileSettingsActivity extends BaseActivity {
     @BindView(R.id.panel_receive_notifications) LinearLayout mPanelReceiveNotifications;
     @BindView(R.id.layout_view_expense) LinearLayout mPanelAllowViewExpense;
     @BindView(R.id.layout_block) LinearLayout mLayoutBlock;
+    @BindView(R.id.text_from) EditText inputFrom;
+    @BindView(R.id.text_to) EditText inputTo;
 
     private Calendar mBirthDay = Calendar.getInstance();
     private Calendar mFirstDate = Calendar.getInstance();
@@ -84,7 +86,7 @@ public class ProfileSettingsActivity extends BaseActivity {
     @Override
     public void parseExtras() {
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
+        if(bundle != null) {
             mUid = bundle.getString(Keys.Extras.EXTRA_UID, mCurrentUser.getUid());
         }
     }
@@ -113,7 +115,7 @@ public class ProfileSettingsActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (mNumber.length() < s.length()) {
+                if(mNumber.length() < s.length()) {
                     switch (s.length()) {
                         case 5:
                             s.insert(4, " ");
@@ -140,7 +142,7 @@ public class ProfileSettingsActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_save) {
+        if(id == R.id.action_save) {
             saveChanges();
             return true;
         }
@@ -154,12 +156,16 @@ public class ProfileSettingsActivity extends BaseActivity {
         final String birthday = inputBDay.getText().toString().trim();
         final String card = inputCard.getText().toString().trim();
         final String firstDate = inputFirstDate.getText().toString().trim();
+        final String from = inputFrom.getText().toString().trim();
+        final String to = inputTo.getText().toString().trim();
         final String tPosition = inputPosition.getTag().toString().trim();
         final String tPhone = inputPhone.getTag().toString().trim();
         final String tEmail = inputEmail.getTag().toString().trim();
         final String tBirthday = inputBDay.getTag().toString().trim();
         final String tCard = inputCard.getTag().toString().trim();
         final String tFirstDate = inputFirstDate.getTag().toString().trim();
+        final String tFrom = inputFrom.getTag().toString().trim();
+        final String tTo = inputTo.getTag().toString().trim();
         final boolean receiveNotifications = mSwitchReceiveNotifications.isChecked();
         final boolean tReceiveNotifications = (boolean) mSwitchReceiveNotifications.getTag();
         final boolean allowViewExpense = mSwitchAllowViewExpense.isChecked();
@@ -168,45 +174,53 @@ public class ProfileSettingsActivity extends BaseActivity {
         final boolean tBlock = (boolean) mSwitchBlock.getTag();
         Map<String, Object> childUpdates = new HashMap<>();
         boolean needUpdate = false;
-        if (!phone.equals(tPhone)) {
+        if(!phone.equals(tPhone)) {
             childUpdates.put("phone", phone);
             needUpdate = true;
         }
-        if (!position.equals(tPosition)) {
+        if(!position.equals(tPosition)) {
             childUpdates.put("positionTitle", position);
             needUpdate = true;
         }
-        if (!birthday.equals(tBirthday)) {
+        if(!birthday.equals(tBirthday)) {
             childUpdates.put("birthdayDate", birthday);
             needUpdate = true;
         }
-        if (!card.equals(tCard)) {
+        if(!card.equals(tCard)) {
             childUpdates.put("card", card);
             needUpdate = true;
         }
-        if (!email.equals(tEmail)) {
+        if(!email.equals(tEmail)) {
             childUpdates.put("email", email);
             mCurrentUser.updateEmail(email);
             needUpdate = true;
         }
-        if (!firstDate.equals(tFirstDate)) {
+        if(!firstDate.equals(tFirstDate)) {
             childUpdates.put("workingFirstDate", firstDate);
             needUpdate = true;
         }
-        if (receiveNotifications != tReceiveNotifications) {
+        if(!from.equals(tFrom)) {
+            childUpdates.put("workingStartTime", from);
+            needUpdate = true;
+        }
+        if(!to.equals(tTo)) {
+            childUpdates.put("workingEndTime", to);
+            needUpdate = true;
+        }
+        if(receiveNotifications != tReceiveNotifications) {
             childUpdates.put("isReceiveNotifications", receiveNotifications);
             needUpdate = true;
         }
-        if (allowViewExpense != tAllowViewExpense) {
+        if(allowViewExpense != tAllowViewExpense) {
             childUpdates.put("isAllowViewExpenses", allowViewExpense);
             needUpdate = true;
         }
-        if (block != tBlock) {
+        if(block != tBlock) {
             childUpdates.put("isBlocked", block);
             needUpdate = true;
         }
-        if (needUpdate) {
-            if (isCurrentUser && !textName.getText().toString().isEmpty() && !textName.getText().toString().equals(mCurrentUser.getDisplayName())) {
+        if(needUpdate) {
+            if(isCurrentUser && !textName.getText().toString().isEmpty() && !textName.getText().toString().equals(mCurrentUser.getDisplayName())) {
                 UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                         .setDisplayName(textName.getText().toString())
                         .build();
@@ -225,9 +239,9 @@ public class ProfileSettingsActivity extends BaseActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (isDestroyed()) return;
+                if(isDestroyed()) return;
                 User user = dataSnapshot.getValue(User.class);
-                if (user == null) return;
+                if(user == null) return;
                 textName.setText(user.getFullName());
                 inputPosition.setText(user.getPositionTitle());
                 inputPosition.setTag(user.getPositionTitle());
@@ -241,6 +255,10 @@ public class ProfileSettingsActivity extends BaseActivity {
                 inputCard.setTag(user.getCard());
                 inputFirstDate.setText(user.getWorkingFromDate());
                 inputFirstDate.setTag(user.getWorkingFromDate());
+                inputFrom.setText(user.getWorkingStartTime());
+                inputFrom.setTag(user.getWorkingStartTime());
+                inputTo.setText(user.getWorkingEndTime());
+                inputTo.setTag(user.getWorkingEndTime());
                 mSwitchReceiveNotifications.setChecked(user.getIsReceiveNotifications());
                 mSwitchReceiveNotifications.setTag(user.getIsReceiveNotifications());
                 mSwitchAllowViewExpense.setChecked(user.getIsAllowViewExpenses());
@@ -275,15 +293,15 @@ public class ProfileSettingsActivity extends BaseActivity {
         final String password2 = inputPassword2.getText().toString().trim();
         inputPassword1.setError(null);
         inputPassword2.setError(null);
-        if (password1.length() <= 0) {
+        if(password1.length() <= 0) {
             return;
         }
-        if (password1.length() < 6) {
+        if(password1.length() < 6) {
             inputPassword1.setError(getString(R.string.toast_minimum_password));
             inputPassword1.requestFocus();
             return;
         }
-        if (!password1.equals(password2)) {
+        if(!password1.equals(password2)) {
             inputPassword2.setError(getString(R.string.toast_different_password));
             inputPassword2.requestFocus();
             return;

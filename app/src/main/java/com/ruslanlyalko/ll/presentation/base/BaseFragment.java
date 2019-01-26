@@ -46,9 +46,9 @@ public abstract class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         try {
             Activity activity = getActivity();
-            if (activity != null) {
+            if(activity != null) {
                 final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null && getView() != null) {
+                if(imm != null && getView() != null) {
                     imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 }
             }
@@ -70,6 +70,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected BaseActivity getBaseActivity() {
+        if(getActivity() == null)
+            throw new RuntimeException("activity destroyed");
         return (BaseActivity) getActivity();
     }
 

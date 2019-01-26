@@ -15,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.Lesson;
@@ -23,6 +22,7 @@ import com.ruslanlyalko.ll.presentation.base.BaseFragment;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.LessonsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.calendar.adapter.OnLessonClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.lesson.LessonActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,7 +75,7 @@ public class RoomFragment extends BaseFragment implements OnLessonClickListener 
 
     @Override
     protected void parseArguments() {
-        if (getArguments() != null)
+        if(getArguments() != null)
             mCurrentRoomType = getArguments().getInt(ARG_SECTION_NUMBER, 0);
     }
 
@@ -90,7 +90,7 @@ public class RoomFragment extends BaseFragment implements OnLessonClickListener 
     }
 
     private void loadLessons() {
-        if (getActivity() != null && getActivity().isDestroyed()) return;
+        if(getActivity() == null || getActivity().isDestroyed()) return;
         String aDate = DateFormat.format("yyyy/MM/dd", mCurrentDate).toString();
         FirebaseDatabase.getInstance().getReference(DC.DB_LESSONS)
                 .child(aDate)
@@ -98,11 +98,13 @@ public class RoomFragment extends BaseFragment implements OnLessonClickListener 
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
+                        if(getActivity() == null || getActivity().isDestroyed()) return;
                         List<Lesson> lessons = new ArrayList<>();
+                        boolean isAdmin = getCurrentUser().getIsAdmin();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             Lesson lesson = data.getValue(Lesson.class);
-                            if (lesson != null) {
-                                if ((getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId))
+                            if(lesson != null) {
+                                if((isAdmin || lesson.getUserId().equals(mUserId))
                                         && lesson.getRoomType() == mCurrentRoomType) {
                                     lessons.add(lesson);
                                 }
@@ -127,7 +129,7 @@ public class RoomFragment extends BaseFragment implements OnLessonClickListener 
                 List<Contact> contacts = new ArrayList<>();
                 for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
                     Contact contact = clientSS.getValue(Contact.class);
-                    if (contact != null) {
+                    if(contact != null) {
                         contacts.add(contact);
                     }
                 }
@@ -142,7 +144,7 @@ public class RoomFragment extends BaseFragment implements OnLessonClickListener 
 
     @Override
     public void onCommentClicked(final Lesson lesson) {
-        if (lesson.hasDescription())
+        if(lesson.hasDescription())
             Toast.makeText(getContext(), lesson.getDescription(), Toast.LENGTH_LONG).show();
     }
 
@@ -153,7 +155,7 @@ public class RoomFragment extends BaseFragment implements OnLessonClickListener 
 
     @Override
     public void onRemoveClicked(final Lesson lesson) {
-        if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
+        if(getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getBaseActivity());
             builder.setTitle(R.string.dialog_calendar_remove_title)
                     .setPositiveButton(R.string.action_remove, (dialog, which) -> removeLesson(lesson))

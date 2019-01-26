@@ -185,6 +185,7 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
+                if(getActivity() == null || getActivity().isDestroyed()) return;
                 List<Contact> contacts = new ArrayList<>();
                 List<Contact> archivedContacts = new ArrayList<>();
                 for (DataSnapshot clientSS : dataSnapshot.getChildren()) {

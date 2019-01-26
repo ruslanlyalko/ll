@@ -231,5 +231,7 @@
     <string name="hint_after_reminder">After Last Lesson</string>
     <string name="hint_block">Block user</string>
     <string name="text_archived">Archived</string>
+    <string name="hint_from">Start time</string>
+    <string name="hint_to">End time</string>
 
 </resources>
