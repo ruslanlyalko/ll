@@ -280,11 +280,13 @@ exports.before10 = functions.https.onRequest((req, res)=>{
 				var offset = lessonObj.dateTime.timezoneOffset / 60;	
 				var hrs = hrsUTC - offset;
 				if((lessonObj.dateTime.hours === hrs && lessonObj.dateTime.minutes > mnt && lessonObj.dateTime.minutes < (mnt+11))
-					|| (lessonObj.dateTime.hours === (hrs+1) && mnt > 49 && lessonObj.dateTime.minutes === 0)) {					
-						const membersRef = admin.database().ref(refString+"/"+lessonObj.key+"/clients/");
-						sendLessonRemainder(lessonObj.userId, contactsSnap, membersRef);
-						sendReminderIfFirstLesson(lessonObj, lessonsSnap);
-						messages = messages + 1;
+					|| (lessonObj.dateTime.hours === (hrs+1) && mnt > 49 && lessonObj.dateTime.minutes === 0)) {											
+						if(lessonObj.statusType < 1){
+							const membersRef = admin.database().ref(refString+"/"+lessonObj.key+"/clients/");
+							sendLessonRemainder(lessonObj.userId, contactsSnap, membersRef);
+							sendReminderIfFirstLesson(lessonObj, lessonsSnap);
+							messages = messages + 1;
+						}
 				}
 			});	
 			const logStr = "Today found " + count + " lessons. Messages sent to " + messages + " users"; 
@@ -302,7 +304,7 @@ function sendReminderIfFirstLesson(lessonObj, lessonsSnap){
 		//var afterCount = 0;
 		lessonsSnap.forEach(lesson => {	
 			var lessonO = lesson.val();				
-			if(lessonO.dateTime.time < lessonObj.dateTime.time){
+			if(lessonObj.statusType < 1 && lessonO.dateTime.time < lessonObj.dateTime.time){
 				beforeCount = beforeCount + 1;
 			}
 		//	if(lessonO.dateTime.time > lessonObj.dateTime.time){
