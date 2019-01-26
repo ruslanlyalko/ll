@@ -230,5 +230,6 @@
     <string name="hint_before_reminder">Before First Lesson</string>
     <string name="hint_after_reminder">After Last Lesson</string>
     <string name="hint_block">Block user</string>
+    <string name="text_archived">Archived</string>
 
 </resources>

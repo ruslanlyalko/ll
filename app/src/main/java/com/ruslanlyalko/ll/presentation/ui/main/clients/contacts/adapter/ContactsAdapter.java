@@ -1,6 +1,7 @@
 package com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     }
 
     public void add(final Contact contactComment) {
-        if (mDataSource.contains(contactComment)) return;
+        if(mDataSource.contains(contactComment)) return;
         mDataSource.add(contactComment);
         mDataSourceFiltered.add(contactComment);
         notifyItemInserted(mDataSource.size());
@@ -87,12 +88,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
 
     @Override
     public Filter getFilter() {
-        if (mFilter == null)
+        if(mFilter == null)
             mFilter = new MyFilter();
         return mFilter;
     }
 
-    public void setSelectedCotacts(final List<String> clients) {
+    public void setSelectedContacts(final List<String> clients) {
         mCheckedContacts = clients;
         notifyDataSetChanged();
     }
@@ -106,23 +107,26 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         @BindView(R.id.text_sub_title) TextView mTextSubTitle;
         @BindView(R.id.layout_root) LinearLayout mLayoutRoot;
         @BindView(R.id.check_box_selected) CheckBox mCheckBoxSelected;
+        Resources mResources;
 
         MyViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            mResources = view.getResources();
         }
 
         void bindData(final Contact contact) {
-            mTextName.setText(contact.getName());
+            String name = contact.getName() + (contact.getIsArchived() ? " (" + mResources.getString(R.string.text_archived) + ")" : "");
+            mTextName.setText(name);
             mTextPhone1.setText(contact.getPhone());
-            if (contact.getPhone2() != null & !contact.getPhone2().isEmpty())
+            if(contact.getPhone2() != null && !contact.getPhone2().isEmpty())
                 mTextPhone2.setText(contact.getPhone2());
             else
                 mTextPhone2.setText("");
             String subtitle = "";
-            if (contact.hasUser())
+            if(contact.hasUser())
                 subtitle = "[" + contact.getUserName() + "] ";
-            if (contact.getBirthDay().getTime() != contact.getCreatedAt().getTime())
+            if(contact.getBirthDay().getTime() != contact.getCreatedAt().getTime())
                 subtitle += DateUtils.toString(contact.getBirthDay(), "dd.MM.yyyy");
             subtitle += " " + contact.getEmail();
             mTextSubTitle.setText(subtitle);
@@ -133,8 +137,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         @OnClick(R.id.check_box_selected)
         void onCheckedChanged() {
             boolean isChecked = mCheckBoxSelected.isChecked();
-            if (mOnContactClickListener == null) return;
-            if (isChecked && !mCheckedContacts.contains(mDataSourceFiltered.get(getAdapterPosition()).getKey())) {
+            if(mOnContactClickListener == null) return;
+            if(isChecked && !mCheckedContacts.contains(mDataSourceFiltered.get(getAdapterPosition()).getKey())) {
                 mCheckedContacts.add(mDataSourceFiltered.get(getAdapterPosition()).getKey());
                 mOnContactClickListener.onItemsCheckedChanged(mCheckedContacts);
             } else {
@@ -145,7 +149,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
 
         @OnClick(R.id.layout_root)
         void onItemClicked() {
-            if (mOnContactClickListener == null) return;
+            if(mOnContactClickListener == null) return;
             final ActivityOptionsCompat options;
             options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity,
                     Pair.create(mImageView, "avatar"),
@@ -162,7 +166,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
             ArrayList<Contact> tempList = new ArrayList<>();
             for (int i = 0; i < mDataSource.size(); i++) {
                 Contact contact = mDataSource.get(i);
-                if (isMatchFilter(charSequence, contact)) {
+                if(isMatchFilter(charSequence, contact)) {
                     tempList.add(contact);
                 }
             }
@@ -179,30 +183,30 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         }
 
         private boolean isMatchFilter(final CharSequence charSequence, final Contact contact) {
-            if (charSequence.toString().equals(" / ")) return true;
+            if(charSequence.toString().equals(" / ")) return true;
             String[] filter = charSequence.toString().split("/", 3);
             String name = filter[0];
             String phone = "";
             String teacher = "";
-            if (filter.length > 1)
+            if(filter.length > 1)
                 phone = filter[1];
-            if (filter.length > 2)
+            if(filter.length > 2)
                 teacher = filter[2];
-            if (name.equals(" "))
+            if(name.equals(" "))
                 name = "";
-            if (phone.equals(" "))
+            if(phone.equals(" "))
                 phone = "";
             boolean isNameGood = true;
             boolean isPhoneGood = true;
             boolean isTeacherGood = true;
-            if (!name.isEmpty() && !(contact.getName().toLowerCase().contains(name.toLowerCase()))) {
+            if(!name.isEmpty() && !(contact.getName().toLowerCase().contains(name.toLowerCase()))) {
                 isNameGood = false;
             }
-            if (!phone.isEmpty() && !(contact.getPhone().toLowerCase().contains(phone.toLowerCase())
+            if(!phone.isEmpty() && !(contact.getPhone().toLowerCase().contains(phone.toLowerCase())
                     || (contact.getPhone2() == null || contact.getPhone2().toLowerCase().contains(phone.toLowerCase())))) {
                 isPhoneGood = false;
             }
-            if (!teacher.isEmpty() && !(contact.getUserId() != null && contact.getUserId().toLowerCase().contains(teacher.toLowerCase()))) {
+            if(!teacher.isEmpty() && !(contact.getUserId() != null && contact.getUserId().toLowerCase().contains(teacher.toLowerCase()))) {
                 isTeacherGood = false;
             }
             return isNameGood && isPhoneGood && isTeacherGood;

@@ -25,8 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
-import com.ruslanlyalko.ll.presentation.utils.UserType;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.User;
@@ -35,6 +33,8 @@ import com.ruslanlyalko.ll.presentation.ui.main.clients.OnFilterListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.ContactsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.OnContactClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.ContactDetailsActivity;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
+import com.ruslanlyalko.ll.presentation.utils.UserType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,8 +89,8 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
         mLayoutFilterSpinner.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
         mCheckBoxMy.setVisibility(getCurrentUser().getIsAdmin() ? View.GONE : View.VISIBLE);
         mContactsAdapter = new ContactsAdapter(this, getActivity(), mIsSelectable);
-        if (mSelectedClients != null)
-            mContactsAdapter.setSelectedCotacts(mSelectedClients);
+        if(mSelectedClients != null)
+            mContactsAdapter.setSelectedContacts(mSelectedClients);
         TextWatcher watcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
@@ -111,7 +111,7 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
         mEditFilterPhone.addTextChangedListener(watcher);
         setupRecycler();
         loadContacts();
-        if (getCurrentUser().getIsAdmin())
+        if(getCurrentUser().getIsAdmin())
             loadUsers();
     }
 
@@ -123,7 +123,8 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
                         mUsers.clear();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             User user = data.getValue(User.class);
-                            mUsers.add(user);
+                            if(user != null && !user.getIsBlocked())
+                                mUsers.add(user);
                         }
                         initSpinnerTeacher();
                     }
@@ -148,8 +149,8 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 long index = mSpinnerTeacher.getSelectedItemId();
-                if (index < 1) {
-                    if (!mTeacherId.equals("")) {
+                if(index < 1) {
+                    if(!mTeacherId.equals("")) {
                         mTeacherId = "";
                         onFilterTextChanged();
                     }
@@ -167,7 +168,7 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
 
     @Override
     protected void parseArguments() {
-        if (getArguments() == null) return;
+        if(getArguments() == null) return;
         mUserType = getArguments().getInt(Keys.Extras.EXTRA_TAB_INDEX, 0);
         mIsSelectable = getArguments().getBoolean(Keys.Extras.EXTRA_IS_SELCTABLE, false);
     }
@@ -185,12 +186,17 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 List<Contact> contacts = new ArrayList<>();
+                List<Contact> archivedContacts = new ArrayList<>();
                 for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
                     Contact contact = clientSS.getValue(Contact.class);
-                    if (contact != null && contact.getUserType() == mUserType) {
-                        contacts.add(contact);
+                    if(contact != null && contact.getUserType() == mUserType) {
+                        if(contact.getIsArchived())
+                            archivedContacts.add(contact);
+                        else
+                            contacts.add(contact);
                     }
                 }
+                contacts.addAll(archivedContacts);
                 mContactsAdapter.setData(contacts);
                 onFilterTextChanged();
             }
@@ -205,26 +211,26 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
     void onFilterTextChanged() {
         String name = mEditFilterName.getText().toString().trim();
         String phone = mEditFilterPhone.getText().toString().trim();
-        if (name.equals(""))
+        if(name.equals(""))
             name = " ";
-        if (phone.equals(""))
+        if(phone.equals(""))
             phone = " ";
         String filter = name + "/" + phone + mTeacherId;
         mContactsAdapter.getFilter().filter(filter);
-        if (getCurrentUser().getIsAdmin()) {
+        if(getCurrentUser().getIsAdmin()) {
             new Handler().postDelayed(() -> {
                 String title = "[" + mContactsAdapter.getItemCount() + "]";
                 mTextCount.setText(title);
             }, 100);
         }
-        if (mOnFilterListener != null)
+        if(mOnFilterListener != null)
             mOnFilterListener.onFilterChanged(name, phone);
     }
 
     @OnCheckedChanged(R.id.check_box_my)
     void onMyChanged(boolean isChecked) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null && isChecked)
+        if(user != null && isChecked)
             mTeacherId = "/" + user.getUid();
         else
             mTeacherId = "";
@@ -233,7 +239,7 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
 
     @Override
     public void onItemClicked(final int position, ActivityOptionsCompat options) {
-        startActivity(ContactDetailsActivity.getLaunchIntent(getContext(), mContactsAdapter.getItem(position)), options.toBundle());
+        startActivity(ContactDetailsActivity.getLaunchIntent(getContext(), mContactsAdapter.getItem(position)));
     }
 
     @Override
@@ -251,8 +257,8 @@ public class ContactsFragment extends BaseFragment implements OnContactClickList
 
     public void updateSelected(final List<String> clients) {
         mSelectedClients = clients;
-        if (mContactsAdapter != null)
-            mContactsAdapter.setSelectedCotacts(clients);
+        if(mContactsAdapter != null)
+            mContactsAdapter.setSelectedContacts(clients);
     }
 
     public List<String> getSelected() {

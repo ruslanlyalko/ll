@@ -15,13 +15,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.birth.adapter.BirthContactsAdapter;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter.OnContactClickListener;
 import com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.details.ContactDetailsActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,7 +81,7 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
                 List<Contact> contacts = new ArrayList<>();
                 for (DataSnapshot clientSS : dataSnapshot.getChildren()) {
                     Contact contact = clientSS.getValue(Contact.class);
-                    if (contact != null) {
+                    if(contact != null) {
                         contacts.add(0, contact);
                     }
                 }
@@ -96,7 +96,7 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
     }
 
     private void onFilterTextChanged(Date date) {
-        if (isDestroyed()) return;
+        if(isDestroyed()) return;
         mLastDate = date;
         Calendar month = Calendar.getInstance();
         month.setTime(date);
@@ -118,7 +118,7 @@ public class BirthActivity extends BaseActivity implements OnContactClickListene
 
     @Override
     public void onItemClicked(final int position, final ActivityOptionsCompat options) {
-        startActivity(ContactDetailsActivity.getLaunchIntent(this, mBirthContactsAdapter.getItem(position)), options.toBundle());
+        startActivity(ContactDetailsActivity.getLaunchIntent(this, mBirthContactsAdapter.getItem(position)));
     }
 
     @Override

@@ -160,6 +160,17 @@
                 android:inputType="textMultiLine|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
+        <Switch
+            android:id="@+id/switch_archived"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="4dp"
+            android:hint="@string/text_archived"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -171,8 +182,8 @@
             android:id="@+id/spinner_teacher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="0dp" />
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="16dp" />
     </LinearLayout>
 
 </ScrollView>

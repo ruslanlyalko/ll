@@ -112,9 +112,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pendingIntent);
-        if (notificationType.equals(REMINDER)) {
-            builder.setDeleteIntent(pendingIntent);
-        }
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

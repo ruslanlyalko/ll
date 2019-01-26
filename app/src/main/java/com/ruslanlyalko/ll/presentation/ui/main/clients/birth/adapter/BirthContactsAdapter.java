@@ -106,7 +106,7 @@ public class BirthContactsAdapter extends RecyclerView.Adapter<BirthContactsAdap
         void bindData(final Contact contact) {
             mTextName.setText(contact.getName());
             mTextPhone1.setText(contact.getPhone());
-            if (contact.getPhone2() != null & !contact.getPhone2().isEmpty())
+            if (contact.getPhone2() != null && !contact.getPhone2().isEmpty())
                 mTextPhone2.setText(contact.getPhone2());
             else
                 mTextPhone2.setText("");

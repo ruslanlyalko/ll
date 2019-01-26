@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -27,14 +28,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.ContactHolder;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
-import com.ruslanlyalko.ll.presentation.utils.UserType;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Contact;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
+import com.ruslanlyalko.ll.presentation.utils.ContactHolder;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
+import com.ruslanlyalko.ll.presentation.utils.UserType;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     @BindView(R.id.edit_birth_day) EditText mEditBirthDay;
     @BindView(R.id.image_contacts) ImageView mImageContacts;
     @BindView(R.id.spinner_teacher) Spinner mSpinnerTeacher;
+    @BindView(R.id.switch_archived) Switch mSwitchArchived;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private Contact mContact = new Contact();
@@ -88,13 +90,13 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     @Override
     protected void parseExtras() {
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
+        if(bundle != null) {
             mContact = (Contact) bundle.getSerializable(Keys.Extras.EXTRA_ITEM_ID);
             mClientPhone = bundle.getString(Keys.Extras.EXTRA_CLIENT_PHONE);
             mClientName = bundle.getString(Keys.Extras.EXTRA_CLIENT_NAME);
         }
         mIsNew = mContact == null;
-        if (mIsNew) {
+        if(mIsNew) {
             mContact = new Contact();
             mContact.setName(mClientName);
             mContact.setPhone(mClientPhone);
@@ -110,10 +112,11 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         mEditPhone1.setText(mContact.getPhone());
         mEditPhone2.setText(mContact.getPhone2());
         mEditEmail.setText(mContact.getEmail());
+        mSwitchArchived.setChecked(mContact.getIsArchived());
         mEditDescription.setText(mContact.getDescription());
         TabLayout.Tab tab = mTabsUserType.getTabAt(mContact.getUserType() == UserType.ADULT ? 0 : 1);
         loadUsers();
-        if (tab != null) tab.select();
+        if(tab != null) tab.select();
         mNeedToSave = false;
     }
 
@@ -125,8 +128,8 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_save) {
-            if (mIsNew)
+        if(id == R.id.action_save) {
+            if(mIsNew)
                 addClient();
             else
                 updateClient();
@@ -136,7 +139,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
 
     @Override
     public void onBackPressed() {
-        if (mNeedToSave) {
+        if(mNeedToSave) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ContactEditActivity.this);
             builder.setTitle(R.string.dialog_discard_changes)
                     .setPositiveButton(R.string.action_discard, (dialog, which) -> {
@@ -181,7 +184,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         arrayAdapter.addAll(userNamesList);
         mSpinnerTeacher.setAdapter(arrayAdapter);
         for (int i = 0; i < mSpinnerTeacher.getAdapter().getCount(); i++) {
-            if (mSpinnerTeacher.getItemAtPosition(i).equals(mContact.getUserName()))
+            if(mSpinnerTeacher.getItemAtPosition(i).equals(mContact.getUserName()))
                 mSpinnerTeacher.setSelection(i);
         }
     }
@@ -228,8 +231,9 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
         mContact.setPhone(mEditPhone1.getText().toString().trim());
         mContact.setPhone2(mEditPhone2.getText().toString().trim());
         mContact.setDescription(mEditDescription.getText().toString().trim());
+        mContact.setIsArchived(mSwitchArchived.isChecked());
         long index = mSpinnerTeacher.getSelectedItemId();
-        if (index < 1) {
+        if(index < 1) {
             mContact.setUserName("");
             mContact.setUserId("");
         } else {
@@ -237,13 +241,13 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
             mContact.setUserId(mUsers.get((int) index - 1).getId());
         }
         TabLayout.Tab tab = mTabsUserType.getTabAt(0);
-        if (tab != null)
+        if(tab != null)
             mContact.setUserType(tab.isSelected() ? UserType.ADULT : UserType.CHILD);
     }
 
     private void addClient() {
         updateModel();
-        if (mContact.getName().isEmpty()) {
+        if(mContact.getName().isEmpty()) {
             Toast.makeText(this, getString(R.string.error_no_name), Toast.LENGTH_LONG).show();
             return;
         }
@@ -260,7 +264,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
 
     private void updateClient() {
         updateModel();
-        if (mContact.getName().isEmpty()) {
+        if(mContact.getName().isEmpty()) {
             Toast.makeText(this, getString(R.string.error_no_name), Toast.LENGTH_LONG).show();
             return;
         }
@@ -300,7 +304,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     @OnClick(R.id.image_contacts)
     public void onContactsClicked() {
         String[] perms = {Manifest.permission.READ_CONTACTS};
-        if (EasyPermissions.hasPermissions(this, perms)) {
+        if(EasyPermissions.hasPermissions(this, perms)) {
             showContacts();
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.text_read_contacts_rationale),
@@ -309,7 +313,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
     }
 
     void showContacts() {
-        if (!ContactHolder.hasContacts()) {
+        if(!ContactHolder.hasContacts()) {
             ContactHolder.setContacts(getContacts());
         }
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(ContactEditActivity.this);
@@ -351,7 +355,7 @@ public class ContactEditActivity extends BaseActivity implements EasyPermissions
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             list.add(new Pair<>(name, phoneNumber));
         }
-        if (phones != null)
+        if(phones != null)
             phones.close();
         return list;
     }

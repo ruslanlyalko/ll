@@ -175,7 +175,7 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
             invalidateOptionsMenu();
             mCardCommentsSend.setVisibility(mMessage.getCommentsEnabled() ? View.VISIBLE : View.GONE);
             if (getSupportActionBar() != null) getSupportActionBar().setTitle(mMessage.getTitle1());
-            if (mMessage.getDescription() != null & !mMessage.getDescription().isEmpty()) {
+            if (mMessage.getDescription() != null && !mMessage.getDescription().isEmpty()) {
                 textDescription.setVisibility(View.VISIBLE);
                 textDescription.setText(mMessage.getDescription());
             } else {

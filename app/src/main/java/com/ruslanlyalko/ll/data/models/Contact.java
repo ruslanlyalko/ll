@@ -26,6 +26,15 @@ public class Contact implements Serializable {
     private String description;
     private int totalIncome;
     private int totalExpense;
+    private boolean isArchived;
+
+    public boolean getIsArchived() {
+        return isArchived;
+    }
+
+    public void setIsArchived(final boolean archived) {
+        isArchived = archived;
+    }
 
     public Contact() {
         userType = UserType.ADULT;
