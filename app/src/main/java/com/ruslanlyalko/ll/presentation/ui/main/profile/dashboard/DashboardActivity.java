@@ -161,7 +161,9 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return mResults.get((int) value).getMonth();
+                if((int) value < mResults.size())
+                    return mResults.get((int) value).getMonth();
+                return "";
             }
         });
     }
@@ -188,7 +190,9 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return mResults.get((int) value).getMonth();
+                if((int) value < mResults.size())
+                    return mResults.get((int) value).getMonth();
+                return "";
             }
         });
     }
