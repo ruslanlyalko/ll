@@ -284,6 +284,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     private void loadSettingsSalaries() {
         getDB(DC.DB_SETTINGS_SALARY)
+                .orderByChild("dateFrom/time")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {

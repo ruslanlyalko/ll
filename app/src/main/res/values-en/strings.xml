@@ -233,5 +233,6 @@
     <string name="text_archived">Archived</string>
     <string name="hint_from">Start time</string>
     <string name="hint_to">End time</string>
+    <string name="action_duplicate">Duplicate</string>
 
 </resources>

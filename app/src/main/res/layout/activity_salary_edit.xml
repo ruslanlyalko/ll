@@ -11,14 +11,10 @@
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-        <TextView
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs_tariffs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="16dp"
-            android:text="1.03.2019"
-            android:textColor="@color/colorAccent" />
+            android:layout_height="wrap_content"/>
 
         <requestFocus />
         <!--Private-->

@@ -265,6 +265,7 @@
     <string name="text_archived">Заархівовано</string>
     <string name="hint_from">Початок дня</string>
     <string name="hint_to">Кінець дня</string>
+    <string name="action_duplicate">Дублювати</string>
 
     <string-array name="months">
         <item>Січень</item>

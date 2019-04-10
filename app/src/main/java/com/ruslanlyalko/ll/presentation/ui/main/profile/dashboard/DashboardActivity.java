@@ -508,6 +508,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
 
     private void loadSettingsSalaries() {
         getDB(DC.DB_SETTINGS_SALARY)
+                .orderByChild("dateFrom/time")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {

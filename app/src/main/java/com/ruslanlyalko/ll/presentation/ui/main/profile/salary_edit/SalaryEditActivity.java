@@ -1,6 +1,8 @@
 package com.ruslanlyalko.ll.presentation.ui.main.profile.salary_edit;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +16,12 @@ import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.SettingsSalary;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -52,8 +60,11 @@ public class SalaryEditActivity extends BaseActivity {
     @BindView(R.id.edit_online_teacher_child) EditText mEditOnLineTeacherChild;
     @BindView(R.id.edit_online_student_15_child) EditText mEditOnLineStudent15Child;
     @BindView(R.id.edit_online_teacher_15_child) EditText mEditOnLineTeacher15Child;
+    @BindView(R.id.tabs_tariffs) TabLayout mTabsTariffs;
+
     private boolean mNeedToSave = false;
-    private SettingsSalary mSettingsSalary = new SettingsSalary();
+    private List<SettingsSalary> mSettingsSalary = new ArrayList<>();
+    private int mLastSelectedIndex = 0;
 
     public static Intent getLaunchIntent(final BaseActivity activity) {
         return new Intent(activity, SalaryEditActivity.class);
@@ -66,8 +77,21 @@ public class SalaryEditActivity extends BaseActivity {
 
     @Override
     protected void setupView() {
+        mTabsTariffs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(final TabLayout.Tab tab) {
+                updateUI();
+            }
+
+            @Override
+            public void onTabUnselected(final TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(final TabLayout.Tab tab) {
+            }
+        });
         loadSalaries();
-        updateUI();
     }
 
     @Override
@@ -79,7 +103,10 @@ public class SalaryEditActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_save) {
-            saveToDb();
+            save();
+        }
+        if (id == R.id.action_duplicate) {
+            duplicate();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -91,7 +118,7 @@ public class SalaryEditActivity extends BaseActivity {
             builder.setTitle(R.string.dialog_report_save_before_close_title)
                     .setMessage(R.string.dialog_mk_edit_text)
                     .setPositiveButton(R.string.action_save, (dialog, which) -> {
-                        saveToDb();
+                        save();
                         onBackPressed();
                     })
                     .setNegativeButton(R.string.action_cancel, (dialog, which) -> {
@@ -107,65 +134,110 @@ public class SalaryEditActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        getMenuInflater().inflate(R.menu.menu_salary_edit, menu);
         return true;
     }
 
     private void updateUI() {
         setTitle(R.string.title_activity_edit);
+        SettingsSalary currentSettings = mSettingsSalary.get(mTabsTariffs.getSelectedTabPosition());
         //
-        mEditPrivateStudent.setText(String.valueOf(mSettingsSalary.getStudentPrivate()));
-        mEditPrivateStudent15.setText(String.valueOf(mSettingsSalary.getStudentPrivate15()));
-        mEditPrivateTeacher.setText(String.valueOf(mSettingsSalary.getTeacherPrivate()));
-        mEditPrivateTeacher15.setText(String.valueOf(mSettingsSalary.getTeacherPrivate15()));
+        mEditPrivateStudent.setText(String.valueOf(currentSettings.getStudentPrivate()));
+        mEditPrivateStudent15.setText(String.valueOf(currentSettings.getStudentPrivate15()));
+        mEditPrivateTeacher.setText(String.valueOf(currentSettings.getTeacherPrivate()));
+        mEditPrivateTeacher15.setText(String.valueOf(currentSettings.getTeacherPrivate15()));
         //
-        mEditPairStudent.setText(String.valueOf(mSettingsSalary.getStudentPair()));
-        mEditPairStudent15.setText(String.valueOf(mSettingsSalary.getStudentPair15()));
-        mEditPairTeacher.setText(String.valueOf(mSettingsSalary.getTeacherPair()));
-        mEditPairTeacher15.setText(String.valueOf(mSettingsSalary.getTeacherPair15()));
+        mEditPairStudent.setText(String.valueOf(currentSettings.getStudentPair()));
+        mEditPairStudent15.setText(String.valueOf(currentSettings.getStudentPair15()));
+        mEditPairTeacher.setText(String.valueOf(currentSettings.getTeacherPair()));
+        mEditPairTeacher15.setText(String.valueOf(currentSettings.getTeacherPair15()));
         //
-        mEditGroupStudent.setText(String.valueOf(mSettingsSalary.getStudentGroup()));
-        mEditGroupStudent15.setText(String.valueOf(mSettingsSalary.getStudentGroup15()));
-        mEditGroupTeacher.setText(String.valueOf(mSettingsSalary.getTeacherGroup()));
-        mEditGroupTeacher15.setText(String.valueOf(mSettingsSalary.getTeacherGroup15()));
+        mEditGroupStudent.setText(String.valueOf(currentSettings.getStudentGroup()));
+        mEditGroupStudent15.setText(String.valueOf(currentSettings.getStudentGroup15()));
+        mEditGroupTeacher.setText(String.valueOf(currentSettings.getTeacherGroup()));
+        mEditGroupTeacher15.setText(String.valueOf(currentSettings.getTeacherGroup15()));
         //
-        mEditOnLineStudent.setText(String.valueOf(mSettingsSalary.getStudentOnLine()));
-        mEditOnLineStudent15.setText(String.valueOf(mSettingsSalary.getStudentOnLine15()));
-        mEditOnLineTeacher.setText(String.valueOf(mSettingsSalary.getTeacherOnLine()));
-        mEditOnLineTeacher15.setText(String.valueOf(mSettingsSalary.getTeacherOnLine15()));
+        mEditOnLineStudent.setText(String.valueOf(currentSettings.getStudentOnLine()));
+        mEditOnLineStudent15.setText(String.valueOf(currentSettings.getStudentOnLine15()));
+        mEditOnLineTeacher.setText(String.valueOf(currentSettings.getTeacherOnLine()));
+        mEditOnLineTeacher15.setText(String.valueOf(currentSettings.getTeacherOnLine15()));
         // ---child
-        mEditPrivateStudentChild.setText(String.valueOf(mSettingsSalary.getStudentPrivateChild()));
-        mEditPrivateStudent15Child.setText(String.valueOf(mSettingsSalary.getStudentPrivate15Child()));
-        mEditPrivateTeacherChild.setText(String.valueOf(mSettingsSalary.getTeacherPrivateChild()));
-        mEditPrivateTeacher15Child.setText(String.valueOf(mSettingsSalary.getTeacherPrivate15Child()));
+        mEditPrivateStudentChild.setText(String.valueOf(currentSettings.getStudentPrivateChild()));
+        mEditPrivateStudent15Child.setText(String.valueOf(currentSettings.getStudentPrivate15Child()));
+        mEditPrivateTeacherChild.setText(String.valueOf(currentSettings.getTeacherPrivateChild()));
+        mEditPrivateTeacher15Child.setText(String.valueOf(currentSettings.getTeacherPrivate15Child()));
         //
-        mEditPairStudentChild.setText(String.valueOf(mSettingsSalary.getStudentPairChild()));
-        mEditPairStudent15Child.setText(String.valueOf(mSettingsSalary.getStudentPair15Child()));
-        mEditPairTeacherChild.setText(String.valueOf(mSettingsSalary.getTeacherPairChild()));
-        mEditPairTeacher15Child.setText(String.valueOf(mSettingsSalary.getTeacherPair15Child()));
+        mEditPairStudentChild.setText(String.valueOf(currentSettings.getStudentPairChild()));
+        mEditPairStudent15Child.setText(String.valueOf(currentSettings.getStudentPair15Child()));
+        mEditPairTeacherChild.setText(String.valueOf(currentSettings.getTeacherPairChild()));
+        mEditPairTeacher15Child.setText(String.valueOf(currentSettings.getTeacherPair15Child()));
         //
-        mEditGroupStudentChild.setText(String.valueOf(mSettingsSalary.getStudentGroupChild()));
-        mEditGroupStudent15Child.setText(String.valueOf(mSettingsSalary.getStudentGroup15Child()));
-        mEditGroupTeacherChild.setText(String.valueOf(mSettingsSalary.getTeacherGroupChild()));
-        mEditGroupTeacher15Child.setText(String.valueOf(mSettingsSalary.getTeacherGroup15Child()));
+        mEditGroupStudentChild.setText(String.valueOf(currentSettings.getStudentGroupChild()));
+        mEditGroupStudent15Child.setText(String.valueOf(currentSettings.getStudentGroup15Child()));
+        mEditGroupTeacherChild.setText(String.valueOf(currentSettings.getTeacherGroupChild()));
+        mEditGroupTeacher15Child.setText(String.valueOf(currentSettings.getTeacherGroup15Child()));
         //
-        mEditOnLineStudentChild.setText(String.valueOf(mSettingsSalary.getStudentOnLineChild()));
-        mEditOnLineStudent15Child.setText(String.valueOf(mSettingsSalary.getStudentOnLine15Child()));
-        mEditOnLineTeacherChild.setText(String.valueOf(mSettingsSalary.getTeacherOnLineChild()));
-        mEditOnLineTeacher15Child.setText(String.valueOf(mSettingsSalary.getTeacherOnLine15Child()));
+        mEditOnLineStudentChild.setText(String.valueOf(currentSettings.getStudentOnLineChild()));
+        mEditOnLineStudent15Child.setText(String.valueOf(currentSettings.getStudentOnLine15Child()));
+        mEditOnLineTeacherChild.setText(String.valueOf(currentSettings.getTeacherOnLineChild()));
+        mEditOnLineTeacher15Child.setText(String.valueOf(currentSettings.getTeacherOnLine15Child()));
         mNeedToSave = false;
     }
 
+    private void duplicate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(getMaxDate());
+        DatePickerDialog dialog = new DatePickerDialog(SalaryEditActivity.this, (datePicker, year, month, day)
+                -> {
+            SettingsSalary currentSettings = mSettingsSalary.get(mTabsTariffs.getSelectedTabPosition());
+            currentSettings.setDateFrom(DateUtils.getDate(year, month, day));
+            currentSettings.setKey(null);
+            saveToDB(currentSettings);
+        },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+        dialog.getDatePicker().setMinDate(calendar.getTime().getTime());
+        dialog.show();
+    }
+
+    private Date getMaxDate() {
+        Calendar calendar = Calendar.getInstance();
+        for (SettingsSalary settingsSalary : mSettingsSalary) {
+            if (settingsSalary.getDateFrom().after(calendar.getTime())) {
+                calendar.setTime(settingsSalary.getDateFrom());
+            }
+        }
+        calendar.add(Calendar.MONTH, 1);
+        return calendar.getTime();
+    }
+
     private void loadSalaries() {
-        getDB(DC.DB_SETTINGS_SALARY).child("second_key")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        getDB(DC.DB_SETTINGS_SALARY)
+                .orderByChild("dateFrom/time")
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        SettingsSalary settingsSalary = dataSnapshot.getValue(SettingsSalary.class);
-                        if (settingsSalary != null) {
-                            mSettingsSalary = settingsSalary;
-                            updateUI();
+                        if (isDestroyed()) {
+                            return;
                         }
+                        if (mTabsTariffs.getTabCount() > 0) {
+                            mLastSelectedIndex = mTabsTariffs.getSelectedTabPosition();
+                        }
+                        mSettingsSalary.clear();
+                        mTabsTariffs.removeAllTabs();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            SettingsSalary settingsSalary = data.getValue(SettingsSalary.class);
+                            if (settingsSalary != null) {
+                                mSettingsSalary.add(settingsSalary);
+                                mTabsTariffs.addTab(mTabsTariffs.newTab().setText(DateUtils.toString(settingsSalary.getDateFrom(), "MM yyyy")));
+                            }
+                        }
+                        if (mLastSelectedIndex < mTabsTariffs.getTabCount()) {
+                            mTabsTariffs.getTabAt(mLastSelectedIndex).select();
+                        }
+                        updateUI();
                     }
 
                     @Override
@@ -174,63 +246,67 @@ public class SalaryEditActivity extends BaseActivity {
                 });
     }
 
-    private void saveToDb() {
+    private void save() {
+        SettingsSalary currentSettings = mSettingsSalary.get(mTabsTariffs.getSelectedTabPosition());
         try {
-            mSettingsSalary.setStudentPrivate(Integer.valueOf(mEditPrivateStudent.getText().toString()));
-            mSettingsSalary.setTeacherPrivate(Integer.valueOf(mEditPrivateTeacher.getText().toString()));
-            mSettingsSalary.setStudentPrivate15(Integer.valueOf(mEditPrivateStudent15.getText().toString()));
-            mSettingsSalary.setTeacherPrivate15(Integer.valueOf(mEditPrivateTeacher15.getText().toString()));
+            currentSettings.setStudentPrivate(Integer.valueOf(mEditPrivateStudent.getText().toString()));
+            currentSettings.setTeacherPrivate(Integer.valueOf(mEditPrivateTeacher.getText().toString()));
+            currentSettings.setStudentPrivate15(Integer.valueOf(mEditPrivateStudent15.getText().toString()));
+            currentSettings.setTeacherPrivate15(Integer.valueOf(mEditPrivateTeacher15.getText().toString()));
             //
-            mSettingsSalary.setStudentPair(Integer.valueOf(mEditPairStudent.getText().toString()));
-            mSettingsSalary.setTeacherPair(Integer.valueOf(mEditPairTeacher.getText().toString()));
-            mSettingsSalary.setStudentPair15(Integer.valueOf(mEditPairStudent15.getText().toString()));
-            mSettingsSalary.setTeacherPair15(Integer.valueOf(mEditPairTeacher15.getText().toString()));
+            currentSettings.setStudentPair(Integer.valueOf(mEditPairStudent.getText().toString()));
+            currentSettings.setTeacherPair(Integer.valueOf(mEditPairTeacher.getText().toString()));
+            currentSettings.setStudentPair15(Integer.valueOf(mEditPairStudent15.getText().toString()));
+            currentSettings.setTeacherPair15(Integer.valueOf(mEditPairTeacher15.getText().toString()));
             //
-            mSettingsSalary.setStudentGroup(Integer.valueOf(mEditGroupStudent.getText().toString()));
-            mSettingsSalary.setTeacherGroup(Integer.valueOf(mEditGroupTeacher.getText().toString()));
-            mSettingsSalary.setStudentGroup15(Integer.valueOf(mEditGroupStudent15.getText().toString()));
-            mSettingsSalary.setTeacherGroup15(Integer.valueOf(mEditGroupTeacher15.getText().toString()));
+            currentSettings.setStudentGroup(Integer.valueOf(mEditGroupStudent.getText().toString()));
+            currentSettings.setTeacherGroup(Integer.valueOf(mEditGroupTeacher.getText().toString()));
+            currentSettings.setStudentGroup15(Integer.valueOf(mEditGroupStudent15.getText().toString()));
+            currentSettings.setTeacherGroup15(Integer.valueOf(mEditGroupTeacher15.getText().toString()));
             //
-            mSettingsSalary.setStudentOnLine(Integer.valueOf(mEditOnLineStudent.getText().toString()));
-            mSettingsSalary.setTeacherOnLine(Integer.valueOf(mEditOnLineTeacher.getText().toString()));
-            mSettingsSalary.setStudentOnLine15(Integer.valueOf(mEditOnLineStudent15.getText().toString()));
-            mSettingsSalary.setTeacherOnLine15(Integer.valueOf(mEditOnLineTeacher15.getText().toString()));
+            currentSettings.setStudentOnLine(Integer.valueOf(mEditOnLineStudent.getText().toString()));
+            currentSettings.setTeacherOnLine(Integer.valueOf(mEditOnLineTeacher.getText().toString()));
+            currentSettings.setStudentOnLine15(Integer.valueOf(mEditOnLineStudent15.getText().toString()));
+            currentSettings.setTeacherOnLine15(Integer.valueOf(mEditOnLineTeacher15.getText().toString()));
             //****
-            mSettingsSalary.setStudentPrivateChild(Integer.valueOf(mEditPrivateStudentChild.getText().toString()));
-            mSettingsSalary.setTeacherPrivateChild(Integer.valueOf(mEditPrivateTeacherChild.getText().toString()));
-            mSettingsSalary.setStudentPrivate15Child(Integer.valueOf(mEditPrivateStudent15Child.getText().toString()));
-            mSettingsSalary.setTeacherPrivate15Child(Integer.valueOf(mEditPrivateTeacher15Child.getText().toString()));
+            currentSettings.setStudentPrivateChild(Integer.valueOf(mEditPrivateStudentChild.getText().toString()));
+            currentSettings.setTeacherPrivateChild(Integer.valueOf(mEditPrivateTeacherChild.getText().toString()));
+            currentSettings.setStudentPrivate15Child(Integer.valueOf(mEditPrivateStudent15Child.getText().toString()));
+            currentSettings.setTeacherPrivate15Child(Integer.valueOf(mEditPrivateTeacher15Child.getText().toString()));
             //
-            mSettingsSalary.setStudentPairChild(Integer.valueOf(mEditPairStudentChild.getText().toString()));
-            mSettingsSalary.setTeacherPairChild(Integer.valueOf(mEditPairTeacherChild.getText().toString()));
-            mSettingsSalary.setStudentPair15Child(Integer.valueOf(mEditPairStudent15Child.getText().toString()));
-            mSettingsSalary.setTeacherPair15Child(Integer.valueOf(mEditPairTeacher15Child.getText().toString()));
+            currentSettings.setStudentPairChild(Integer.valueOf(mEditPairStudentChild.getText().toString()));
+            currentSettings.setTeacherPairChild(Integer.valueOf(mEditPairTeacherChild.getText().toString()));
+            currentSettings.setStudentPair15Child(Integer.valueOf(mEditPairStudent15Child.getText().toString()));
+            currentSettings.setTeacherPair15Child(Integer.valueOf(mEditPairTeacher15Child.getText().toString()));
             //
-            mSettingsSalary.setStudentGroupChild(Integer.valueOf(mEditGroupStudentChild.getText().toString()));
-            mSettingsSalary.setTeacherGroupChild(Integer.valueOf(mEditGroupTeacherChild.getText().toString()));
-            mSettingsSalary.setStudentGroup15Child(Integer.valueOf(mEditGroupStudent15Child.getText().toString()));
-            mSettingsSalary.setTeacherGroup15Child(Integer.valueOf(mEditGroupTeacher15Child.getText().toString()));
+            currentSettings.setStudentGroupChild(Integer.valueOf(mEditGroupStudentChild.getText().toString()));
+            currentSettings.setTeacherGroupChild(Integer.valueOf(mEditGroupTeacherChild.getText().toString()));
+            currentSettings.setStudentGroup15Child(Integer.valueOf(mEditGroupStudent15Child.getText().toString()));
+            currentSettings.setTeacherGroup15Child(Integer.valueOf(mEditGroupTeacher15Child.getText().toString()));
             //
-            mSettingsSalary.setStudentOnLineChild(Integer.valueOf(mEditOnLineStudentChild.getText().toString()));
-            mSettingsSalary.setTeacherOnLineChild(Integer.valueOf(mEditOnLineTeacherChild.getText().toString()));
-            mSettingsSalary.setStudentOnLine15Child(Integer.valueOf(mEditOnLineStudent15Child.getText().toString()));
-            mSettingsSalary.setTeacherOnLine15Child(Integer.valueOf(mEditOnLineTeacher15Child.getText().toString()));
+            currentSettings.setStudentOnLineChild(Integer.valueOf(mEditOnLineStudentChild.getText().toString()));
+            currentSettings.setTeacherOnLineChild(Integer.valueOf(mEditOnLineTeacherChild.getText().toString()));
+            currentSettings.setStudentOnLine15Child(Integer.valueOf(mEditOnLineStudent15Child.getText().toString()));
+            currentSettings.setTeacherOnLine15Child(Integer.valueOf(mEditOnLineTeacher15Child.getText().toString()));
         } catch (NumberFormatException e) {
             Toast.makeText(this, R.string.error_empty_error, Toast.LENGTH_LONG).show();
             e.printStackTrace();
             return;
         }
-        if (!mSettingsSalary.hasKey()) {
+        saveToDB(currentSettings);
+    }
+
+    private void saveToDB(SettingsSalary settingsSalary) {
+        if (!settingsSalary.hasKey()) {
             String key = getDB(DC.DB_SETTINGS_SALARY).push().getKey();
-            mSettingsSalary.setKey(key);
+            settingsSalary.setKey(key);
         }
         getDB(DC.DB_SETTINGS_SALARY)
-                .child(mSettingsSalary.getKey())
-                .setValue(mSettingsSalary)
+                .child(settingsSalary.getKey())
+                .setValue(settingsSalary)
                 .addOnCompleteListener(task -> {
                     Toast.makeText(SalaryEditActivity.this, getString(R.string.toast_updated), Toast.LENGTH_SHORT).show();
                     mNeedToSave = false;
-                    onBackPressed();
                 });
     }
 }
