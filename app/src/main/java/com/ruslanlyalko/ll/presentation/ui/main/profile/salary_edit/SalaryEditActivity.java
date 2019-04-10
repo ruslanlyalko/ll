@@ -157,7 +157,7 @@ public class SalaryEditActivity extends BaseActivity {
     }
 
     private void loadSalaries() {
-        getDB(DC.DB_SETTINGS_SALARY).child("first_key")
+        getDB(DC.DB_SETTINGS_SALARY).child("second_key")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {

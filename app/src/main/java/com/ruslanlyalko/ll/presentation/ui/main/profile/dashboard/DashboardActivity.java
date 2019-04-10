@@ -45,6 +45,7 @@ import com.ruslanlyalko.ll.presentation.widget.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -88,7 +89,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     private int mSalaryTotal;
     private int mExpensesTotal;
     private Calendar mCurrentMonth = Calendar.getInstance();
-    private SettingsSalary mSettingsSalary;
+    private List<SettingsSalary> mSettingsSalary = new ArrayList<>();
 
     public static Intent getLaunchIntent(final AppCompatActivity launchActivity) {
         return new Intent(launchActivity, DashboardActivity.class);
@@ -124,7 +125,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                         for (DataSnapshot year : dataSnapshot.getChildren()) {
                             for (DataSnapshot month : year.getChildren()) {
                                 Result result = month.getValue(Result.class);
-                                if(result != null) {
+                                if (result != null) {
                                     results.add(result);
                                 }
                             }
@@ -161,7 +162,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if((int) value < mResults.size())
+                if ((int) value < mResults.size())
                     return mResults.get((int) value).getMonth();
                 return "";
             }
@@ -190,7 +191,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if((int) value < mResults.size())
+                if ((int) value < mResults.size())
                     return mResults.get((int) value).getMonth();
                 return "";
             }
@@ -225,9 +226,9 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         int type0 = 0;
         int type1 = 0;
         for (Expense expense : mExpenses) {
-            if(expense.getTypeId() == 0)
+            if (expense.getTypeId() == 0)
                 type0 += expense.getPrice();
-            if(expense.getTypeId() == 1)
+            if (expense.getTypeId() == 1)
                 type1 += expense.getPrice();
         }
         mExpensesTotal = type0 + type1;
@@ -246,7 +247,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         String year = DateUtils.toString(mCurrentMonth.getTime(), "yyyy");
         String month = DateUtils.toString(mCurrentMonth.getTime(), "MM");
         Result result = new Result(mIncomeTotal, mSalaryTotal, mExpensesTotal, netIncome, year, month);
-        if(mIncomeTotal != 0 && mSalaryTotal != 0)
+        if (mIncomeTotal != 0 && mSalaryTotal != 0)
             FirebaseDatabase.getInstance()
                     .getReference(DC.DB_RESULTS)
                     .child(year)
@@ -257,7 +258,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
 
     @OnClick(R.id.panel_action)
     void onExpandClicked() {
-        if(mLayoutCollapsing.getVisibility() == View.VISIBLE) {
+        if (mLayoutCollapsing.getVisibility() == View.VISIBLE) {
             mImageView.setImageResource(R.drawable.ic_action_expand_more);
             ViewUtils.collapse(mLayoutCollapsing);
         } else {
@@ -276,7 +277,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             for (DataSnapshot ds : data.getChildren()) {
                                 Lesson lesson = ds.getValue(Lesson.class);
-                                if(lesson != null) {
+                                if (lesson != null) {
                                     mLessonList.add(lesson);
                                 }
                             }
@@ -299,7 +300,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                         mExpenses.clear();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             Expense expense = data.getValue(Expense.class);
-                            if(expense != null) {
+                            if (expense != null) {
                                 mExpenses.add(0, expense);
                             }
                         }
@@ -314,10 +315,10 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
 
     private void loadUsers() {
         getDataManager().getAllUsers().observe(this, list -> {
-            if(list == null) return;
+            if (list == null) return;
             mUsers.clear();
             for (User user : list) {
-                if(user != null)
+                if (user != null)
                     mUsers.add(user);
             }
             calcSalaryForUsers();
@@ -370,101 +371,102 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             int groupTotalChildCount = 0;
             int onlineTotalChildCount = 0;
             for (Lesson lesson : mLessonList) {
-                if(!lesson.getUserId().equals(user.getId())) continue;
-                if(lesson.getStatusType() == 1) continue;
-                if(lesson.getUserType() == 0) {
-                    if(lesson.getLessonLengthId() == 0) {
+                if (!lesson.getUserId().equals(user.getId())) continue;
+                if (lesson.getStatusType() == 1) continue;
+                SettingsSalary currentSettings = getSettingsSalaryForDate(lesson.getDateTime());
+                if (lesson.getUserType() == 0) {
+                    if (lesson.getLessonLengthId() == 0) {
                         switch (lesson.getLessonType()) {
                             case 0:
                                 privateTotalCount += 1;
-                                privateTotal += mSettingsSalary.getTeacherPrivate();
-                                privateTotalIncome += mSettingsSalary.getStudentPrivate();
+                                privateTotal += currentSettings.getTeacherPrivate();
+                                privateTotalIncome += currentSettings.getStudentPrivate();
                                 break;
                             case 1:
                                 pairTotalCount += 1;
-                                pairTotal += mSettingsSalary.getTeacherPair();
-                                pairTotalIncome += mSettingsSalary.getStudentPair() * lesson.getClients().size();
+                                pairTotal += currentSettings.getTeacherPair();
+                                pairTotalIncome += currentSettings.getStudentPair() * lesson.getClients().size();
                                 break;
                             case 2:
                                 groupTotalCount += 1;
-                                groupTotal += mSettingsSalary.getTeacherGroup();
-                                groupTotalIncome += mSettingsSalary.getStudentGroup() * lesson.getClients().size();
+                                groupTotal += currentSettings.getTeacherGroup();
+                                groupTotalIncome += currentSettings.getStudentGroup() * lesson.getClients().size();
                                 break;
                             case 3:
                                 onlineTotalCount += 1;
-                                onlineTotal += mSettingsSalary.getTeacherOnLine();
-                                onlineTotalIncome += mSettingsSalary.getStudentOnLine();
+                                onlineTotal += currentSettings.getTeacherOnLine();
+                                onlineTotalIncome += currentSettings.getStudentOnLine();
                                 break;
                         }
                     } else {
                         switch (lesson.getLessonType()) {
                             case 0:
                                 privateTotalCount += 1;
-                                privateTotal += mSettingsSalary.getTeacherPrivate15();
-                                privateTotalIncome += mSettingsSalary.getStudentPrivate15();
+                                privateTotal += currentSettings.getTeacherPrivate15();
+                                privateTotalIncome += currentSettings.getStudentPrivate15();
                                 break;
                             case 1:
                                 pairTotalCount += 1;
-                                pairTotal += mSettingsSalary.getTeacherPair15();
-                                pairTotalIncome += mSettingsSalary.getStudentPair15() * lesson.getClients().size();
+                                pairTotal += currentSettings.getTeacherPair15();
+                                pairTotalIncome += currentSettings.getStudentPair15() * lesson.getClients().size();
                                 break;
                             case 2:
                                 groupTotalCount += 1;
-                                groupTotal += mSettingsSalary.getTeacherGroup15();
-                                groupTotalIncome += mSettingsSalary.getStudentGroup15() * lesson.getClients().size();
+                                groupTotal += currentSettings.getTeacherGroup15();
+                                groupTotalIncome += currentSettings.getStudentGroup15() * lesson.getClients().size();
                                 break;
                             case 3:
                                 onlineTotalCount += 1;
-                                onlineTotal += mSettingsSalary.getTeacherOnLine15();
-                                onlineTotalIncome += mSettingsSalary.getStudentOnLine15();
+                                onlineTotal += currentSettings.getTeacherOnLine15();
+                                onlineTotalIncome += currentSettings.getStudentOnLine15();
                                 break;
                         }
                     }
                 } else {
-                    if(lesson.getLessonLengthId() == 0) {
+                    if (lesson.getLessonLengthId() == 0) {
                         switch (lesson.getLessonType()) {
                             case 0:
                                 privateTotalChildCount += 1;
-                                privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
-                                privateTotalChildIncome += mSettingsSalary.getStudentPrivateChild();
+                                privateTotalChild += currentSettings.getTeacherPrivateChild();
+                                privateTotalChildIncome += currentSettings.getStudentPrivateChild();
                                 break;
                             case 1:
                                 pairTotalChildCount += 1;
-                                pairTotalChild += mSettingsSalary.getTeacherPairChild();
-                                pairTotalChildIncome += mSettingsSalary.getStudentPairChild() * lesson.getClients().size();
+                                pairTotalChild += currentSettings.getTeacherPairChild();
+                                pairTotalChildIncome += currentSettings.getStudentPairChild() * lesson.getClients().size();
                                 break;
                             case 2:
                                 groupTotalChildCount += 1;
-                                groupTotalChild += mSettingsSalary.getTeacherGroupChild();
-                                groupTotalChildIncome += mSettingsSalary.getStudentGroupChild() * lesson.getClients().size();
+                                groupTotalChild += currentSettings.getTeacherGroupChild();
+                                groupTotalChildIncome += currentSettings.getStudentGroupChild() * lesson.getClients().size();
                                 break;
                             case 3:
                                 onlineTotalChildCount += 1;
-                                onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
-                                onlineTotalChildIncome += mSettingsSalary.getStudentOnLineChild();
+                                onlineTotalChild += currentSettings.getTeacherOnLineChild();
+                                onlineTotalChildIncome += currentSettings.getStudentOnLineChild();
                                 break;
                         }
                     } else {
                         switch (lesson.getLessonType()) {
                             case 0:
                                 privateTotalChildCount += 1;
-                                privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
-                                privateTotalChildIncome += mSettingsSalary.getStudentPrivate15Child();
+                                privateTotalChild += currentSettings.getTeacherPrivate15Child();
+                                privateTotalChildIncome += currentSettings.getStudentPrivate15Child();
                                 break;
                             case 1:
                                 pairTotalChildCount += 1;
-                                pairTotalChild += mSettingsSalary.getTeacherPair15Child();
-                                pairTotalChildIncome += mSettingsSalary.getStudentPair15Child() * lesson.getClients().size();
+                                pairTotalChild += currentSettings.getTeacherPair15Child();
+                                pairTotalChildIncome += currentSettings.getStudentPair15Child() * lesson.getClients().size();
                                 break;
                             case 2:
                                 groupTotalChildCount += 1;
-                                groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
-                                groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child() * lesson.getClients().size();
+                                groupTotalChild += currentSettings.getTeacherGroup15Child();
+                                groupTotalChildIncome += currentSettings.getStudentGroup15Child() * lesson.getClients().size();
                                 break;
                             case 3:
                                 onlineTotalChildCount += 1;
-                                onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
-                                onlineTotalChildIncome += mSettingsSalary.getStudentOnLine15Child();
+                                onlineTotalChild += currentSettings.getTeacherOnLine15Child();
+                                onlineTotalChildIncome += currentSettings.getStudentOnLine15Child();
                                 break;
                         }
                     }
@@ -486,7 +488,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             aPair += pairTotal + pairTotalChild;
             aGroup += groupTotal + groupTotalChild;
             aOnLine += onlineTotal + onlineTotalChild;
-            if(total != 0)
+            if (total != 0)
                 mUsersSalaryAdapter.add(user, total);
             birthdays = birthdays.concat(user.getBirthdayDate() + " - " + user.getFullName() + "\n");
         }//user
@@ -505,13 +507,16 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void loadSettingsSalaries() {
-        getDB(DC.DB_SETTINGS_SALARY).child("first_key")
+        getDB(DC.DB_SETTINGS_SALARY)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        SettingsSalary settingsSalary = dataSnapshot.getValue(SettingsSalary.class);
-                        if(settingsSalary != null) {
-                            mSettingsSalary = settingsSalary;
+                        mSettingsSalary.clear();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            SettingsSalary settingsSalary = data.getValue(SettingsSalary.class);
+                            if (settingsSalary != null) {
+                                mSettingsSalary.add(settingsSalary);
+                            }
                         }
                     }
 
@@ -519,6 +524,20 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
                     public void onCancelled(final DatabaseError databaseError) {
                     }
                 });
+    }
+
+    private SettingsSalary getSettingsSalaryForDate(Date date) {
+        SettingsSalary result = new SettingsSalary();
+        Date longTimeAgo = new Date();
+        longTimeAgo.setTime(1);
+        result.setDateFrom(longTimeAgo);
+        for (SettingsSalary settingsSalary : mSettingsSalary) {
+            if (settingsSalary.getDateFrom().after(result.getDateFrom())
+                    && settingsSalary.getDateFrom().before(date)) {
+                result = settingsSalary;
+            }
+        }
+        return result;
     }
 
     private void updateBarChart(List<Result> resultList) {
@@ -535,7 +554,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
             values.add(new BarEntry(i, val, val));
         }
         BarDataSet set1;
-        if(mBarChart.getData() != null &&
+        if (mBarChart.getData() != null &&
                 mBarChart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) mBarChart.getData().getDataSetByIndex(0);
             set1.setValues(values);
@@ -576,11 +595,11 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
         }
         BarDataSet set1;
         BarDataSet set1Profit;
-        if(mBarChartIncome.getData() != null &&
+        if (mBarChartIncome.getData() != null &&
                 mBarChartIncome.getData().getDataSetCount() == 1) {
             set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
             set1.setValues(values);
-        } else if(mBarChartIncome.getData() != null &&
+        } else if (mBarChartIncome.getData() != null &&
                 mBarChartIncome.getData().getDataSetCount() == 2) {
             set1 = (BarDataSet) mBarChartIncome.getData().getDataSetByIndex(0);
             set1.setValues(values);

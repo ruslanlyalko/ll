@@ -80,7 +80,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @BindView(R.id.calendar_view) CompactCalendarView mCalendarView;
 
     private Contact mContact;
-    private SettingsSalary mSettingsSalary = new SettingsSalary();
+    private List<SettingsSalary> mSettingsSalary = new ArrayList<>();
     private String mContactKey = "";
     private LessonsHeaderAdapter mLessonsAdapter = new LessonsHeaderAdapter(this);
     private ContactRechargesAdapter mContactRechargesAdapter;
@@ -111,18 +111,18 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @Override
     protected void parseExtras() {
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null) {
+        if (bundle != null) {
             mContact = (Contact) bundle.getSerializable(Keys.Extras.EXTRA_ITEM_ID);
             mContactKey = bundle.getString(Keys.Extras.EXTRA_CONTACT_KEY);
         }
-        if(mContact != null)
+        if (mContact != null)
             mContactKey = mContact.getKey();
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void setupView() {
-        if(isDestroyed()) return;
+        if (isDestroyed()) return;
         setupCalendar();
         setupRecycler();
         setupBalance();
@@ -130,6 +130,20 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         showContactDetails();
         loadSettingsSalaries();
         loadContacts();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_edit:
+                startActivity(ContactEditActivity.getLaunchIntent(this, mContact));
+                break;
+            case R.id.action_delete:
+                removeCurrentContact();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupCalendar() {
@@ -160,17 +174,11 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_edit:
-                startActivity(ContactEditActivity.getLaunchIntent(this, mContact));
-                break;
-            case R.id.action_delete:
-                removeCurrentContact();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_delete).setVisible(getCurrentUser().getIsAdmin());
+        menu.findItem(R.id.action_edit).setVisible(getCurrentUser().getIsAdmin());
+        return true;
     }
 
     @Override
@@ -202,13 +210,13 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                         mTotalCharge = 0;
                         for (DataSnapshot rechargesSS : dataSnapshot.getChildren()) {
                             ContactRecharge recharge = rechargesSS.getValue(ContactRecharge.class);
-                            if(recharge != null) {
+                            if (recharge != null) {
                                 contactRecharges.add(recharge);
                                 mTotalCharge += recharge.getPrice();
                             }
                         }
                         boolean showPlaceholder = contactRecharges.size() == 0;
-                        if(isDestroyed()) return;
+                        if (isDestroyed()) return;
                         mTextIncomePlaceholder.setVisibility(showPlaceholder ? View.VISIBLE : View.GONE);
                         mContactRechargesAdapter.setData(contactRecharges);
                         calcBalance();
@@ -221,11 +229,11 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void removeCurrentContact() {
-        if(mLessonsAdapter.getItemCount() != 0) {
+        if (mLessonsAdapter.getItemCount() != 0) {
             Toast.makeText(this, R.string.error_delete_contact, Toast.LENGTH_LONG).show();
             return;
         }
-        if(mHasLessonsWithOtherTeachers) {
+        if (mHasLessonsWithOtherTeachers) {
             Toast.makeText(this, R.string.error_delete_contact_other, Toast.LENGTH_LONG).show();
             return;
         }
@@ -275,13 +283,16 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void loadSettingsSalaries() {
-        getDB(DC.DB_SETTINGS_SALARY).child("first_key")
+        getDB(DC.DB_SETTINGS_SALARY)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        SettingsSalary settingsSalary = dataSnapshot.getValue(SettingsSalary.class);
-                        if(settingsSalary != null) {
-                            mSettingsSalary = settingsSalary;
+                        mSettingsSalary.clear();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            SettingsSalary settingsSalary = data.getValue(SettingsSalary.class);
+                            if (settingsSalary != null) {
+                                mSettingsSalary.add(settingsSalary);
+                            }
                         }
                     }
 
@@ -292,17 +303,17 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void showContactDetails() {
-        if(isDestroyed()) return;
-        if(mContact == null) {
+        if (isDestroyed()) return;
+        if (mContact == null) {
             setTitle("");
             return;
         }
         setTitle("");
         mTextUserName.setText(mContact.getName());
         String subtitle = "";
-        if(mContact.hasUser())
+        if (mContact.hasUser())
             subtitle = "[" + mContact.getUserName() + "] \n";
-        if(mContact.getBirthDay().getTime() != mContact.getCreatedAt().getTime())
+        if (mContact.getBirthDay().getTime() != mContact.getCreatedAt().getTime())
             subtitle += DateUtils.toString(mContact.getBirthDay(), "dd.MM.yyyy");
         subtitle += "\n" + mContact.getEmail();
         mTextSubTitle.setText(subtitle);
@@ -316,13 +327,13 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void loadLessons() {
-        if(isDestroyed()) return;
+        if (isDestroyed()) return;
         mValueEventListener = getDB(DC.DB_LESSONS)
                 .addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        if(isDestroyed()) return;
+                        if (isDestroyed()) return;
                         mHasLessonsWithOtherTeachers = false;
                         mCalendarView.removeAllEvents();
                         List<Lesson> lessons = new ArrayList<>();
@@ -331,8 +342,8 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                                 for (DataSnapshot datMonth : datYear.getChildren()) {
                                     for (DataSnapshot datDay : datMonth.getChildren()) {
                                         Lesson lesson = datDay.getValue(Lesson.class);
-                                        if(lesson != null && (lesson.getClients().contains(mContact.getKey()))) {
-                                            if(getCurrentUser().getIsAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
+                                        if (lesson != null && (lesson.getClients().contains(mContact.getKey()))) {
+                                            if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
                                                 lessons.add(lesson);
                                                 int color = ContextCompat.getColor(ContactDetailsActivity.this, R.color.colorPrimary);
                                                 long date = lesson.getDateTime().getTime();
@@ -362,7 +373,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void showLessonsOnList() {
-        if(mCurrentDate == null) {
+        if (mCurrentDate == null) {
             mLessonsAdapter.setData(mLessons);
         } else {
             mLessonsAdapter.setData(getLessonsForCurrentDate());
@@ -372,11 +383,25 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     private List<Lesson> getLessonsForCurrentDate() {
         List<Lesson> list = new ArrayList<>();
         for (Lesson lesson : mLessons) {
-            if(DateUtils.dateEquals(mCurrentDate, lesson.getDateTime())) {
+            if (DateUtils.dateEquals(mCurrentDate, lesson.getDateTime())) {
                 list.add(lesson);
             }
         }
         return list;
+    }
+
+    private SettingsSalary getSettingsSalaryForDate(Date date) {
+        SettingsSalary result = new SettingsSalary();
+        Date longTimeAgo = new Date();
+        longTimeAgo.setTime(1);
+        result.setDateFrom(longTimeAgo);
+        for (SettingsSalary settingsSalary : mSettingsSalary) {
+            if (settingsSalary.getDateFrom().after(result.getDateFrom())
+                    && settingsSalary.getDateFrom().before(date)) {
+                result = settingsSalary;
+            }
+        }
+        return result;
     }
 
     private void calcBalance() {
@@ -408,100 +433,101 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         int groupTotalChildCount = 0;
         int onlineTotalChildCount = 0;
         for (Lesson lesson : mLessonsAdapter.getData()) {
-            if(lesson.getStatusType() == 1) continue;
-            if(lesson.getUserType() == 0) {
-                if(lesson.getLessonLengthId() == 0) {
+            if (lesson.getStatusType() == 1) continue;
+            SettingsSalary currentSettings = getSettingsSalaryForDate(lesson.getDateTime());
+            if (lesson.getUserType() == 0) {
+                if (lesson.getLessonLengthId() == 0) {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalCount += 1;
-                            privateTotal += mSettingsSalary.getTeacherPrivate();
-                            privateTotalIncome += mSettingsSalary.getStudentPrivate();
+                            privateTotal += currentSettings.getTeacherPrivate();
+                            privateTotalIncome += currentSettings.getStudentPrivate();
                             break;
                         case 1:
                             pairTotalCount += 1;
-                            pairTotal += mSettingsSalary.getTeacherPair();
-                            pairTotalIncome += mSettingsSalary.getStudentPair();
+                            pairTotal += currentSettings.getTeacherPair();
+                            pairTotalIncome += currentSettings.getStudentPair();
                             break;
                         case 2:
                             groupTotalCount += 1;
-                            groupTotal += mSettingsSalary.getTeacherGroup();
-                            groupTotalIncome += mSettingsSalary.getStudentGroup();
+                            groupTotal += currentSettings.getTeacherGroup();
+                            groupTotalIncome += currentSettings.getStudentGroup();
                             break;
                         case 3:
                             onlineTotalCount += 1;
-                            onlineTotal += mSettingsSalary.getTeacherOnLine();
-                            onlineTotalIncome += mSettingsSalary.getStudentOnLine();
+                            onlineTotal += currentSettings.getTeacherOnLine();
+                            onlineTotalIncome += currentSettings.getStudentOnLine();
                             break;
                     }
                 } else {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalCount += 1;
-                            privateTotal += mSettingsSalary.getTeacherPrivate15();
-                            privateTotalIncome += mSettingsSalary.getStudentPrivate15();
+                            privateTotal += currentSettings.getTeacherPrivate15();
+                            privateTotalIncome += currentSettings.getStudentPrivate15();
                             break;
                         case 1:
                             pairTotalCount += 1;
-                            pairTotal += mSettingsSalary.getTeacherPair15();
-                            pairTotalIncome += mSettingsSalary.getStudentPair15();
+                            pairTotal += currentSettings.getTeacherPair15();
+                            pairTotalIncome += currentSettings.getStudentPair15();
                             break;
                         case 2:
                             groupTotalCount += 1;
-                            groupTotal += mSettingsSalary.getTeacherGroup15();
-                            groupTotalIncome += mSettingsSalary.getStudentGroup15();
+                            groupTotal += currentSettings.getTeacherGroup15();
+                            groupTotalIncome += currentSettings.getStudentGroup15();
                             break;
                         case 3:
                             onlineTotalCount += 1;
-                            onlineTotal += mSettingsSalary.getTeacherOnLine15();
-                            onlineTotalIncome += mSettingsSalary.getStudentOnLine15();
+                            onlineTotal += currentSettings.getTeacherOnLine15();
+                            onlineTotalIncome += currentSettings.getStudentOnLine15();
                             break;
                     }
                 }
             } else {
-                if(lesson.getLessonLengthId() == 0) {
+                if (lesson.getLessonLengthId() == 0) {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalChildCount += 1;
-                            privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
-                            privateTotalChildIncome += mSettingsSalary.getStudentPrivateChild();
+                            privateTotalChild += currentSettings.getTeacherPrivateChild();
+                            privateTotalChildIncome += currentSettings.getStudentPrivateChild();
                             break;
                         case 1:
                             pairTotalChildCount += 1;
-                            pairTotalChild += mSettingsSalary.getTeacherPairChild();
-                            pairTotalChildIncome += mSettingsSalary.getStudentPairChild();
+                            pairTotalChild += currentSettings.getTeacherPairChild();
+                            pairTotalChildIncome += currentSettings.getStudentPairChild();
                             break;
                         case 2:
                             groupTotalChildCount += 1;
-                            groupTotalChild += mSettingsSalary.getTeacherGroupChild();
-                            groupTotalChildIncome += mSettingsSalary.getStudentGroupChild();
+                            groupTotalChild += currentSettings.getTeacherGroupChild();
+                            groupTotalChildIncome += currentSettings.getStudentGroupChild();
                             break;
                         case 3:
                             onlineTotalChildCount += 1;
-                            onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
-                            onlineTotalChildIncome += mSettingsSalary.getStudentOnLineChild();
+                            onlineTotalChild += currentSettings.getTeacherOnLineChild();
+                            onlineTotalChildIncome += currentSettings.getStudentOnLineChild();
                             break;
                     }
                 } else {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalChildCount += 1;
-                            privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
-                            privateTotalChildIncome += mSettingsSalary.getStudentPrivate15Child();
+                            privateTotalChild += currentSettings.getTeacherPrivate15Child();
+                            privateTotalChildIncome += currentSettings.getStudentPrivate15Child();
                             break;
                         case 1:
                             pairTotalChildCount += 1;
-                            pairTotalChild += mSettingsSalary.getTeacherPair15Child();
-                            pairTotalChildIncome += mSettingsSalary.getStudentPair15Child();
+                            pairTotalChild += currentSettings.getTeacherPair15Child();
+                            pairTotalChildIncome += currentSettings.getStudentPair15Child();
                             break;
                         case 2:
                             groupTotalChildCount += 1;
-                            groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
-                            groupTotalChildIncome += mSettingsSalary.getStudentGroup15Child();
+                            groupTotalChild += currentSettings.getTeacherGroup15Child();
+                            groupTotalChildIncome += currentSettings.getStudentGroup15Child();
                             break;
                         case 3:
                             onlineTotalChildCount += 1;
-                            onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
-                            onlineTotalChildIncome += mSettingsSalary.getStudentOnLine15Child();
+                            onlineTotalChild += currentSettings.getTeacherOnLine15Child();
+                            onlineTotalChildIncome += currentSettings.getStudentOnLine15Child();
                             break;
                     }
                 }
@@ -524,17 +550,9 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     private void loadContacts() {
         getDataManager().getAllContacts().observe(this, list -> {
-            if(list == null) return;
+            if (list == null) return;
             mLessonsAdapter.setContacts(list);
         });
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_delete).setVisible(getCurrentUser().getIsAdmin());
-        menu.findItem(R.id.action_edit).setVisible(getCurrentUser().getIsAdmin());
-        return true;
     }
 
     @OnClick(R.id.button_recharge)
@@ -561,7 +579,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     @Override
     public void onCommentClicked(final Lesson lesson) {
-        if(lesson.hasDescription())
+        if (lesson.hasDescription())
             Toast.makeText(this, lesson.getDescription(), Toast.LENGTH_LONG).show();
     }
 
@@ -572,7 +590,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     @Override
     public void onRemoveClicked(final Lesson lesson) {
-        if(getCurrentUser().getIsAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
+        if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(ContactDetailsActivity.this);
             builder.setTitle(R.string.dialog_calendar_remove_title)
                     .setPositiveButton(R.string.action_remove, (dialog, which) -> {
@@ -609,7 +627,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     @OnClick(R.id.layout_balance_header)
     public void onClick() {
-        if(mListIncome.getVisibility() == View.VISIBLE)
+        if (mListIncome.getVisibility() == View.VISIBLE)
             mListIncome.setVisibility(View.GONE);
         else
             mListIncome.setVisibility(View.VISIBLE);
@@ -617,7 +635,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
 
     @OnClick(R.id.text_month)
     public void onMonthClick() {
-        if(mCalendarView.getVisibility() == View.VISIBLE) {
+        if (mCalendarView.getVisibility() == View.VISIBLE) {
             mCalendarView.setVisibility(View.GONE);
             mCurrentDate = null;
             showLessonsOnList();

@@ -15,17 +15,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
-import com.ruslanlyalko.ll.presentation.utils.ViewUtils;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Lesson;
 import com.ruslanlyalko.ll.data.models.SettingsSalary;
 import com.ruslanlyalko.ll.data.models.User;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
+import com.ruslanlyalko.ll.presentation.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -62,7 +63,7 @@ public class SalaryActivity extends BaseActivity {
     @BindView(R.id.text_salary_group15_child) TextView mTextSalaryGroup15Child;
     @BindView(R.id.text_salary_online15_child) TextView mTextSalaryOnline15Child;
 
-    private SettingsSalary mSettingsSalary = new SettingsSalary();
+    private List<SettingsSalary> mSettingsSalary = new ArrayList<>();
     private List<Lesson> mLessons = new ArrayList<>();
     private Calendar mCurrentMonth = Calendar.getInstance();
     private User mUser;
@@ -101,6 +102,7 @@ public class SalaryActivity extends BaseActivity {
     }
 
     private void updateMonth() {
+        updateConditionUI();
         mTextMonth.setText(DateUtils.getMonthWithYear(getResources(), mCurrentMonth));
     }
 
@@ -160,14 +162,17 @@ public class SalaryActivity extends BaseActivity {
     }
 
     private void loadSettingsSalaries() {
-        getDB(DC.DB_SETTINGS_SALARY).child("first_key")
+        getDB(DC.DB_SETTINGS_SALARY)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        SettingsSalary settingsSalary = dataSnapshot.getValue(SettingsSalary.class);
-                        if (settingsSalary != null) {
-                            mSettingsSalary = settingsSalary;
-                            updateConditionUI();
+                        mSettingsSalary.clear();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            SettingsSalary settingsSalary = data.getValue(SettingsSalary.class);
+                            if (settingsSalary != null) {
+                                mSettingsSalary.add(settingsSalary);
+                                updateConditionUI();
+                            }
                         }
                     }
 
@@ -177,30 +182,45 @@ public class SalaryActivity extends BaseActivity {
                 });
     }
 
+    private SettingsSalary getSettingsSalaryForDate(Date date) {
+        SettingsSalary result = new SettingsSalary();
+        Date longTimeAgo = new Date();
+        longTimeAgo.setTime(1);
+        result.setDateFrom(longTimeAgo);
+        for (SettingsSalary settingsSalary : mSettingsSalary) {
+            if (settingsSalary.getDateFrom().after(result.getDateFrom())
+                    && settingsSalary.getDateFrom().before(date)) {
+                result = settingsSalary;
+            }
+        }
+        return result;
+    }
+
     private void updateConditionUI() {
-        mTextSalaryPrivate.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPrivate()));
-        mTextSalaryPrivate15.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPrivate15()));
+        SettingsSalary currentSettings = getSettingsSalaryForDate(mCurrentMonth.getTime());
+        mTextSalaryPrivate.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherPrivate()));
+        mTextSalaryPrivate15.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherPrivate15()));
         //
-        mTextSalaryPair.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPair()));
-        mTextSalaryPair15.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPair15()));
+        mTextSalaryPair.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherPair()));
+        mTextSalaryPair15.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherPair15()));
         //
-        mTextSalaryGroup.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherGroup()));
-        mTextSalaryGroup15.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherGroup15()));
+        mTextSalaryGroup.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherGroup()));
+        mTextSalaryGroup15.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherGroup15()));
         //
-        mTextSalaryOnline.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherOnLine()));
-        mTextSalaryOnline15.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherOnLine15()));
+        mTextSalaryOnline.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherOnLine()));
+        mTextSalaryOnline15.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherOnLine15()));
         //
-        mTextSalaryPrivateChild.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPrivateChild()));
-        mTextSalaryPrivate15Child.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPrivate15Child()));
+        mTextSalaryPrivateChild.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherPrivateChild()));
+        mTextSalaryPrivate15Child.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherPrivate15Child()));
         //
-        mTextSalaryPairChild.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPairChild()));
-        mTextSalaryPair15Child.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherPair15Child()));
+        mTextSalaryPairChild.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherPairChild()));
+        mTextSalaryPair15Child.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherPair15Child()));
         //
-        mTextSalaryGroupChild.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherGroupChild()));
-        mTextSalaryGroup15Child.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherGroup15Child()));
+        mTextSalaryGroupChild.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherGroupChild()));
+        mTextSalaryGroup15Child.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherGroup15Child()));
         //
-        mTextSalaryOnlineChild.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherOnLineChild()));
-        mTextSalaryOnline15Child.setText(String.format(getString(R.string.hrn_d), mSettingsSalary.getTeacherOnLine15Child()));
+        mTextSalaryOnlineChild.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherOnLineChild()));
+        mTextSalaryOnline15Child.setText(String.format(getString(R.string.hrn_d), currentSettings.getTeacherOnLine15Child()));
     }
 
     private void loadLessons() {
@@ -245,49 +265,51 @@ public class SalaryActivity extends BaseActivity {
         int pairTotalChildCount = 0;
         int groupTotalChildCount = 0;
         int onlineTotalChildCount = 0;
-        if (mLessons == null || mSettingsSalary == null) {
+        if (mLessons == null || mSettingsSalary == null || mSettingsSalary.isEmpty()) {
             Log.e("Salary", "Wrong argument!");
             return;
         }
         for (Lesson lesson : mLessons) {
             if (lesson.getStatusType() == 1) continue;
+            SettingsSalary currentSettings = getSettingsSalaryForDate(lesson.getDateTime());
+
             if (lesson.getUserType() == 0) {
                 if (lesson.getLessonLengthId() == 0) {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalCount += 1;
-                            privateTotal += mSettingsSalary.getTeacherPrivate();
+                            privateTotal += currentSettings.getTeacherPrivate();
                             break;
                         case 1:
                             pairTotalCount += 1;
-                            pairTotal += mSettingsSalary.getTeacherPair();
+                            pairTotal += currentSettings.getTeacherPair();
                             break;
                         case 2:
                             groupTotalCount += 1;
-                            groupTotal += mSettingsSalary.getTeacherGroup();
+                            groupTotal += currentSettings.getTeacherGroup();
                             break;
                         case 3:
                             onlineTotalCount += 1;
-                            onlineTotal += mSettingsSalary.getTeacherOnLine();
+                            onlineTotal += currentSettings.getTeacherOnLine();
                             break;
                     }
                 } else {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalCount += 1;
-                            privateTotal += mSettingsSalary.getTeacherPrivate15();
+                            privateTotal += currentSettings.getTeacherPrivate15();
                             break;
                         case 1:
                             pairTotalCount += 1;
-                            pairTotal += mSettingsSalary.getTeacherPair15();
+                            pairTotal += currentSettings.getTeacherPair15();
                             break;
                         case 2:
                             groupTotalCount += 1;
-                            groupTotal += mSettingsSalary.getTeacherGroup15();
+                            groupTotal += currentSettings.getTeacherGroup15();
                             break;
                         case 3:
                             onlineTotalCount += 1;
-                            onlineTotal += mSettingsSalary.getTeacherOnLine15();
+                            onlineTotal += currentSettings.getTeacherOnLine15();
                             break;
                     }
                 }
@@ -296,38 +318,38 @@ public class SalaryActivity extends BaseActivity {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalChildCount += 1;
-                            privateTotalChild += mSettingsSalary.getTeacherPrivateChild();
+                            privateTotalChild += currentSettings.getTeacherPrivateChild();
                             break;
                         case 1:
                             pairTotalChildCount += 1;
-                            pairTotalChild += mSettingsSalary.getTeacherPairChild();
+                            pairTotalChild += currentSettings.getTeacherPairChild();
                             break;
                         case 2:
                             groupTotalChildCount += 1;
-                            groupTotalChild += mSettingsSalary.getTeacherGroupChild();
+                            groupTotalChild += currentSettings.getTeacherGroupChild();
                             break;
                         case 3:
                             onlineTotalChildCount += 1;
-                            onlineTotalChild += mSettingsSalary.getTeacherOnLineChild();
+                            onlineTotalChild += currentSettings.getTeacherOnLineChild();
                             break;
                     }
                 } else {
                     switch (lesson.getLessonType()) {
                         case 0:
                             privateTotalChildCount += 1;
-                            privateTotalChild += mSettingsSalary.getTeacherPrivate15Child();
+                            privateTotalChild += currentSettings.getTeacherPrivate15Child();
                             break;
                         case 1:
                             pairTotalChildCount += 1;
-                            pairTotalChild += mSettingsSalary.getTeacherPair15Child();
+                            pairTotalChild += currentSettings.getTeacherPair15Child();
                             break;
                         case 2:
                             groupTotalChildCount += 1;
-                            groupTotalChild += mSettingsSalary.getTeacherGroup15Child();
+                            groupTotalChild += currentSettings.getTeacherGroup15Child();
                             break;
                         case 3:
                             onlineTotalChildCount += 1;
-                            onlineTotalChild += mSettingsSalary.getTeacherOnLine15Child();
+                            onlineTotalChild += currentSettings.getTeacherOnLine15Child();
                             break;
                     }
                 }
