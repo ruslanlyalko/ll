@@ -40,13 +40,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
     private Unbinder mUnBinder;
     private User mCurrentUser;
-    private DataManager mDataManager;
+    private DataManager mDataManager = DataManagerImpl.newInstance();
 
-    public BaseActivity() {
-        mDataManager = DataManagerImpl.newInstance();
+    protected FirebaseAuth getAuth() {
+        return FirebaseAuth.getInstance();
     }
-
-    protected FirebaseAuth getAuth() {return FirebaseAuth.getInstance();}
 
     protected DataManager getDataManager() {
         return mDataManager;
@@ -56,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(isFullScreen())
+        if (isFullScreen())
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(getLayoutResource());
         mUnBinder = ButterKnife.bind(this);
@@ -64,11 +62,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         parseExtras();
         initToolbar();
         setupView();
-        if(isModalView())
+        if (isModalView())
             overridePendingTransition(R.anim.fadein, R.anim.nothing);
-        if(isLeftView())
+        if (isLeftView())
             overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
-        if(isRightView())
+        if (isRightView())
             overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
     }
 
@@ -99,17 +97,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        if(toolbar != null) {
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
-        if(getSupportActionBar() != null)
+        if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     protected void copyToClipboard(String label, String text) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(label, text);
-        if(clipboard != null) {
+        if (clipboard != null) {
             clipboard.setPrimaryClip(clip);
         }
     }
@@ -130,7 +128,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void clearPushNotificationForDialog(String key) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if(notificationManager != null) {
+        if (notificationManager != null) {
             notificationManager.cancel(key.hashCode());
         }
     }
@@ -141,9 +139,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
-        if(view != null) {
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if(imm != null) {
+            if (imm != null) {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         }
@@ -151,7 +149,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         } else
@@ -162,11 +160,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onBackPressed() {
         hideKeyboard();
         super.onBackPressed();
-        if(isModalView())
+        if (isModalView())
             overridePendingTransition(R.anim.nothing, R.anim.fadeout);
-        if(isLeftView())
+        if (isLeftView())
             overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
-        if(isRightView())
+        if (isRightView())
             overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
     }
 

@@ -4,9 +4,10 @@ import android.arch.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
 import com.ruslanlyalko.ll.data.models.Contact;
+import com.ruslanlyalko.ll.data.models.Lesson;
+import com.ruslanlyalko.ll.data.models.SettingsSalary;
 import com.ruslanlyalko.ll.data.models.User;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,13 +25,17 @@ public interface DataManager {
 
     MutableLiveData<List<User>> getAllUsers();
 
+    MutableLiveData<List<Lesson>> getAllLessons();
+
+    MutableLiveData<List<SettingsSalary>> getAllSettingsSalary();
+
+    MutableLiveData<List<Contact>> getAllContacts();
+
     Task<Void> changePassword(String newPassword);
 
     void updateToken();
 
     void logout();
-
     // Contacts
-    MutableLiveData<List<Contact>> getAllContacts();
 
 }

@@ -122,7 +122,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
     }
 
     private void showLessonsForDate() {
-        if(isDestroyed()) return;
+        if (isDestroyed()) return;
         mFab.setVisibility((getCurrentUser().getIsAdmin() || DateUtils.isTodayOrFuture(mCurrentDate.getTime()))
                 ? View.VISIBLE : View.GONE);
         String aDate = DateFormat.format("yyyy/MM/dd", mCurrentDate.getTime()).toString();
@@ -135,8 +135,8 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
                         List<Lesson> lessons = new ArrayList<>();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             Lesson lesson = data.getValue(Lesson.class);
-                            if(lesson != null) {
-                                if(getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
+                            if (lesson != null) {
+                                if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
                                     lessons.add(lesson);
                                 }
                             }
@@ -152,52 +152,36 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     private void loadContacts() {
         getDataManager().getAllContacts().observe(this, list -> {
-            if(list == null) return;
+            if (list == null) return;
             mLessonsAdapter.setContacts(list);
         });
     }
 
     private void showLessonsOnCalendar() {
         mSwipeRefresh.setRefreshing(true);
-        getDB(DC.DB_LESSONS)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        if(isDestroyed()) return;
-                        mUsersList.clear();
-                        mCompactCalendarView.removeAllEvents();
-                        for (DataSnapshot datYears : dataSnapshot.getChildren()) {
-                            for (DataSnapshot datYear : datYears.getChildren()) {
-                                for (DataSnapshot datMonth : datYear.getChildren()) {
-                                    for (DataSnapshot datDay : datMonth.getChildren()) {
-                                        Lesson lesson = datDay.getValue(Lesson.class);
-                                        if(lesson != null && (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId))) {
-                                            int color = getUserColor(lesson.getUserId());
-                                            long date = lesson.getDateTime().getTime();
-                                            String uId = lesson.getUserId();
-                                            mCompactCalendarView.addEvent(
-                                                    new Event(color, date, uId), true);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        mSwipeRefresh.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
+        getDataManager().getAllLessons().observe(this, allLessons -> {
+            mUsersList.clear();
+            mCompactCalendarView.removeAllEvents();
+            for (Lesson lesson : allLessons) {
+                if (lesson != null && (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId))) {
+                    int color = getUserColor(lesson.getUserId());
+                    long date = lesson.getDateTime().getTime();
+                    String uId = lesson.getUserId();
+                    mCompactCalendarView.addEvent(
+                            new Event(color, date, uId), true);
+                }
+            }
+            mSwipeRefresh.setRefreshing(false);
+        });
     }
 
     private int getUserColor(String userId) {
-        if(!mUsersList.contains(userId)) {
+        if (!mUsersList.contains(userId)) {
             mUsersList.add(userId);
         }
         int index = mUsersList.indexOf(userId);
         int[] colors = getResources().getIntArray(R.array.colors);
-        if(index < 6)
+        if (index < 6)
             return colors[index];
         else
             return Color.GREEN;
@@ -205,7 +189,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     @Override
     public void onCommentClicked(final Lesson lesson) {
-        if(lesson.hasDescription())
+        if (lesson.hasDescription())
             Toast.makeText(this, lesson.getDescription(), Toast.LENGTH_LONG).show();
     }
 
@@ -216,7 +200,7 @@ public class CalendarActivity extends BaseActivity implements OnLessonClickListe
 
     @Override
     public void onRemoveClicked(final Lesson lesson) {
-        if(getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
+        if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(mUserId)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
             builder.setTitle(R.string.dialog_calendar_remove_title)
                     .setPositiveButton(R.string.action_remove, (dialog, which) ->

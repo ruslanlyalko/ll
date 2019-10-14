@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,6 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
@@ -49,7 +49,6 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -78,14 +77,13 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     @BindView(R.id.card_description) CardView mCardDescription;
     @BindView(R.id.text_month) TextView mTextMonth;
     @BindView(R.id.calendar_view) CompactCalendarView mCalendarView;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
+    @BindView(R.id.progress_bar_recharge) ProgressBar mProgressBarRecharge;
 
     private Contact mContact;
     private List<SettingsSalary> mSettingsSalary = new ArrayList<>();
-    private String mContactKey = "";
     private LessonsHeaderAdapter mLessonsAdapter = new LessonsHeaderAdapter(this);
     private ContactRechargesAdapter mContactRechargesAdapter;
-    private ValueEventListener mValueEventListener;
-    private ValueEventListener mContactValueEventListener;
     private boolean mHasLessonsWithOtherTeachers;
     private int mTotalCharge = 0;
     private List<Lesson> mLessons = new ArrayList<>();
@@ -113,10 +111,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mContact = (Contact) bundle.getSerializable(Keys.Extras.EXTRA_ITEM_ID);
-            mContactKey = bundle.getString(Keys.Extras.EXTRA_CONTACT_KEY);
         }
-        if (mContact != null)
-            mContactKey = mContact.getKey();
     }
 
     @SuppressLint("SetTextI18n")
@@ -126,10 +121,25 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         setupCalendar();
         setupRecycler();
         setupBalance();
-        loadDetails();
+        getDataManager().getAllSettingsSalary().observe(this, settingsSalaries -> mSettingsSalary = settingsSalaries);
+        getDataManager().getAllContacts().observe(this, list -> mLessonsAdapter.setContacts(list));
+        new Handler().postDelayed(this::loadLessons, 300);
+        loadContactRecharges();
+        getDB(DC.DB_CONTACTS)
+                .child(mContact.getKey())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        mContact = dataSnapshot.getValue(Contact.class);
+                        showContactDetails();
+                    }
+
+                    @Override
+                    public void onCancelled(final DatabaseError databaseError) {
+                    }
+                });
         showContactDetails();
-        loadSettingsSalaries();
-        loadContacts();
+
     }
 
     @Override
@@ -181,29 +191,15 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         return true;
     }
 
-    @Override
-    protected void onPause() {
-        getDB(DC.DB_LESSONS).removeEventListener(mValueEventListener);
-        getDB(DC.DB_CONTACTS_RECHARGE).child(mContactKey).removeEventListener(mContactValueEventListener);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new Handler().postDelayed(() -> {
-            loadLessons();
-            loadContactRecharges();
-        }, 500);
-    }
 
     private void setupBalance() {
         mCardBalance.setVisibility(getCurrentUser().getIsAdmin() ? View.VISIBLE : View.GONE);
     }
 
     private void loadContactRecharges() {
-        mContactValueEventListener = getDB(DC.DB_CONTACTS_RECHARGE)
-                .child(mContactKey).addValueEventListener(new ValueEventListener() {
+        getDB(DC.DB_CONTACTS_RECHARGE)
+                .child(mContact.getKey())
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         List<ContactRecharge> contactRecharges = new ArrayList<>();
@@ -215,9 +211,10 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
                                 mTotalCharge += recharge.getPrice();
                             }
                         }
-                        boolean showPlaceholder = contactRecharges.size() == 0;
                         if (isDestroyed()) return;
-                        mTextIncomePlaceholder.setVisibility(showPlaceholder ? View.VISIBLE : View.GONE);
+                        mProgressBarRecharge.setVisibility(View.GONE);
+                        mTextIncomePlaceholder.setVisibility(contactRecharges.isEmpty()
+                                ? View.VISIBLE : View.GONE);
                         mContactRechargesAdapter.setData(contactRecharges);
                         calcBalance();
                     }
@@ -266,43 +263,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         });
     }
 
-    private void loadDetails() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(DC.DB_CONTACTS)
-                .child(mContactKey);
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                mContact = dataSnapshot.getValue(Contact.class);
-                showContactDetails();
-            }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private void loadSettingsSalaries() {
-        getDB(DC.DB_SETTINGS_SALARY)
-                .orderByChild("dateFrom/time")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        mSettingsSalary.clear();
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            SettingsSalary settingsSalary = data.getValue(SettingsSalary.class);
-                            if (settingsSalary != null) {
-                                mSettingsSalary.add(settingsSalary);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
-    }
-
     private void showContactDetails() {
         if (isDestroyed()) return;
         if (mContact == null) {
@@ -328,49 +288,29 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
     }
 
     private void loadLessons() {
-        if (isDestroyed()) return;
-        mValueEventListener = getDB(DC.DB_LESSONS)
-                .addValueEventListener(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        if (isDestroyed()) return;
-                        mHasLessonsWithOtherTeachers = false;
-                        mCalendarView.removeAllEvents();
-                        List<Lesson> lessons = new ArrayList<>();
-                        for (DataSnapshot datYears : dataSnapshot.getChildren()) {
-                            for (DataSnapshot datYear : datYears.getChildren()) {
-                                for (DataSnapshot datMonth : datYear.getChildren()) {
-                                    for (DataSnapshot datDay : datMonth.getChildren()) {
-                                        Lesson lesson = datDay.getValue(Lesson.class);
-                                        if (lesson != null && (lesson.getClients().contains(mContact.getKey()))) {
-                                            if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
-                                                lessons.add(lesson);
-                                                int color = ContextCompat.getColor(ContactDetailsActivity.this, R.color.colorPrimary);
-                                                long date = lesson.getDateTime().getTime();
-                                                String uId = lesson.getUserId();
-                                                mCalendarView.addEvent(
-                                                        new Event(color, date, uId), true);
-                                            } else
-                                                mHasLessonsWithOtherTeachers = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Collections.sort(lessons, (o1, o2) ->
-                                Long.compare(o2.getDateTime().getTime(), o1.getDateTime().getTime()));
-                        String count = String.format(Locale.US, "[%d]", lessons.size());
-                        mTextLessonCount.setText(count);
-                        mLessons = lessons;
-                        showLessonsOnList();
-                        calcBalance();
-                    }
-
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                    }
-                });
+        getDataManager().getAllLessons().observe(this, allLessons -> {
+            mProgressBar.setVisibility(View.GONE);
+            mHasLessonsWithOtherTeachers = false;
+            mCalendarView.removeAllEvents();
+            mLessons.clear();
+            for (Lesson lesson : allLessons) {
+                if (lesson != null && (lesson.getClients().contains(mContact.getKey()))) {
+                    if (getCurrentUser().getIsAdmin() || lesson.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
+                        mLessons.add(lesson);
+                        int color = ContextCompat.getColor(ContactDetailsActivity.this, R.color.colorPrimary);
+                        long date = lesson.getDateTime().getTime();
+                        String uId = lesson.getUserId();
+                        mCalendarView.addEvent(
+                                new Event(color, date, uId), true);
+                    } else
+                        mHasLessonsWithOtherTeachers = true;
+                }
+            }
+            String count = String.format(Locale.US, "[%d]", mLessons.size());
+            mTextLessonCount.setText(count);
+            showLessonsOnList();
+            calcBalance();
+        });
     }
 
     private void showLessonsOnList() {
@@ -433,7 +373,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         int pairTotalChildCount = 0;
         int groupTotalChildCount = 0;
         int onlineTotalChildCount = 0;
-        for (Lesson lesson : mLessonsAdapter.getData()) {
+        for (Lesson lesson : mLessons) {
             if (lesson.getStatusType() == 1) continue;
             SettingsSalary currentSettings = getSettingsSalaryForDate(lesson.getDateTime());
             if (lesson.getUserType() == 0) {
@@ -549,12 +489,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         mTextBalance.setTextColor(ContextCompat.getColor(this, (mContact.getTotalIncome() - mContact.getTotalExpense()) < 0 ? R.color.colorPrimary : R.color.colorAccent));
     }
 
-    private void loadContacts() {
-        getDataManager().getAllContacts().observe(this, list -> {
-            if (list == null) return;
-            mLessonsAdapter.setContacts(list);
-        });
-    }
 
     @OnClick(R.id.button_recharge)
     public void onViewClicked() {
@@ -608,7 +542,6 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
         getDB(DC.DB_LESSONS)
                 .child(DateUtils.toString(lesson.getDateTime(), "yyyy/MM/dd"))
                 .child(lesson.getKey()).removeValue().addOnSuccessListener(aVoid -> {
-            loadLessons();
             Toast.makeText(this, R.string.toast_lesson_removed, Toast.LENGTH_LONG).show();
         });
     }
@@ -634,7 +567,7 @@ public class ContactDetailsActivity extends BaseActivity implements OnLessonClic
             mListIncome.setVisibility(View.VISIBLE);
     }
 
-    @OnClick(R.id.text_month)
+    @OnClick(R.id.layout_month)
     public void onMonthClick() {
         if (mCalendarView.getVisibility() == View.VISIBLE) {
             mCalendarView.setVisibility(View.GONE);
