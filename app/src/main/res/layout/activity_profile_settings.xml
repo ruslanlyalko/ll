@@ -64,7 +64,7 @@
                 android:src="@drawable/ic_user_name"
                 tools:ignore="ContentDescription" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -78,7 +78,7 @@
                     android:inputType="text"
                     android:nextFocusLeft="@+id/text_phone"
                     android:nextFocusUp="@+id/text_phone" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- Phone-->
@@ -95,7 +95,7 @@
                 android:src="@drawable/ic_user_phone"
                 tools:ignore="ContentDescription" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -109,7 +109,7 @@
                     android:inputType="phone"
                     android:nextFocusLeft="@+id/text_phone"
                     android:nextFocusUp="@+id/text_phone" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- email-->
@@ -126,7 +126,7 @@
                 android:src="@drawable/ic_user_email"
                 tools:ignore="ContentDescription" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -139,7 +139,7 @@
                     android:enabled="false"
                     android:hint="@string/hint_email"
                     android:inputType="textEmailAddress" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -157,7 +157,7 @@
                 android:src="@drawable/ic_user_birthday"
                 tools:ignore="ContentDescription" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -170,9 +170,9 @@
                     android:layout_marginEnd="4dp"
                     android:hint="@string/hint_from"
                     android:inputType="textEmailAddress" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -185,7 +185,7 @@
                     android:layout_marginEnd="16dp"
                     android:hint="@string/hint_to"
                     android:inputType="textEmailAddress" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -203,7 +203,7 @@
                 android:src="@drawable/ic_user_birthday"
                 tools:ignore="ContentDescription" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -215,7 +215,7 @@
                     android:layout_marginRight="16dp"
                     android:focusable="false"
                     android:hint="@string/hint_date_birth" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -234,7 +234,7 @@
                 android:src="@drawable/ic_user_card"
                 tools:ignore="ContentDescription" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -247,7 +247,7 @@
                     android:hint="@string/hint_card"
                     android:inputType="phone"
                     android:maxLength="19" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -267,7 +267,7 @@
                 android:src="@drawable/ic_user_birthday"
                 tools:ignore="ContentDescription" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -280,7 +280,7 @@
                     android:focusable="false"
                     android:hint="@string/hint_first_date"
                     android:inputType="date" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -392,7 +392,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -404,9 +404,9 @@
                         android:layout_marginRight="16dp"
                         android:hint="@string/hint_password"
                         android:inputType="textPassword" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -418,7 +418,7 @@
                         android:layout_marginRight="16dp"
                         android:hint="@string/hint_password_one_more"
                         android:inputType="textPassword" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
