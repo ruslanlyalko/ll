@@ -7,9 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -21,8 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -31,11 +32,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.UploadTask;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.Expense;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -202,10 +203,14 @@ public class ExpenseEditActivity extends BaseActivity implements EasyPermissions
         mImageExpense.setVisibility(View.VISIBLE);
         String imageFileName = DateUtils.getCurrentTimeStamp() + "_original" + ".jpg";
         uploadFile(imageFile, imageFileName, 85).addOnSuccessListener(taskSnapshot -> {
-            if (taskSnapshot.getDownloadUrl() != null)
-                mExpense.setImage(taskSnapshot.getDownloadUrl().toString());
-            mProgressBar.setVisibility(View.GONE);
-            mButtonUpload.setVisibility(View.VISIBLE);
+
+            taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(uri -> {
+                mExpense.setImage(uri.toString());
+                mProgressBar.setVisibility(View.GONE);
+                mButtonUpload.setVisibility(View.VISIBLE);
+            });
+
+
         }).addOnFailureListener(exception -> {
             mProgressBar.setVisibility(View.GONE);
             mButtonUpload.setVisibility(View.VISIBLE);

@@ -1,9 +1,10 @@
 package com.ruslanlyalko.ll.data;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

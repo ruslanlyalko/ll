@@ -1,12 +1,13 @@
 package com.ruslanlyalko.ll.presentation.widget;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -17,9 +18,9 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 
 import butterknife.BindView;
 
@@ -32,14 +33,14 @@ public class PhotoPreviewActivity extends BaseActivity {
     private String mFolder = "";
     private String mThumbnail = "";
 
-    public static Intent getLaunchIntent(final AppCompatActivity launchActivity, String uri, String userName) {
+    public static Intent getLaunchIntent(final Activity launchActivity, String uri, String userName) {
         Intent intent = new Intent(launchActivity, PhotoPreviewActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_URI, uri);
         intent.putExtra(Keys.Extras.EXTRA_USER_NAME, userName);
         return intent;
     }
 
-    public static Intent getLaunchIntent(final AppCompatActivity launchActivity, String uri, String userName, String thumbnail, boolean a) {
+    public static Intent getLaunchIntent(final Activity launchActivity, String uri, String userName, String thumbnail, boolean a) {
         Intent intent = new Intent(launchActivity, PhotoPreviewActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_URI, uri);
         intent.putExtra(Keys.Extras.EXTRA_USER_NAME, userName);
@@ -47,7 +48,7 @@ public class PhotoPreviewActivity extends BaseActivity {
         return intent;
     }
 
-    public static Intent getLaunchIntent(final AppCompatActivity launchActivity, final String uri, final String userName, final String storage) {
+    public static Intent getLaunchIntent(final Activity launchActivity, final String uri, final String userName, final String storage) {
         Intent intent = new Intent(launchActivity, PhotoPreviewActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_URI, uri);
         intent.putExtra(Keys.Extras.EXTRA_USER_NAME, userName);

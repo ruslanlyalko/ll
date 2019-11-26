@@ -1,5 +1,6 @@
 package com.ruslanlyalko.ll.presentation.ui.main;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -13,7 +14,6 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
     private List<Notification> mNotifications = new ArrayList<>();
     private AppInfo mAppInfo = new AppInfo();
 
-    public static Intent getLaunchIntent(final AppCompatActivity launchActivity) {
+    public static Intent getLaunchIntent(final Activity launchActivity) {
         return new Intent(launchActivity, MainActivity.class);
     }
 

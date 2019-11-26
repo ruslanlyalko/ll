@@ -10,14 +10,20 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.content.ContextCompat;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.FirebaseUtils;
+import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.DialogActivity;
 import com.ruslanlyalko.ll.presentation.ui.main.expenses.ExpensesActivity;
 import com.ruslanlyalko.ll.presentation.ui.reminder.ReminderShowActivity;
@@ -27,7 +33,6 @@ import java.util.Map;
 import java.util.Random;
 
 import static com.ruslanlyalko.ll.presentation.service.NotificationType.COMMENT;
-import static com.ruslanlyalko.ll.presentation.service.NotificationType.REMINDER;
 
 /**
  * Created by Ruslan Lyalko
@@ -64,6 +69,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+        }
+    }
+
+    @Override
+    public void onNewToken(@NonNull String refreshedToken) {
+        super.onNewToken(refreshedToken);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseDatabase.getInstance().getReference(DC.DB_USERS)
+                    .child(user.getUid())
+                    .child(DC.USER_TOKEN)
+                    .setValue(refreshedToken);
         }
     }
 

@@ -3,18 +3,19 @@ package com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.info;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.Keys;
 import com.ruslanlyalko.ll.data.configuration.DC;
 import com.ruslanlyalko.ll.data.models.DialogReadUser;
 import com.ruslanlyalko.ll.data.models.MessageComment;
 import com.ruslanlyalko.ll.presentation.base.BaseActivity;
+import com.ruslanlyalko.ll.presentation.utils.Keys;
 
 import java.util.ArrayList;
 import java.util.List;

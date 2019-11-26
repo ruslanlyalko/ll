@@ -6,13 +6,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         tools:visibility="gone" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
@@ -76,7 +76,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/card_phone1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,9 +103,9 @@
                             android:transitionName="phone1"
                             tools:text="0958422333" />
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/card_phone2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -135,12 +135,12 @@
                             tools:text="0958422333" />
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
             <!--DESCRIPTION-->
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -152,10 +152,10 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:visibility="gone" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <!--BALANCE-->
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_balance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -222,7 +222,7 @@
                         android:layout_height="4dp"
                         android:indeterminate="true" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/list_income"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -241,10 +241,10 @@
 
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <!--CALENDAR-->
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -308,7 +308,7 @@
                         app:compactCalendarTextSize="14sp" />
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <ProgressBar
                 android:id="@+id/progress_bar"
@@ -317,7 +317,7 @@
                 android:layout_height="4dp"
                 android:indeterminate="true" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list_lessons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -326,7 +326,7 @@
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
 

@@ -1,19 +1,20 @@
 package com.ruslanlyalko.ll.presentation.ui.main.profile.dashboard;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -91,7 +92,7 @@ public class DashboardActivity extends BaseActivity implements OnItemClickListen
     private Calendar mCurrentMonth = Calendar.getInstance();
     private List<SettingsSalary> mSettingsSalary = new ArrayList<>();
 
-    public static Intent getLaunchIntent(final AppCompatActivity launchActivity) {
+    public static Intent getLaunchIntent(final Activity launchActivity) {
         return new Intent(launchActivity, DashboardActivity.class);
     }
 

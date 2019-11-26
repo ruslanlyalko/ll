@@ -1,8 +1,8 @@
 package com.ruslanlyalko.ll.presentation.ui.main.profile.salary;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -68,7 +68,7 @@ public class SalaryActivity extends BaseActivity {
     private Calendar mCurrentMonth = Calendar.getInstance();
     private User mUser;
 
-    public static Intent getLaunchIntent(final AppCompatActivity launchActivity, User user) {
+    public static Intent getLaunchIntent(final Activity launchActivity, User user) {
         Intent intent = new Intent(launchActivity, SalaryActivity.class);
         intent.putExtra(Keys.Extras.EXTRA_USER, user);
         return intent;

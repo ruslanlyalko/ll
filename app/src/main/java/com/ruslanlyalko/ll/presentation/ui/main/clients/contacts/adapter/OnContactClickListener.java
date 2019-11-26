@@ -1,8 +1,6 @@
 package com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter;
 
-import android.support.v4.app.ActivityOptionsCompat;
-
-import com.ruslanlyalko.ll.data.models.Contact;
+import androidx.core.app.ActivityOptionsCompat;
 
 import java.util.List;
 

@@ -1,13 +1,14 @@
 package com.ruslanlyalko.ll.presentation.ui.login;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +24,7 @@ public class ResetPasswordActivity extends BaseActivity {
     @BindView(R.id.text_email) EditText inputEmail;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
 
-    public static Intent getLaunchIntent(final AppCompatActivity launchActivity) {
+    public static Intent getLaunchIntent(final Activity launchActivity) {
         return new Intent(launchActivity, ResetPasswordActivity.class);
     }
 

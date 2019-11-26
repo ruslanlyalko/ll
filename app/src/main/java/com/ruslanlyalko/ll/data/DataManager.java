@@ -1,6 +1,7 @@
 package com.ruslanlyalko.ll.data;
 
-import android.arch.lifecycle.MutableLiveData;
+
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
 import com.ruslanlyalko.ll.data.models.Contact;

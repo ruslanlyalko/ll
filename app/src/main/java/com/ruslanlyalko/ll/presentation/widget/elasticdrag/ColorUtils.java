@@ -1,8 +1,8 @@
 package com.ruslanlyalko.ll.presentation.widget.elasticdrag;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.ColorInt;
-import android.support.annotation.IntRange;
+import androidx.annotation.CheckResult;
+import androidx.annotation.ColorInt;
+import androidx.annotation.IntRange;
 
 public class ColorUtils {
 

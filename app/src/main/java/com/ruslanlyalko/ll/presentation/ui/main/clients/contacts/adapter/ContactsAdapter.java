@@ -2,9 +2,6 @@ package com.ruslanlyalko.ll.presentation.ui.main.clients.contacts.adapter;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +11,10 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.data.models.Contact;

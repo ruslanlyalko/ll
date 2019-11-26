@@ -11,13 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.ContentLoadingProgressBar;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +19,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -211,14 +213,19 @@ public class ProfileActivity extends BaseActivity implements OnItemClickListener
                 showProgressBarUpload();
                 String imageFileName = DateUtils.getCurrentTimeStamp() + "_original" + ".jpg";
                 uploadFile(resultUri, imageFileName, 95).addOnSuccessListener(taskSnapshot -> {
-                    if(taskSnapshot.getDownloadUrl() != null) {
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("avatar", taskSnapshot.getDownloadUrl().toString());
-                        mDatabase.getReference().child(DC.DB_USERS).child(mUID).updateChildren(childUpdates)
-                                .addOnCompleteListener(task ->
-                                        hideProgressBarUpload());
-                    }
-                }).addOnFailureListener(exception -> hideProgressBarUpload());
+
+                    taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put("avatar", uri.toString());
+                            mDatabase.getReference().child(DC.DB_USERS).child(mUID).updateChildren(childUpdates)
+                                    .addOnCompleteListener(task ->
+                                            hideProgressBarUpload());
+                        }
+                    });
+                })
+                .addOnFailureListener(exception -> hideProgressBarUpload());
             } else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 error.printStackTrace();

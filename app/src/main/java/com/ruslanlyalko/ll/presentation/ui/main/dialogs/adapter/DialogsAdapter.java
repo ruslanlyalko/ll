@@ -1,7 +1,6 @@
 package com.ruslanlyalko.ll.presentation.ui.main.dialogs.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ruslanlyalko.ll.R;
-import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 import com.ruslanlyalko.ll.data.models.Message;
 import com.ruslanlyalko.ll.data.models.Notification;
 import com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.DialogActivity;
+import com.ruslanlyalko.ll.presentation.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;

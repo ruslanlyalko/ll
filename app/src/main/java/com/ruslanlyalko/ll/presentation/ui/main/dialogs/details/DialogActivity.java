@@ -6,13 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +15,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -448,15 +449,17 @@ public class DialogActivity extends BaseActivity implements EasyPermissions.Perm
             final String filenameOriginal = DateUtils.getCurrentTimeStamp() + "_original" + ".jpg";
             final String filenameThumbnail = DateUtils.getCurrentTimeStamp() + "_thumbnail" + ".jpg";
             uploadFile(imageFile, filenameOriginal, 95).addOnSuccessListener(taskSnapshot ->
+                    taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(uri ->
                     uploadFile(imageFile, filenameThumbnail, 30)
-                            .addOnSuccessListener(taskSnapshot1 -> {
-                                showProgress(false);
-                                if (taskSnapshot.getDownloadUrl() == null) return;
-                                if (taskSnapshot1.getDownloadUrl() == null) return;
-                                String origin = taskSnapshot.getDownloadUrl().toString();
-                                String thumbnail = taskSnapshot1.getDownloadUrl().toString();
-                                sendCommentFile(origin, thumbnail);
-                            }).addOnFailureListener(exception -> showProgress(false)))
+                    .addOnSuccessListener(taskSnapshot1 -> {
+                        showProgress(false);
+                        taskSnapshot1.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(uri_thumb -> {
+                            String origin = uri.toString();
+                            String thumbnail = uri_thumb.toString();
+                            sendCommentFile(origin, thumbnail);
+                        });
+
+                    }).addOnFailureListener(exception -> showProgress(false))))
                     .addOnFailureListener(exception -> showProgress(false));
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();

@@ -1,8 +1,9 @@
 package com.ruslanlyalko.ll.presentation.ui.main.dialogs.details.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ruslanlyalko.ll.R;
 import com.ruslanlyalko.ll.presentation.utils.DateUtils;

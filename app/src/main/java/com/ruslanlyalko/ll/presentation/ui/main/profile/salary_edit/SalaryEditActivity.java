@@ -2,13 +2,14 @@ package com.ruslanlyalko.ll.presentation.ui.main.profile.salary_edit;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
